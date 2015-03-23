@@ -1,3 +1,5 @@
 /.idea
 /Vagrantfile
 /.vagrant
+/node_modules
+/public/lib
