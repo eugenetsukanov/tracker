@@ -29,13 +29,26 @@ angular
         init();
 
         $scope.save = function () {
-            $scope.task.$save().then(init);
+
+            if (!$scope.task._id) {
+                $scope.task.$save().then(init);
+            }
+
+            else {
+                $scope.task.$update().then(init);
+            }
+
         };
 
         $scope.delete = function (task) {
             task.$delete().then(function () {
                 $scope.tasks = Task.query();
             });
+        };
+
+        $scope.edit = function (task) {
+            $scope.task = task;
+
         }
 
     })
