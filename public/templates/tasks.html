@@ -1,2 +1,12 @@
+<form ng-submit="save()">
+    <input type="text" placeholder="Task.." ng-model="task.title"/>
+    <button>save</button>
+</form>
 
-{{hi}}
+<ul>
+
+    <li ng-repeat="task in tasks">
+        <h3>{{task.title}}</h3>
+    </li>
+
+</ul>

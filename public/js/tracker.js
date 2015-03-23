@@ -20,7 +20,17 @@ angular
         return $resource('/api/tasks/:taskId', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
     .controller('TaskListCtrl', function ($scope, Task) {
-        $scope.tasks = Task.query();
+
+        function init() {
+            $scope.tasks = Task.query();
+            $scope.task = new Task();
+        }
+
+        init();
+
+        $scope.save = function () {
+            $scope.task.$save().then(init);
+        }
 
     })
 
