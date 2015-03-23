@@ -1,5 +1,5 @@
 angular
-    .module('Tracker', ['ui.router'])
+    .module('Tracker', ['ui.router', 'ngResource'])
 
 
     .config(function ($stateProvider, $urlRouterProvider) {
@@ -16,9 +16,13 @@ angular
 
     })
 
-    .controller('TaskListCtrl', function ($scope) {
-        $scope.hi = 1111;
-})
+    .factory('Task', function ($resource) {
+        return $resource('/api/tasks/:taskId', {taskId: '@_id'}, {update: {method: 'PUT'}});
+    })
+    .controller('TaskListCtrl', function ($scope, Task) {
+        $scope.tasks = Task.query();
+
+    })
 
 
 ;
