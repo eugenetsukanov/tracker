@@ -4,8 +4,13 @@ module.exports = function (app, passport) {
         passport.authenticate('local', { successRedirect: '/api/users/me' })
     );
 
+    app.get('/api/logout', function (req, res) {
+        req.logout();
+        res.sendStatus(200);
+    });
+
     app.use('/api', function (req, res, next) {
-        if(!req.user) return res.sendStatus(403);
+        if (!req.user) return res.sendStatus(403);
         next();
     });
 
