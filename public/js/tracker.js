@@ -7,7 +7,6 @@ angular
         $urlRouterProvider.otherwise("/app/tasks");
 
         $stateProvider
-
             .state('app', {
                 url: "/app",
                 views: {
@@ -69,9 +68,18 @@ angular
         }
 
     })
-    .controller('LoginCtrl', function ($scope) {
+
+    .factory('Login', function ($resource) {
+        return $resource('/api/login');
+    })
+    .controller('LoginCtrl', function ($scope, Login) {
 
         $scope.login = function () {
+
+            Login.save({
+                username: $scope.userName,
+                password: $scope.userPassword
+            });
 
         }
 
