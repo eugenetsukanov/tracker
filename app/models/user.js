@@ -13,7 +13,7 @@ var userSchema = new Schema({
 userSchema.methods = {
 
     validPassword: function (password) {
-        return this.password === password
+        return this.local.password === password
     }
 
 };
