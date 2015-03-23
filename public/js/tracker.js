@@ -4,13 +4,30 @@ angular
 
     .config(function ($stateProvider, $urlRouterProvider) {
 
-        $urlRouterProvider.otherwise("/");
+        $urlRouterProvider.otherwise("/app/tasks");
 
         $stateProvider
+
             .state('app', {
-                url: "/",
+                url: "/app",
+                views: {
+                    "": {
+                        templateUrl: "templates/app.html"
+                    },
+                    menu: {
+                        templateUrl: "templates/menu.html"
+                    }
+                }
+            })
+            .state('app.tasks', {
+                url: "/tasks",
                 templateUrl: "templates/tasks.html",
                 controller: 'TaskListCtrl'
+            })
+            .state('app.login', {
+                url: "/login",
+                controller: "LoginCtrl",
+                templateUrl: "templates/login.html"
             })
         ;
 
@@ -51,6 +68,13 @@ angular
 
         }
 
+    })
+    .controller('LoginCtrl', function ($scope) {
+        
+        $scope.login = function () {
+            
+        }
+        
     })
 
 
