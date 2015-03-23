@@ -9,14 +9,15 @@ angular
         $stateProvider
             .state('app', {
                 url: "/",
-                templateUrl: "templates/tasks.html"
+                templateUrl: "templates/tasks.html",
+                controller: 'TaskListCtrl'
             })
         ;
 
     })
 
-    .controller('tasksCtrl', function ($scope) {
-
+    .controller('TaskListCtrl', function ($scope) {
+        $scope.hi = 1111;
 })
 
 
