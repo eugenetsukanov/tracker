@@ -70,11 +70,11 @@ angular
 
     })
     .controller('LoginCtrl', function ($scope) {
-        
+
         $scope.login = function () {
-            
+
         }
-        
+
     })
 
 
