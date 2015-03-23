@@ -52,35 +52,36 @@ app.post('/api/tasks', TaskForm, function (req, res) {
 
 });
 
+app.param('taskId', function (req, res, next, taskId) {
+
+    Task.findById(taskId, function (err, task) {
+        req.Task = task;
+        next();
+    });
+});
+
 app.delete('/api/tasks/:taskId', function (req, res) {
 
-
-    Task.findById(req.params.taskId, function (err, task) {
-        task.remove(function () {
-            res.sendStatus(200);
-        });
+    req.Task.remove(function () {
+        res.sendStatus(200);
     });
 
 });
 
 app.put('/api/tasks/:taskId', TaskForm, function (req, res) {
 
+    var task = req.Task;
 
-    Task.findById(req.params.taskId, function (err, task) {
+    if (req.form.isValid) {
+        task.title = req.form.title;
 
-
-        if (req.form.isValid) {
-            task.title = req.form.title;
-
-            task.save(function (err, task) {
-                res.json(task);
-            });
-        }
-        else {
-            res.sendStatus(400);
-        }
-
-    });
+        task.save(function (err, task) {
+            res.json(task);
+        });
+    }
+    else {
+        res.sendStatus(400);
+    }
 
 });
 
@@ -89,6 +90,6 @@ var server = app.listen(3000, function () {
     var host = server.address().address;
     var port = server.address().port;
 
-    console.log('Example app listening at http://%s:%s', host, port)
+    console.log('Tracker app listening at http://%s:%s', host, port)
 
 });
