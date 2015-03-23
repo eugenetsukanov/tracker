@@ -30,6 +30,12 @@ angular
 
         $scope.save = function () {
             $scope.task.$save().then(init);
+        };
+
+        $scope.delete = function (task) {
+            task.$delete().then(function () {
+                $scope.tasks = Task.query();
+            });
         }
 
     })

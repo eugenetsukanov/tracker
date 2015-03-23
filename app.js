@@ -52,6 +52,17 @@ app.post('/api/tasks', TaskForm, function (req, res) {
 
 });
 
+app.delete('/api/tasks/:taskId', function (req, res) {
+
+
+    Task.findById(req.params.taskId, function (err, task) {
+        task.remove(function () {
+            res.sendStatus(200);
+        });
+    });
+
+});
+
 var server = app.listen(3000, function () {
 
     var host = server.address().address;
