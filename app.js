@@ -3,8 +3,17 @@ var app = express();
 var bodyParser = require('body-parser');
 
 app.use(express.static(__dirname + '/public'));
+
+
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+// passport
+var passport = require('passport');
+//var LocalStrategy = require('passport-local').Strategy;
+
+app.use('/login', passport.authenticate('local', { successRedirect: '/', failureRedirect: '/login' }));
 
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/tracker');
