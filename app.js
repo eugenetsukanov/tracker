@@ -25,20 +25,6 @@ require('./app/config/passport')(passport);
 // app routes
 require('./app/routes/app.routes')(app, passport);
 
-var Schema = mongoose.Schema;
-
-var TaskSchema = new Schema({
-    title: String,
-    user: String,
-    priority: Number,
-    status: String,
-    spendtime: Number,
-    velocity: Number,
-    date: {type: Date, default: Date.now}
-});
-
-var Task = mongoose.model('Task', TaskSchema);
-
 var form = require("express-form"),
     field = form.field;
 
@@ -46,6 +32,7 @@ var TaskForm = form(
     field("title").trim().required()
 );
 
+var Task = require('./app/models/task');
 
 app.get('/api/tasks', function (req, res) {
     Task.find(function (err, tasks) {
