@@ -9,19 +9,17 @@ angular
         $stateProvider
             .state('app', {
                 url: "/app",
-                views: {
-                    "": {
-                        templateUrl: "templates/app.html"
-                    },
-                    menu: {
-                        templateUrl: "templates/menu.html"
-                    }
-                }
+                templateUrl: "templates/app.html"
             })
             .state('app.tasks', {
                 url: "/tasks",
                 templateUrl: "templates/tasks.html",
                 controller: 'TaskListCtrl'
+            })
+            .state('app.task', {
+                url: "/tasks/:taskId",
+                templateUrl: "templates/task.html",
+                controller: 'TaskCtrl'
             })
             .state('app.login', {
                 url: "/login",
@@ -66,6 +64,9 @@ angular
             $scope.task = task;
 
         }
+
+    })
+    .controller('TaskCtrl', function ($scope, Task) {
 
     })
 

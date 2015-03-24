@@ -9,6 +9,7 @@
         <h3>{{task.title}}</h3>
          <button ng-click="delete(task)">Delete</button>
          <button ng-click="edit(task)">Edit</button>
+        <a ui-sref="app.task({taskId: task._id})">tree</a>
     </li>
 
 </ul>
