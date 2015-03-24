@@ -1,8 +1,9 @@
 angular
     .module('Tracker', ['ui.router', 'ngResource'])
 
+    .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
-    .config(function ($stateProvider, $urlRouterProvider) {
+        $httpProvider.interceptors.push('HttpInterceptor');
 
         $urlRouterProvider.otherwise("/app/tasks");
 
@@ -28,6 +29,17 @@ angular
             })
         ;
 
+    })
+
+    .factory('HttpInterceptor', function ($q, $injector) {
+        return {
+            'responseError': function (rejection) {
+                if (rejection.status == 401) {
+                    $injector.get('$state').go('app.login')
+                }
+                return $q.reject(rejection);
+            }
+        };
     })
 
     .factory('Task', function ($resource) {
