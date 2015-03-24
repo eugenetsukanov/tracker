@@ -19,5 +19,7 @@ module.exports = function (app, passport) {
         res.json(req.user);
     });
 
+    require('../api/task')(app);
+
 
 };
