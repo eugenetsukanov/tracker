@@ -10,7 +10,7 @@ module.exports = function (app, passport) {
     });
 
     app.use('/api', function (req, res, next) {
-        if (!req.user) return res.sendStatus(403);
+        //if (!req.user) return res.sendStatus(403);
         next();
     });
 
