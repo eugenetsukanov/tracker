@@ -25,9 +25,6 @@ require('./app/config/passport')(passport);
 // app routes
 require('./app/routes/app.routes')(app, passport);
 
-var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/tracker');
-
 var Schema = mongoose.Schema;
 
 var TaskSchema = new Schema({
