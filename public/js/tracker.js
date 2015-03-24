@@ -99,7 +99,10 @@ angular
             Login.save({
                 username: $scope.userName,
                 password: $scope.userPassword
-            });
+            }, function () {
+//                console.log('user', user);
+                console.log(arguments);
+            })
 
         }
 

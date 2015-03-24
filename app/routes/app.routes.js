@@ -15,7 +15,6 @@ module.exports = function (app, passport) {
     });
 
     app.get('/api/users/me', function (req, res) {
-        console.log(req.user);
         res.json(req.user);
     });
 
