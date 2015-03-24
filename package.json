@@ -5,7 +5,8 @@
     "main": "index.js",
     "scripts": {
         "setup": "npm i && bower i",
-        "start": "nodemon app.js -i node_modules/ -i public/",
+        "start.dev": "nodemon app.js -i node_modules/ -i public/",
+        "start": "npm run setup && npm run start.dev",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "",
