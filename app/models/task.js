@@ -8,6 +8,7 @@ var TaskSchema = new Schema({
     status: String,
     spendtime: Number,
     velocity: Number,
+    parentTaskId: {type: Schema.Types.ObjectId, default: null},
     date: {type: Date, default: Date.now}
 });
 

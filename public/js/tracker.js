@@ -33,6 +33,9 @@ angular
     .factory('Task', function ($resource) {
         return $resource('/api/tasks/:taskId', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
+    .factory('ChildTask', function ($resource) {
+        return $resource('/api/tasks/:taskId/childTask', {taskId: '@_id'}, {update: {method: 'PUT'}});
+    })
     .controller('TaskListCtrl', function ($scope, Task) {
 
         function init() {
@@ -66,7 +69,36 @@ angular
         }
 
     })
-    .controller('TaskCtrl', function ($scope, Task) {
+    .controller('TaskCtrl', function ($scope, Task, ChildTask, $stateParams) {
+        var init = function () {
+            $scope.task = Task.get({taskId: $stateParams.taskId});
+            $scope.tasks = ChildTask.query({taskId: $stateParams.taskId});
+            $scope.childTask = new ChildTask();
+        };
+
+        init()
+
+        $scope.save = function () {
+
+            if (!$scope.childTask._id) {
+                $scope.childTask.$save({taskId: $scope.task._id}).then(init);
+            }
+
+            else {
+                $scope.childTask.$update().then(init);
+            }
+
+        };
+
+        $scope.edit = function (task) {
+            $scope.childTask = task;
+        };
+
+        $scope.delete = function (task) {
+            task.$delete().then(function () {
+                init()
+            });
+        };
 
     })
 

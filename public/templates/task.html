@@ -1,1 +1,17 @@
-task info
+{{ task.title }}
+
+<form ng-submit="save()">
+    <input type="text" placeholder="Task.." ng-model="childTask.title"/>
+    <button>save</button>
+</form>
+
+<ul>
+
+    <li ng-repeat="childTask in tasks">
+        <h3>{{childTask.title}}</h3>
+        <button ng-click="delete(childTask)">Delete</button>
+        <button ng-click="edit(childTask)">Edit</button>
+        <a ui-sref="app.task({taskId: childTask._id})">tree</a>
+    </li>
+
+</ul>
