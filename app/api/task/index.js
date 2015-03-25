@@ -4,7 +4,8 @@ module.exports = function (app) {
         field = form.field;
 
     var TaskForm = form(
-        field("title").trim().required()
+        field("title").trim().required(),
+        field("spenttime").trim()
     );
 
     var Task = require('../../models/task');
@@ -91,6 +92,7 @@ module.exports = function (app) {
 
         if (req.form.isValid) {
             task.title = req.form.title;
+            task.spenttime = req.form.spenttime;
 
             task.save(function (err, task) {
                 res.json(task);

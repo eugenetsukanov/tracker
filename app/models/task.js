@@ -6,7 +6,7 @@ var TaskSchema = new Schema({
     user: String,
     priority: Number,
     status: String,
-    spendtime: Number,
+    spenttime: Number,
     velocity: Number,
     parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
     date: {type: Date, default: Date.now}
