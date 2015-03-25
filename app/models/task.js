@@ -8,6 +8,7 @@ var TaskSchema = new Schema({
     status: String,
     spenttime: Number,
     complexity: Number,
+    points: Number,
     velocity: Number,
     parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
     date: {type: Date, default: Date.now}
@@ -20,12 +21,24 @@ TaskSchema.post('remove', function (task) {
 
         tasks.forEach(function (task) {
             task.remove(function () {
-                
+
             });
         })
 
     })
 
+});
+
+TaskSchema.pre('save', function (next) {
+
+    console.log('pre save', this);
+
+    if (this.complexity) {
+        var row = [0,1,2,3,5,8,13,21,34,55,89,144];
+        var points = row[this.complexity];
+        this.points = points;
+    }
+    next();
 });
 
 var Task = mongoose.model('Task', TaskSchema);
