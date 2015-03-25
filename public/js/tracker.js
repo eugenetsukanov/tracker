@@ -13,8 +13,8 @@ angular
             })
             .state('app.tasks', {
                 url: "/tasks",
-                templateUrl: "templates/tasks.html",
-                controller: 'TaskListCtrl'
+                templateUrl: "templates/task.html",
+                controller: 'TaskCtrl'
             })
             .state('app.task', {
                 url: "/tasks/:taskId",
@@ -33,47 +33,18 @@ angular
     .factory('Task', function ($resource) {
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
-    .factory('ChildTask', function ($resource) {
-        return $resource('/api/tasks/:taskId/childTask', {taskId: '@_id'}, {update: {method: 'PUT'}});
-    })
-    .controller('TaskListCtrl', function ($scope, Task) {
-
-        function init() {
-            $scope.tasks = Task.query();
-            $scope.task = new Task();
-        }
-
-        init();
-
-        $scope.save = function () {
-
-            if (!$scope.task._id) {
-                $scope.task.$save().then(init);
-            }
-
-            else {
-                $scope.task.$update().then(init);
-            }
-
-        };
-
-        $scope.delete = function (task) {
-            task.$delete().then(function () {
-                $scope.tasks = Task.query();
-            });
-        };
-
-        $scope.edit = function (task) {
-            $scope.task = task;
-
-        }
-
-    })
-    .controller('TaskCtrl', function ($scope, Task, ChildTask, $stateParams) {
+    .controller('TaskCtrl', function ($scope, Task, $stateParams) {
         var init = function () {
-            $scope.task = Task.get({taskId: $stateParams.taskId});
-            $scope.tasks = Task.query({taskId: $stateParams.taskId, nested: 'tasks'});
+
+            if ($stateParams.taskId) {
+                $scope.task = Task.get({taskId: $stateParams.taskId});
+                $scope.tasks = Task.query({taskId: $stateParams.taskId, nested: 'tasks'});
+            } else {
+                $scope.tasks = Task.query();
+            }
+
             $scope.newTask = new Task();
+
         };
 
         init();
@@ -81,7 +52,12 @@ angular
         $scope.save = function () {
 
             if (!$scope.newTask._id) {
-                $scope.newTask.$save({taskId: $scope.task._id, nested: 'tasks'}).then(init);
+
+                if ($stateParams.taskId) {
+                    $scope.newTask.$save({taskId: $stateParams.taskId, nested: 'tasks'}).then(init);
+                } else {
+                    $scope.newTask.$save().then(init);
+                }
             }
 
             else {
