@@ -1,21 +1,41 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var crypto = require("crypto");
 
-var userSchema = new Schema({
+var UserSchema = new Schema({
 
     local: {
-        username: String,
-        password: String
+        username: {type: String, index: true},
+
+        passwordSalt: String,
+        passwordHashed: String
     }
 
 });
 
-userSchema.methods = {
+function hash(data) {
+    return crypto
+        .createHash("sha256")
+        .update(data)
+        .digest("hex");
+}
+
+UserSchema.methods = {
 
     validPassword: function (password) {
-        return this.local.password === password
+        return this.local.passwordHashed === hash(this.local.passwordSalt + password);
+    },
+    setPassword: function (password) {
+        var salt = 'key-' +  Math.random() + ' ' + Math.random() + new Date();
+        this.local.passwordSalt = hash(salt);
+        this.local.passwordHashed = hash(this.local.passwordSalt + password);
     }
 
 };
 
-module.exports = mongoose.model('User', userSchema);
+
+UserSchema.virtual('local.password').set(function (password) {
+    this.setPassword(password);
+});
+
+module.exports = mongoose.model('User', UserSchema);

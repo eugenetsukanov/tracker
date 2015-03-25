@@ -27,6 +27,15 @@ angular
                 controller: "LoginCtrl",
                 templateUrl: "templates/login.html"
             })
+            .state('app.register', {
+                url: "/register",
+                controller: "RegisterCtrl",
+                templateUrl: "templates/register.html"
+            })
+            .state('app.logout', {
+                url: "/logout",
+                controller: "LogoutCtrl"
+            })
         ;
 
     })
@@ -104,7 +113,7 @@ angular
     .factory('Login', function ($resource) {
         return $resource('/api/login');
     })
-    .controller('LoginCtrl', function ($scope, Login) {
+    .controller('LoginCtrl', function ($scope, Login, $state) {
 
         $scope.login = function () {
 
@@ -112,8 +121,32 @@ angular
                 username: $scope.userName,
                 password: $scope.userPassword
             }, function () {
-//                console.log('user', user);
-                console.log(arguments);
+                $state.go('app.tasks');
+            })
+
+        }
+
+    })
+    .factory('Logout', function ($resource) {
+        return $resource('/api/logout');
+    })
+    .controller('LogoutCtrl', function ($scope, Logout, $state) {
+        Logout.save(function () {
+            $state.go('app.login');
+        });
+    })
+    .factory('Register', function ($resource) {
+        return $resource('/api/register');
+    })
+    .controller('RegisterCtrl', function ($scope, Register, $state) {
+
+        $scope.register = function () {
+
+            Register.save({
+                username: $scope.userName,
+                password: $scope.userPassword
+            }, function () {
+                $state.go('app.tasks');
             })
 
         }
