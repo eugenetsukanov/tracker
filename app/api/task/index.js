@@ -21,7 +21,7 @@ module.exports = function (app) {
         res.json(req.Task);
     });
 
-    app.get('/api/tasks/:taskId/childTask', function (req, res) {
+    app.get('/api/tasks/:taskId/tasks', function (req, res) {
 
         Task.find({parentTaskId: req.Task._id}, function (err, tasks) {
             if (err) return next(err);
@@ -51,38 +51,13 @@ module.exports = function (app) {
 
     });
 
-    app.post('/api/tasks/:taskId/childTask', TaskForm, function (req, res) {
+    app.post('/api/tasks/:taskId/tasks', TaskForm, function (req, res) {
 
 
         if (req.form.isValid) {
             var task = new Task(req.form);
 
             task.parentTaskId = req.Task._id;
-
-            task.save(function (err, task) {
-                res.json(task);
-            });
-        }
-        else {
-            res.sendStatus(400);
-        }
-
-    });
-
-    app.delete('/api/tasks/:taskId/childTask', function (req, res) {
-
-        req.Task.remove(function () {
-            res.sendStatus(200);
-        });
-
-    });
-
-    app.put('/api/tasks/:taskId/childTask', TaskForm, function (req, res) {
-
-        var task = req.Task;
-
-        if (req.form.isValid) {
-            task.title = req.form.title;
 
             task.save(function (err, task) {
                 res.json(task);

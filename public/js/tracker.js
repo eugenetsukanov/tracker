@@ -31,7 +31,7 @@ angular
     })
 
     .factory('Task', function ($resource) {
-        return $resource('/api/tasks/:taskId', {taskId: '@_id'}, {update: {method: 'PUT'}});
+        return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
     .factory('ChildTask', function ($resource) {
         return $resource('/api/tasks/:taskId/childTask', {taskId: '@_id'}, {update: {method: 'PUT'}});
@@ -72,26 +72,26 @@ angular
     .controller('TaskCtrl', function ($scope, Task, ChildTask, $stateParams) {
         var init = function () {
             $scope.task = Task.get({taskId: $stateParams.taskId});
-            $scope.tasks = ChildTask.query({taskId: $stateParams.taskId});
-            $scope.childTask = new ChildTask();
+            $scope.tasks = Task.query({taskId: $stateParams.taskId, nested: 'tasks'});
+            $scope.newTask = new Task();
         };
 
-        init()
+        init();
 
         $scope.save = function () {
 
-            if (!$scope.childTask._id) {
-                $scope.childTask.$save({taskId: $scope.task._id}).then(init);
+            if (!$scope.newTask._id) {
+                $scope.newTask.$save({taskId: $scope.task._id, nested: 'tasks'}).then(init);
             }
 
             else {
-                $scope.childTask.$update().then(init);
+                $scope.newTask.$update().then(init);
             }
 
         };
 
         $scope.edit = function (task) {
-            $scope.childTask = task;
+            $scope.newTask = task;
         };
 
         $scope.delete = function (task) {
