@@ -7,6 +7,7 @@ var TaskSchema = new Schema({
     priority: Number,
     status: String,
     spenttime: Number,
+    complexity: Number,
     velocity: Number,
     parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
     date: {type: Date, default: Date.now}

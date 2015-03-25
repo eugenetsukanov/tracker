@@ -5,8 +5,10 @@ module.exports = function (app) {
 
     var TaskForm = form(
         field("title").trim().required(),
-        field("spenttime").trim(),
-        field("status").trim()
+        field("spenttime").trim().isNumeric(),
+        field("status").trim(),
+        field("priority").trim().isInt(),
+        field("complexity").trim().isInt()
     );
 
     var Task = require('../../models/task');
@@ -95,6 +97,8 @@ module.exports = function (app) {
             task.title = req.form.title;
             task.spenttime = req.form.spenttime;
             task.status = req.form.status;
+            task.priority = req.form.priority;
+            task.complexity = req.form.complexity;
 
             task.save(function (err, task) {
                 res.json(task);
