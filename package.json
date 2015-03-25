@@ -4,7 +4,7 @@
   "description": "Tracker",
   "main": "index.js",
   "scripts": {
-    "setup": "npm i && bower i",
+    "setup": "npm install && bower install --config.interactive=false",
     "start.dev": "nodemon app.js -i node_modules/ -i public/",
     "start": "npm run setup && npm run start.dev",
     "test": "echo \"Error: no test specified\" && exit 1"
