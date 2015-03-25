@@ -31,8 +31,6 @@ TaskSchema.post('remove', function (task) {
 
 TaskSchema.pre('save', function (next) {
 
-    console.log('pre save', this);
-
     if (this.complexity) {
         var row = [0,1,2,3,5,8,13,21,34,55,89,144];
         var points = row[this.complexity];
