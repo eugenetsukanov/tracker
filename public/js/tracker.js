@@ -34,6 +34,10 @@ angular
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
     .controller('TaskCtrl', function ($scope, Task, $stateParams) {
+
+        $scope.statuses = [
+            "open", "in progress", "done", "accepted"
+        ];
         var init = function () {
 
             if ($stateParams.taskId) {

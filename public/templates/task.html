@@ -1,11 +1,13 @@
 <div ng-if="task">
     {{ task.title }}<br/>
-    Spent Time: {{task.spenttime}}
+    Spent Time: {{task.spenttime}}<br/>
+    Status: {{task.status}}<br/>
 </div>
 
 <form ng-submit="save()">
     <input type="text" placeholder="Task.." ng-model="newTask.title"/>
-    <input type="number" placeholder="Spent Time in hours" ng-model="newTask.spenttime"/><br/><br/>
+    <input type="number" placeholder="Spent Time in hours" ng-model="newTask.spenttime"/><br/>
+    <select ng-options="status for status in statuses" ng-model="newTask.status"></select>
     <button>save</button>
 </form>
 
