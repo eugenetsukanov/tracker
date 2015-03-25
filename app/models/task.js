@@ -16,30 +16,7 @@ var TaskSchema = new Schema({
 });
 
 TaskSchema.pre('save', function (next) {
-
-    this.checkSimple(function (err, simple) {
-        this.simple = simple;
-
-        if (simple) {
-
-            if (this.complexity) {
-                var row = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
-                var points = row[this.complexity];
-                this.points = points;
-            }
-
-            if (this.points && this.spenttime) {
-                this.velocity = this.points / this.spenttime;
-            }
-
-            next();
-
-        } else {
-            this.calculate(next);
-        }
-
-    }.bind(this));
-
+    this.calculate(next);
 });
 
 TaskSchema.methods = {
@@ -54,80 +31,121 @@ TaskSchema.methods = {
         })
     },
 
-    recalculateParentSimple: function () {
+    recalculateParent: function () {
 
-        if (this.parentTaskId) {
+        this.getParent(function (err, task) {
+            if (err) return console.log(err);
 
-            Task.findById(this.parentTaskId, function (err, task) {
-                if (err) return console.log(err);
+            task && task.save(new Function);
+        });
 
-                task && task.save(function () {
-
-                });
-
-            });
-
-        }
     },
 
     calculate: function (next) {
 
-        if (!this.simple) {
+        this.checkSimple(function (err, simple) {
+            this.simple = simple;
 
-            Task.find({ parentTaskId: this._id }, function (err, tasks) {
-                if (err) return console.log(err);
+            if (!this.simple) {
 
-                var spentTime = 0,
-                    points = 0,
-                    velocity = 0;
+                this.calculateComplex(next);
 
-                tasks.forEach(function (task) {
+            } else {
 
-                    spentTime += task.spenttime;
-                    points += task.points;
+                this.calculateSimple(next);
 
-                });
+            }
 
-                if (spentTime && points) {
-                    velocity = points / spentTime;
-                }
+        }.bind(this));
 
-                this.spenttime = spentTime;
-                this.points = points;
-                this.velocity = velocity;
 
-                next();
+    },
 
-            }.bind(this))
+    calculateComplex: function (next) {
 
+        this.getChildren(function (err, tasks) {
+            if (err) return next(err);
+
+            var spentTime = 0,
+                points = 0,
+                velocity = 0;
+
+            tasks.forEach(function (task) {
+
+                spentTime += task.spenttime;
+                points += task.points;
+
+            });
+
+            if (spentTime && points) {
+                velocity = points / spentTime;
+            }
+
+            this.spenttime = spentTime;
+            this.points = points;
+            this.velocity = velocity;
+
+            next();
+
+        }.bind(this));
+
+    },
+
+    calculateSimple: function (next) {
+        if (this.complexity) {
+            var row = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
+            var points = row[this.complexity];
+            this.points = points;
         }
 
+        if (this.points && this.spenttime) {
+            this.velocity = this.points / this.spenttime;
+        }
+
+        next();
+    },
+
+    removeChildren: function () {
+        this.getChildren(function (err, tasks) {
+            tasks.forEach(function (task) {
+                task.remove(new Function);
+            })
+        });
+    },
+
+    getChildren: function (next) {
+        Task.find({ parentTaskId: this}, function (err, tasks) {
+            if (err) return next(err);
+
+            next(null, tasks);
+        })
+    },
+
+    getParent: function (next) {
+        if (this.parentTaskId) {
+            Task.findById(this.parentTaskId, function (err, task) {
+                if (err) return next(err);
+
+                next(null, task);
+            });
+        } else {
+            next(null, null);
+        }
     }
 
 
 };
 
 TaskSchema.post('save', function (task) {
-    task.recalculateParentSimple();
+    task.recalculateParent();
 });
 
 TaskSchema.post('remove', function (task) {
-    task.recalculateParentSimple();
+    task.recalculateParent();
 });
 
 TaskSchema.post('remove', function (task) {
-
-    Task.find({ parentTaskId: task}, function (err, tasks) {
-        if (err) return console.error(err);
-
-        tasks.forEach(function (task) {
-            task.remove(function () {
-
-            });
-        })
-
-    })
-
+    task.removeChildren();
 });
 
 var Task = mongoose.model('Task', TaskSchema);
