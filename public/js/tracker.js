@@ -52,7 +52,9 @@ angular
                 $scope.tasks = Task.query();
             }
 
-            $scope.newTask = new Task();
+            $scope.newTask = new Task({
+                simple: true
+            });
 
         };
 

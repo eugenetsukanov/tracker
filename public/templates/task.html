@@ -11,10 +11,10 @@
 
 <form ng-submit="save()">
     <input type="text" placeholder="Task.." ng-model="newTask.title"/>
-    <input type="text" placeholder="Spent Time in hours" ng-model="newTask.spenttime"/><br/>
+    <input type="text" ng-if="newTask.simple" placeholder="Spent Time in hours" ng-model="newTask.spenttime"/><br/>
     <select ng-options="status for status in statuses" ng-model="newTask.status"></select>
     <select ng-options="priority for priority in priorities" ng-model="newTask.priority"></select>
-    <select ng-options="complexity for complexity in complexities" ng-model="newTask.complexity"></select>
+    <select ng-if="newTask.simple" ng-options="complexity for complexity in complexities" ng-model="newTask.complexity"></select>
     <button>save</button>
 </form>
 
