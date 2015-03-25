@@ -1,5 +1,6 @@
 <div ng-if="task">
-    {{ task.title }}<br/>
+    <h2>{{task.title}}</h2>
+    <br/>
     Spent Time: {{task.spenttime}}<br/>
     Status: {{task.status}}<br/>
     Priority: {{task.priority}}<br/>
@@ -22,6 +23,11 @@
 
     <li ng-repeat="task in tasks">
         <h3>{{task.title}}</h3>
+        <div>
+            <span>Velocity: {{task.velocity}}</span>
+            <span>Points: {{task.points}}</span>
+            <span>Spent Time: {{task.spenttime}}</span>
+        </div>
 
 
         <button ng-click="delete(task)">Delete</button>
