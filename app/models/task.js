@@ -4,12 +4,12 @@ var Schema = mongoose.Schema;
 var TaskSchema = new Schema({
     title: String,
     user: String,
-    priority: Number,
+    priority: {type: Number, default: 0},
     status: String,
-    spenttime: Number,
-    complexity: Number,
-    points: Number,
-    velocity: Number,
+    spenttime: {type: Number, default: 0},
+    complexity: {type: Number, default: 0},
+    points: {type: Number, default: 0},
+    velocity: {type: Number, default: 0},
     parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
     date: {type: Date, default: Date.now},
     simple: {type: Boolean, default: true}
@@ -17,19 +17,27 @@ var TaskSchema = new Schema({
 
 TaskSchema.pre('save', function (next) {
 
-    if (this.complexity) {
-        var row = [0,1,2,3,5,8,13,21,34,55,89,144];
-        var points = row[this.complexity];
-        this.points = points;
-    }
-
-    if (this.points && this.spenttime) {
-        this.velocity = this.points / this.spenttime;
-    }
-
     this.checkSimple(function (err, simple) {
         this.simple = simple;
-        next();
+
+        if (simple) {
+
+            if (this.complexity) {
+                var row = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
+                var points = row[this.complexity];
+                this.points = points;
+            }
+
+            if (this.points && this.spenttime) {
+                this.velocity = this.points / this.spenttime;
+            }
+
+            next();
+
+        } else {
+            this.calculate(next);
+        }
+
     }.bind(this));
 
 });
@@ -60,9 +68,42 @@ TaskSchema.methods = {
             });
 
         }
+    },
 
+    calculate: function (next) {
+
+        if (!this.simple) {
+
+            Task.find({ parentTaskId: this._id }, function (err, tasks) {
+                if (err) return console.log(err);
+
+                var spentTime = 0,
+                    points = 0,
+                    velocity = 0;
+
+                tasks.forEach(function (task) {
+
+                    spentTime += task.spenttime;
+                    points += task.points;
+
+                });
+
+                if (spentTime && points) {
+                    velocity = points / spentTime;
+                }
+
+                this.spenttime = spentTime;
+                this.points = points;
+                this.velocity = velocity;
+
+                next();
+
+            }.bind(this))
+
+        }
 
     }
+
 
 };
 
