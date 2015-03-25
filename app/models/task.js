@@ -8,8 +8,23 @@ var TaskSchema = new Schema({
     status: String,
     spendtime: Number,
     velocity: Number,
-    parentTaskId: {type: Schema.Types.ObjectId, default: null},
+    parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
     date: {type: Date, default: Date.now}
+});
+
+TaskSchema.post('remove', function (task) {
+
+    Task.find({ parentTaskId: task}, function (err, tasks) {
+        if (err) return console.error(err);
+
+        tasks.forEach(function (task) {
+            task.remove(function () {
+                
+            });
+        })
+
+    })
+
 });
 
 var Task = mongoose.model('Task', TaskSchema);

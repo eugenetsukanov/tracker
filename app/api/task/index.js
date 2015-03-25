@@ -80,16 +80,6 @@ module.exports = function (app) {
     app.delete('/api/tasks/:taskId', function (req, res, next) {
 
         req.Task.remove(function () {
-            Task.find({parentTaskId: req.Task._id}, function (err, tasks) {
-                if (err) return next(err);
-
-                if(tasks) {
-                    _.map(tasks, function (task) {
-                        task.remove()
-                    })
-                }
-            });
-
             res.sendStatus(200);
         });
 
