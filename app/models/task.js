@@ -36,6 +36,11 @@ TaskSchema.pre('save', function (next) {
         var points = row[this.complexity];
         this.points = points;
     }
+
+    if (this.points && this.spenttime) {
+        this.velocity = this.points / this.spenttime;
+    }
+
     next();
 });
 
