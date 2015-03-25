@@ -66,23 +66,32 @@ TaskSchema.methods = {
         this.getChildren(function (err, tasks) {
             if (err) return next(err);
 
-            var spentTime = 0,
-                points = 0,
-                velocity = 0;
+            var velocity = 0;
+
+            var totalSpentTime = 0;
+            var totalPoints = 0;
+
+            var acceptedSpentTime = 0;
+            var acceptedPoints = 0;
 
             tasks.forEach(function (task) {
 
-                spentTime += task.spenttime;
-                points += task.points;
+                totalSpentTime += task.spenttime;
+                totalPoints += task.points;
+
+                if (task.isAccepted()) {
+                    acceptedSpentTime += task.spenttime;
+                    acceptedPoints += task.points;
+                }
 
             });
 
-            if (spentTime && points) {
-                velocity = points / spentTime;
+            if (acceptedSpentTime && acceptedPoints) {
+                velocity = acceptedPoints / acceptedSpentTime;
             }
 
-            this.spenttime = spentTime;
-            this.points = points;
+            this.spenttime = totalSpentTime;
+            this.points = totalPoints;
             this.velocity = velocity;
 
             next();
@@ -131,6 +140,9 @@ TaskSchema.methods = {
         } else {
             next(null, null);
         }
+    },
+    isAccepted: function () {
+        return this.status == 'accepted';
     }
 
 
