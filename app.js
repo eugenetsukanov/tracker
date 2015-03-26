@@ -27,6 +27,13 @@ require('./app/config/passport')(passport);
 // app routes
 require('./app/routes/app.routes')(app, passport);
 
+// fixtures
+var fixtures = require('pow-mongodb-fixtures').connect('tracker');
+
+fixtures.clearAndLoad(__dirname + '/app/config/fixtures', function (err) {
+    if (err) console.error(err);
+});
+
 var server = app.listen(3000, function () {
     var host = server.address().address;
     var port = server.address().port;

@@ -29,6 +29,7 @@ UserSchema.methods = {
         var salt = 'key-' +  Math.random() + ' ' + Math.random() + new Date();
         this.local.passwordSalt = hash(salt);
         this.local.passwordHashed = hash(this.local.passwordSalt + password);
+
     }
 
 };
