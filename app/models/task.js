@@ -107,7 +107,7 @@ TaskSchema.methods = {
             this.points = points;
         }
 
-        if (this.points && this.spenttime) {
+        if (this.points && this.spenttime && this.isAccepted()) {
             this.velocity = this.points / this.spenttime;
         }
 
