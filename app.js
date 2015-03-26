@@ -14,7 +14,7 @@ mongoose.connect('mongodb://localhost/tracker');
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(session({ secret: 'tracker$app' }));
+app.use(session({ secret: 'tracker$app'}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(__dirname + '/public'));

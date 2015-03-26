@@ -12,7 +12,8 @@ var TaskSchema = new Schema({
     velocity: {type: Number, default: 0},
     parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
     date: {type: Date, default: Date.now},
-    simple: {type: Boolean, default: true}
+    simple: {type: Boolean, default: true},
+    estimatedTime: {type: Number, default: 0}
 });
 
 TaskSchema.pre('save', function (next) {
@@ -74,6 +75,7 @@ TaskSchema.methods = {
             var acceptedSpentTime = 0;
             var acceptedPoints = 0;
 
+
             tasks.forEach(function (task) {
 
                 totalSpentTime += task.spenttime;
@@ -88,11 +90,13 @@ TaskSchema.methods = {
 
             if (acceptedSpentTime && acceptedPoints) {
                 velocity = acceptedPoints / acceptedSpentTime;
+                this.estimatedTime = totalPoints/velocity;
             }
 
             this.spenttime = totalSpentTime;
             this.points = totalPoints;
             this.velocity = velocity;
+
 
             next();
 
