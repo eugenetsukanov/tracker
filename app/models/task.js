@@ -47,13 +47,38 @@ TaskSchema.methods = {
         }
     },
 
-    updateParent: function () {
+    updateEstimateTime: function (next) {
+        if (this.simple) return next();
 
-        this.getParent(function (err, task) {
-            if (err) return console.log(err);
+        this.getChildren(function (err, tasks) {
+            if (err) return next(err);
 
-            task && task.save(new Function);
-        });
+            var estimatedTime = 0;
+
+            tasks.forEach(function (task) {
+                estimatedTime += task.estimatedTime;
+            });
+
+            this.estimatedTime = estimatedTime;
+
+            next();
+        }.bind(this));
+    },
+    updateParent: function (next) {
+        next = next || new Function;
+
+        this.getParent(function (err, parent) {
+            if (err) return next(err);
+            if(!parent) return next();
+
+            if (parent) {
+                parent.updateEstimateTime(function (err) {
+                    if (err) return next(err);
+                    parent.save(next);
+                });
+            }
+
+        }.bind(this));
 
     },
 
@@ -147,17 +172,7 @@ TaskSchema.methods = {
                     if (velocity) {
                         var prevEstimatedTime = task.estimatedTime || 0;
                         task.estimatedTime = task.points / velocity;
-
-                        var diffTime = task.estimatedTime - prevEstimatedTime;
-
-                        if (diffTime) {
-                            Task.updateEstimateTime(task._id, task.estimatedTime, function () {
-                                Task.updateParentEstimateTime(task.parentTaskId, diffTime, next);
-                            });
-                        }
-                        else {
-                            next();
-                        }
+                        next();
                     } else {
                         next();
                     }
@@ -225,37 +240,6 @@ TaskSchema.methods = {
 
 };
 
-TaskSchema.statics.updateParentEstimateTime = function (parentTaskId, diffTime, next) {
-    next = next || new Function;
-
-    if (!diffTime) return next();
-    if (!parentTaskId) return next();
-
-    Task.update({_id: parentTaskId}, {$inc: {estimatedTime: diffTime}}, {}, function () {
-
-        Task.findById(parentTaskId, function (err, parent) {
-            if (err) return next(err);
-            if (!parent) return next();
-
-            if (parent.parentTaskId) {
-                Task.updateParentEstimateTime(parent.parentTaskId, diffTime, next);
-            }
-            else {
-                next()
-            }
-
-        });
-
-    });
-
-
-}
-TaskSchema.statics.updateEstimateTime = function (taskId, estimatedTime, next) {
-    next = next || new Function;
-
-    Task.update({_id: taskId}, {$set: {estimatedTime: estimatedTime}}, {}, next);
-}
-
 TaskSchema.post('save', function (task) {
     task.updateParent();
 });
@@ -266,10 +250,6 @@ TaskSchema.post('remove', function (task) {
 
 TaskSchema.post('remove', function (task) {
     task.removeChildren();
-});
-
-TaskSchema.post('remove', function (task) {
-    Task.updateParentEstimateTime(task.parentTaskId, -task.estimatedTime);
 });
 
 var Task = mongoose.model('Task', TaskSchema);
