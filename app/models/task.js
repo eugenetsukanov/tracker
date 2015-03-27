@@ -26,6 +26,10 @@ TaskSchema.pre('save', function (next) {
     this.calculate(next);
 });
 
+TaskSchema.pre('save', function (next) {
+    this.initEstimatedTime(next);
+});
+
 TaskSchema.methods = {
 
     checkSimple: function (next) {
@@ -220,6 +224,17 @@ TaskSchema.methods = {
     },
     isAccepted: function () {
         return this.status == 'accepted';
+    },
+    initEstimatedTime: function (next) {
+        if(this.simple) return next();
+
+        this.getChildren(function (err, tasks) {
+            if (err) return next(err);
+            if (tasks.length == 1) {
+                this.estimatedTime = tasks[0].estimatedTime;
+            }
+            next();
+        }.bind(this));
     }
 
 
@@ -229,7 +244,7 @@ TaskSchema.statics.updateParentEstimateTime = function (parentTaskId, diffTime, 
     next = next || new Function;
 
     if (!diffTime) return next();
-    if(!parentTaskId) return next();
+    if (!parentTaskId) return next();
 
     Task.update({_id: parentTaskId}, {$inc: {estimatedTime: diffTime}}, {}, function () {
 
