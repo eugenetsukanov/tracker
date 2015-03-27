@@ -67,8 +67,10 @@ angular
         var init = function () {
 
             if ($stateParams.taskId) {
-                $scope.task = Task.get({taskId: $stateParams.taskId});
-                $scope.tasks = Task.query({taskId: $stateParams.taskId, nested: 'tasks'});
+                Task.query({taskId: $stateParams.taskId, nested: 'tasks'}, function (tasks) {
+                    $scope.tasks = tasks;
+                    $scope.task = Task.get({taskId: $stateParams.taskId});
+                });
             } else {
                 $scope.tasks = Task.query();
             }
