@@ -26,10 +26,6 @@ TaskSchema.pre('save', function (next) {
     this.calculate(next);
 });
 
-TaskSchema.pre('save', function (next) {
-    this.initEstimatedTime(next);
-});
-
 TaskSchema.methods = {
 
     checkSimple: function (next) {
@@ -224,23 +220,6 @@ TaskSchema.methods = {
     },
     isAccepted: function () {
         return this.status == 'accepted';
-    },
-    initEstimatedTime: function (next) {
-        if (this.simple) return next();
-
-        this.getChildren(function (err, tasks) {
-            if (err) return next(err);
-            if (tasks.length == 1) {
-                Task.updateParentEstimateTime(this._id, -this.estimatedTime, function () {
-                    this.estimatedTime = tasks[0].estimatedTime;
-                    next();
-                }.bind(this));
-            }
-            else {
-                next();
-            }
-
-        }.bind(this));
     }
 
 
