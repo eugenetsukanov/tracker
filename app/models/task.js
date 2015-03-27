@@ -257,8 +257,6 @@ TaskSchema.statics.updateEstimateTime = function (taskId, estimatedTime, next) {
 }
 
 TaskSchema.post('save', function (task) {
-
-    console.log('saved', task.title);
     task.updateParent();
 });
 
