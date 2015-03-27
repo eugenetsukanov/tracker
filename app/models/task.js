@@ -16,9 +16,17 @@ var TaskSchema = new Schema({
     estimatedTime: {type: Number, default: 0}
 });
 
+TaskSchema.set('toJSON', {getters: true, virtuals: true});
+
+
+TaskSchema.pre('init', function (next, task) {
+    this.calculateEstimatedTime(task, next);
+});
+
 TaskSchema.pre('save', function (next) {
     this.calculate(next);
 });
+
 
 TaskSchema.methods = {
 
@@ -32,7 +40,19 @@ TaskSchema.methods = {
         })
     },
 
-    recalculateParent: function () {
+    findVelocity: function (next) {
+        if (this.velocity) {
+            next(null, this.velocity);
+        } else {
+            this.getParent(function (err, task) {
+                if (err) return next(err);
+                if (!task) return next(null, 0);
+                task.findVelocity(next);
+            });
+        }
+    },
+
+    updateParent: function () {
 
         this.getParent(function (err, task) {
             if (err) return console.log(err);
@@ -90,7 +110,6 @@ TaskSchema.methods = {
 
             if (acceptedSpentTime && acceptedPoints) {
                 velocity = acceptedPoints / acceptedSpentTime;
-                this.estimatedTime = totalPoints/velocity;
             }
 
             this.spenttime = totalSpentTime;
@@ -118,6 +137,47 @@ TaskSchema.methods = {
         next();
     },
 
+    calculateComplexTaskEstimatedTime: function (task, next) {
+
+        if (task.points && task.velocity) {
+            task.estimatedTime = task.points / task.velocity;
+            // for each children and sum
+        }
+
+        next();
+    },
+    calculateSimpleTaskEstimatedTime: function (task, next) {
+
+        if (task.points && task.parentTaskId) {
+
+            Task.findById(task.parentTaskId, function (err, parent) {
+
+                if (err) return next(err);
+                if (!parent) return next();
+
+                parent.findVelocity(function (err, velocity) {
+                    if (err) return next(err);
+
+                    if (velocity) {
+                        task.estimatedTime = task.points / velocity;
+                    }
+
+                    next();
+                });
+            });
+        } else {
+            next();
+        }
+    },
+    calculateEstimatedTime: function (task, next) {
+        if (task.simple) {
+            this.calculateSimpleTaskEstimatedTime(task, next);
+        }
+        else {
+            this.calculateComplexTaskEstimatedTime(task, next);
+        }
+    },
+
     removeChildren: function () {
         this.getChildren(function (err, tasks) {
             tasks.forEach(function (task) {
@@ -127,11 +187,24 @@ TaskSchema.methods = {
     },
 
     getChildren: function (next) {
-        Task.find({ parentTaskId: this}, function (err, tasks) {
+        Task.find({parentTaskId: this}, function (err, tasks) {
             if (err) return next(err);
 
             next(null, tasks);
         })
+    },
+
+    getSiblings: function (next) {
+        if (this.parentTaskId) {
+            Task.find({parentTaskId: this.parentTaskId, _id: {$ne: this}}, function (err, tasks) {
+                if (err) return next(err);
+
+                next(null, tasks);
+            });
+        }
+        else {
+            next(null, []);
+        }
     },
 
     getParent: function (next) {
@@ -153,11 +226,13 @@ TaskSchema.methods = {
 };
 
 TaskSchema.post('save', function (task) {
-    task.recalculateParent();
+
+    console.log('saved', task.title);
+    task.updateParent();
 });
 
 TaskSchema.post('remove', function (task) {
-    task.recalculateParent();
+    task.updateParent();
 });
 
 TaskSchema.post('remove', function (task) {
