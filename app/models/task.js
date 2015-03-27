@@ -18,7 +18,6 @@ var TaskSchema = new Schema({
 
 TaskSchema.set('toJSON', {getters: true, virtuals: true});
 
-
 TaskSchema.pre('init', function (next, task) {
     this.calculateEstimatedTime(task, next);
 });
@@ -27,27 +26,6 @@ TaskSchema.pre('save', function (next) {
     this.calculate(next);
 });
 
-
-var updateParentEstimateTime = function (parentTaskId, diffTime) {
-
-    Task.update({_id: parentTaskId}, {$inc: {estimatedTime: diffTime}}, {}, function () {
-
-    });
-
-    function next() {
-
-    }
-
-    Task.findById(parentTaskId, function (err, parent) {
-        if (err) return next(err);
-        if (!parent) return next();
-
-        if (parent.parentTaskId) {
-            updateParentEstimateTime(parent.parentTaskId, diffTime);
-        }
-
-    });
-};
 TaskSchema.methods = {
 
     checkSimple: function (next) {
@@ -157,15 +135,6 @@ TaskSchema.methods = {
         next();
     },
 
-    calculateComplexTaskEstimatedTime: function (task, next) {
-
-        //if (task.points && task.velocity) {
-        //    task.estimatedTime = task.points / task.velocity;
-        //    // for each children and sum
-        //}
-
-        next();
-    },
     calculateSimpleTaskEstimatedTime: function (task, next) {
 
         if (task.points && task.parentTaskId) {
@@ -182,18 +151,19 @@ TaskSchema.methods = {
                         var prevEstimatedTime = task.estimatedTime || 0;
                         task.estimatedTime = task.points / velocity;
 
-                        // update this task estimatedTime
-                        Task.update({_id: task._id}, {$set: {estimatedTime: task.estimatedTime}}, {}, function () {
-                        });
-
-                        // update parents estimated time
                         var diffTime = task.estimatedTime - prevEstimatedTime;
 
-                        updateParentEstimateTime(task.parentTaskId, diffTime);
-
+                        if (diffTime) {
+                            Task.updateEstimateTime(task._id, task.estimatedTime, function () {
+                                Task.updateParentEstimateTime(task.parentTaskId, diffTime, next);
+                            });
+                        }
+                        else {
+                            next();
+                        }
+                    } else {
+                        next();
                     }
-
-                    next();
                 });
             });
         } else {
@@ -201,13 +171,10 @@ TaskSchema.methods = {
         }
     },
     calculateEstimatedTime: function (task, next) {
-        if (!task._id) return next();
-
-        if (task.simple) {
+        if (task._id && task.simple) {
             this.calculateSimpleTaskEstimatedTime(task, next);
-        }
-        else {
-            this.calculateComplexTaskEstimatedTime(task, next);
+        } else {
+            next()
         }
     },
 
@@ -258,6 +225,37 @@ TaskSchema.methods = {
 
 };
 
+TaskSchema.statics.updateParentEstimateTime = function (parentTaskId, diffTime, next) {
+    next = next || new Function;
+
+    if (!diffTime) return next();
+    if(!parentTaskId) return next();
+
+    Task.update({_id: parentTaskId}, {$inc: {estimatedTime: diffTime}}, {}, function () {
+
+        Task.findById(parentTaskId, function (err, parent) {
+            if (err) return next(err);
+            if (!parent) return next();
+
+            if (parent.parentTaskId) {
+                Task.updateParentEstimateTime(parent.parentTaskId, diffTime, next);
+            }
+            else {
+                next()
+            }
+
+        });
+
+    });
+
+
+}
+TaskSchema.statics.updateEstimateTime = function (taskId, estimatedTime, next) {
+    next = next || new Function;
+
+    Task.update({_id: taskId}, {$set: {estimatedTime: estimatedTime}}, {}, next);
+}
+
 TaskSchema.post('save', function (task) {
 
     console.log('saved', task.title);
@@ -270,6 +268,10 @@ TaskSchema.post('remove', function (task) {
 
 TaskSchema.post('remove', function (task) {
     task.removeChildren();
+});
+
+TaskSchema.post('remove', function (task) {
+    Task.updateParentEstimateTime(task.parentTaskId, -task.estimatedTime);
 });
 
 var Task = mongoose.model('Task', TaskSchema);
