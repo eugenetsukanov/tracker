@@ -226,14 +226,20 @@ TaskSchema.methods = {
         return this.status == 'accepted';
     },
     initEstimatedTime: function (next) {
-        if(this.simple) return next();
+        if (this.simple) return next();
 
         this.getChildren(function (err, tasks) {
             if (err) return next(err);
             if (tasks.length == 1) {
-                this.estimatedTime = tasks[0].estimatedTime;
+                Task.updateParentEstimateTime(this._id, -this.estimatedTime, function () {
+                    this.estimatedTime = tasks[0].estimatedTime;
+                    next();
+                }.bind(this));
             }
-            next();
+            else {
+                next();
+            }
+
         }.bind(this));
     }
 
