@@ -29,13 +29,10 @@ TaskSchema.pre('save', function (next) {
 TaskSchema.methods = {
 
     checkSimple: function (next) {
-
-        return Task.count({parentTaskId: this._id}, function (err, tasks) {
-            if (err) return console.log(err);
-
-            next(null, tasks == 0);
-
-        })
+        this.countChildren(function (err, cnt) {
+            if (err) return next(err);
+            next(null, cnt == 0)
+        });
     },
 
     findVelocity: function (next) {
@@ -220,6 +217,9 @@ TaskSchema.methods = {
     },
     isAccepted: function () {
         return this.status == 'accepted';
+    },
+    countChildren: function (next) {
+        Task.count({parentTaskId: this._id}, next);
     }
 
 
