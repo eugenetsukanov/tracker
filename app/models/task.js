@@ -28,6 +28,26 @@ TaskSchema.pre('save', function (next) {
 });
 
 
+var updateParentEstimateTime = function (parentTaskId, diffTime) {
+
+    Task.update({_id: parentTaskId}, {$inc: {estimatedTime: diffTime}}, {}, function () {
+
+    });
+
+    function next() {
+
+    }
+
+    Task.findById(parentTaskId, function (err, parent) {
+        if (err) return next(err);
+        if (!parent) return next();
+
+        if (parent.parentTaskId) {
+            updateParentEstimateTime(parent.parentTaskId, diffTime);
+        }
+
+    });
+};
 TaskSchema.methods = {
 
     checkSimple: function (next) {
@@ -139,10 +159,10 @@ TaskSchema.methods = {
 
     calculateComplexTaskEstimatedTime: function (task, next) {
 
-        if (task.points && task.velocity) {
-            task.estimatedTime = task.points / task.velocity;
-            // for each children and sum
-        }
+        //if (task.points && task.velocity) {
+        //    task.estimatedTime = task.points / task.velocity;
+        //    // for each children and sum
+        //}
 
         next();
     },
@@ -159,7 +179,18 @@ TaskSchema.methods = {
                     if (err) return next(err);
 
                     if (velocity) {
+                        var prevEstimatedTime = task.estimatedTime || 0;
                         task.estimatedTime = task.points / velocity;
+
+                        // update this task estimatedTime
+                        Task.update({_id: task._id}, {$set: {estimatedTime: task.estimatedTime}}, {}, function () {
+                        });
+
+                        // update parents estimated time
+                        var diffTime = task.estimatedTime - prevEstimatedTime;
+
+                        updateParentEstimateTime(task.parentTaskId, diffTime);
+
                     }
 
                     next();
@@ -170,6 +201,8 @@ TaskSchema.methods = {
         }
     },
     calculateEstimatedTime: function (task, next) {
+        if (!task._id) return next();
+
         if (task.simple) {
             this.calculateSimpleTaskEstimatedTime(task, next);
         }
