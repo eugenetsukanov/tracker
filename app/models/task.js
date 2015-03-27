@@ -69,13 +69,19 @@ TaskSchema.methods = {
 
         this.getParent(function (err, parent) {
             if (err) return next(err);
-            if(!parent) return next();
+            if (!parent) return next();
 
             if (parent) {
-                parent.updateEstimateTime(function (err) {
+                parent.save(function (err) {
                     if (err) return next(err);
-                    parent.save(next);
+
+                    parent.updateEstimateTime(function (err) {
+                        if (err) return next(err);
+                        parent.save(next);
+                    });
+
                 });
+
             }
 
         }.bind(this));
