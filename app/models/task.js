@@ -13,7 +13,8 @@ var TaskSchema = new Schema({
     parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
     date: {type: Date, default: Date.now},
     simple: {type: Boolean, default: true},
-    estimatedTime: {type: Number, default: 0}
+    estimatedTime: {type: Number, default: 0},
+    timeToDo: {type: Number, default: 0}
 });
 
 TaskSchema.set('toJSON', {getters: true, virtuals: true});
@@ -60,6 +61,7 @@ TaskSchema.methods = {
             });
 
             this.estimatedTime = estimatedTime;
+            this.timeToDo = this.estimatedTime  - this.spenttime;
 
             next();
         }.bind(this));
@@ -175,13 +177,17 @@ TaskSchema.methods = {
                 parent.findVelocity(function (err, velocity) {
                     if (err) return next(err);
 
+                    task.estimatedTime = task.estimatedTime || 0;
+                    task.timeToDo = task.timeToDo || 0;
+                    task.spenttime = task.spenttime || 0;
+
                     if (velocity) {
-                        var prevEstimatedTime = task.estimatedTime || 0;
                         task.estimatedTime = task.points / velocity;
-                        next();
-                    } else {
-                        next();
                     }
+
+                    task.timeToDo = task.estimatedTime  - task.spenttime;
+
+                    next();
                 });
             });
         } else {
