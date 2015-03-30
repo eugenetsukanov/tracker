@@ -27,6 +27,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     v.customize ["modifyvm", :id, "--memory", memory]
     v.customize ["modifyvm", :id, "--cpus", cpu]
     v.customize ["modifyvm", :id, "--vram", "8"]
+    v.customize ["setextradata", :id, "VBoxInternal2/SharedFoldersEnableSymlinksCreate/v-root", "1"]
   end
 
   #PROVISION
