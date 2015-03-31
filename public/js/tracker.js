@@ -1,5 +1,5 @@
 angular
-    .module('Tracker', ['ui.router', 'ngResource'])
+    .module('Tracker', ['ui.router', 'ngResource', 'ui.bootstrap'])
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
@@ -59,6 +59,7 @@ angular
         $scope.statuses = [
             "open", "in progress", "done", "accepted"
         ];
+
 
         $scope.priorities = [0,1,2,3,4,5,6,7,8,9,10];
 
