@@ -40,13 +40,17 @@ module.exports = function (app) {
         })
     });
 
-    app.post('/api/tasks', TaskForm, function (req, res) {
+    app.post('/api/tasks', TaskForm, function (req, res, next) {
 
 
         if (req.form.isValid) {
             var task = new Task(req.form);
-            task.save(function (err, task) {
-                res.json(task);
+            task.save(function (err) {
+                if (err) return next(err);
+                task.updateParent(function (err) {
+                    if (err) return next(err);
+                    res.json(task);
+                });
             });
         }
         else {
@@ -55,7 +59,7 @@ module.exports = function (app) {
 
     });
 
-    app.post('/api/tasks/:taskId/tasks', TaskForm, function (req, res) {
+    app.post('/api/tasks/:taskId/tasks', TaskForm, function (req, res, next) {
 
 
         if (req.form.isValid) {
@@ -64,7 +68,11 @@ module.exports = function (app) {
             task.parentTaskId = req.Task._id;
 
             task.save(function (err, task) {
-                res.json(task);
+                if (err) return next(err);
+                task.updateParent(function (err) {
+                    if (err) return next(err);
+                    res.json(task);
+                });
             });
         }
         else {
@@ -74,7 +82,6 @@ module.exports = function (app) {
     });
 
     app.param('taskId', function (req, res, next, taskId) {
-
         Task.findById(taskId, function (err, task) {
             req.Task = task;
             next();
@@ -82,11 +89,13 @@ module.exports = function (app) {
     });
 
     app.delete('/api/tasks/:taskId', function (req, res, next) {
-
-        req.Task.remove(function () {
-            res.sendStatus(200);
+        req.Task.remove(function (err) {
+            if (err) return next(err);
+            req.Task.updateParent(function (err) {
+                if (err) return next(err);
+                res.sendStatus(200);
+            });
         });
-
     });
 
     app.put('/api/tasks/:taskId', TaskForm, function (req, res) {
@@ -101,7 +110,11 @@ module.exports = function (app) {
             task.complexity = req.form.complexity;
 
             task.save(function (err, task) {
-                res.json(task);
+                if (err) return next(err);
+                task.updateParent(function (err) {
+                    if (err) return next(err);
+                    res.json(task);
+                });
             });
         }
         else {
