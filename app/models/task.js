@@ -4,14 +4,14 @@ var Schema = mongoose.Schema;
 var TaskSchema = new Schema({
     title: String,
     user: String,
-    priority: {type: Number, default: 0},
+    priority: {type: Number, default: 5, index: true},
     status: String,
     spenttime: {type: Number, default: 0},
     complexity: {type: Number, default: 0},
     points: {type: Number, default: 0},
     velocity: {type: Number, default: 0},
     parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
-    date: {type: Date, default: Date.now},
+    date: {type: Date, default: Date.now, index: true},
     simple: {type: Boolean, default: true},
     estimatedTime: {type: Number, default: 0},
     timeToDo: {type: Number, default: 0}

@@ -16,7 +16,7 @@ module.exports = function (app) {
     var _ = require('lodash');
 
     app.get('/api/tasks', function (req, res) {
-        Task.find({parentTaskId: null}, function (err, tasks) {
+        Task.find({parentTaskId: null}).sort('-priority date').exec(function (err, tasks) {
             res.json(tasks);
         })
     });
@@ -27,7 +27,7 @@ module.exports = function (app) {
 
     app.get('/api/tasks/:taskId/tasks', function (req, res) {
 
-        Task.find({parentTaskId: req.Task._id}, function (err, tasks) {
+        Task.find({parentTaskId: req.Task._id}).sort('-priority date').exec(function (err, tasks) {
             if (err) return next(err);
 
             if (!tasks) {
