@@ -1,0 +1,11 @@
+{
+  "app": {
+    "port": 3000
+  },
+  "mongo": {
+    "uri": "mongodb://localhost/tracker_dev"
+  },
+  "fixtures": {
+    "load": true
+  }
+}

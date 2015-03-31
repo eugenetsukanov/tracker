@@ -6,6 +6,7 @@
   "scripts": {
     "setup": "npm install && bower install --config.interactive=false",
     "start.dev": "nodemon app.js -i node_modules/ -i public/",
+    "start.prod": "NODE_ENV=prod pm2 restart app.js",
     "start": "npm run setup && npm run start.dev",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,6 +22,7 @@
     "mongoose": "^3.8.25",
     "passport": "^0.2.1",
     "passport-local": "^1.0.0",
+    "plus.application": "^1.1.0",
     "pow-mongodb-fixtures": "^0.10.0"
   }
 }

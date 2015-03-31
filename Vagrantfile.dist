@@ -53,6 +53,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   ##bower
   config.vm.provision "shell", inline: "which bower || sudo npm install -g bower"
 
+  ##pm2
+  config.vm.provision "shell", inline: "which pm2 || sudo npm install -g pm2"
+
   ##express-livereload
   config.vm.provision "shell", inline: "npm list -g | grep express-livereload || sudo npm install -g express-livereload"
 
