@@ -54,16 +54,8 @@ angular
     .factory('Task', function ($resource) {
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
-    .controller('TaskCtrl', function ($scope, Task, $stateParams) {
-
-        $scope.statuses = [
-            "open", "in progress", "done", "accepted"
-        ];
-
-
-        $scope.priorities = [0,1,2,3,4,5,6,7,8,9,10];
-
-        $scope.complexities = [
+    .factory('taskComplexity', function () {
+        return complexities = [
             {
                 name: '0',
                 value: 0
@@ -111,8 +103,19 @@ angular
             {
                 name: '5+',
                 value: 11
-            },
+            }
+        ]
+    })
+    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity) {
+
+        $scope.statuses = [
+            "open", "in progress", "done", "accepted"
         ];
+
+
+        $scope.priorities = [0,1,2,3,4,5,6,7,8,9,10];
+
+        $scope.complexities = taskComplexity;
 
         $scope.complexityHuman = function (complexity) {
          var result = '';
