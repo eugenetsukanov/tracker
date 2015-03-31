@@ -1,3 +1,14 @@
 .mg {
     margin: 10px;
 }
+.detail-line {
+    overflow: hidden;
+    margin: 0px;
+    padding: 0px;
+    padding-bottom: 12px;
+}
+.detail-line li {
+    list-style: none;
+    display: inline;
+    padding-right: 24px;
+}

@@ -1,14 +1,16 @@
 <div ng-if="task">
     <h2>{{task.title}}</h2>
-    <br/>
-    Spent Time: {{task.spenttime}}<br/>
-    Status: {{task.status}}<br/>
-    Priority: {{task.priority}}<br/>
-    Complexity: {{task.complexity | humanComplexity}}<br/>
-    Points: {{task.points}}<br/>
-    Velocity: {{task.velocity}}<br/>
-    Estimated Time: {{task.estimatedTime}}<br/>
-    Time TODO: {{task.timeToDo}}<br/>
+    <ul class="detail-line">
+        <li>Status: {{task.status}}</li>
+        <li>Priority: {{task.priority}}</li>
+        <li>Spent Time: {{task.spenttime}}</li>
+        <li>Estimated Time: {{task.estimatedTime}}</li>
+        <li>Time TODO: {{task.timeToDo}}</li>
+        <li>Complexity: {{task.complexity | humanComplexity}}</li>
+        <li>Points: {{task.points}}</li>
+        <li>Velocity: {{task.velocity}}</li>
+    </ul>
+
 </div>
 
 <form ng-submit="save()">
@@ -17,7 +19,7 @@
     </div>
 
     <div class="form-group" ng-show="newTask.title">
-        <label for="spentTime" class="col-md-2 control-label">Spent Time</label>
+        <p>Spent Time</p>
         <input ng-model="newTask.spenttime" ng-if="newTask.simple" type="text" class="form-control" id="spentTime"
                placeholder="Spent Time in hours"/>
     </div>
