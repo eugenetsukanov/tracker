@@ -106,6 +106,19 @@ angular
             }
         ]
     })
+    .filter('humanComplexity', function (taskComplexity) {
+
+        return function (complexity) {
+            var result = '';
+            taskComplexity.forEach(function (item) {
+                if (item.value == complexity) {
+                    result = item.name;
+                }
+            });
+            return result;
+        };
+
+    })
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity) {
 
         $scope.statuses = [
@@ -116,16 +129,6 @@ angular
         $scope.priorities = [0,1,2,3,4,5,6,7,8,9,10];
 
         $scope.complexities = taskComplexity;
-
-        $scope.complexityHuman = function (complexity) {
-         var result = '';
-          $scope.complexities.forEach(function (item) {
-              if (item.value == complexity) {
-                  result = item.name;
-              }
-          })
-            return result;
-        };
 
         var init = function () {
 

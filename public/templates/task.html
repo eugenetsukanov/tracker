@@ -4,7 +4,7 @@
     Spent Time: {{task.spenttime}}<br/>
     Status: {{task.status}}<br/>
     Priority: {{task.priority}}<br/>
-    Complexity: {{complexityHuman(task.complexity)}}<br/>
+    Complexity: {{task.complexity | humanComplexity}}<br/>
     Points: {{task.points}}<br/>
     Velocity: {{task.velocity}}<br/>
     Estimated Time: {{task.estimatedTime}}<br/>
