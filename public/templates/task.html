@@ -1,5 +1,9 @@
 <div ng-if="task">
     <h2>{{task.title}}</h2>
+    <h4>
+        <a ng-if="parentTask" ui-sref="app.task({taskId: parentTask._id})"> {{parentTask.title}}</a>
+    </h4>
+
     <ul class="detail-line">
         <li>Status: {{task.status}}</li>
         <li>Priority: {{task.priority}}</li>

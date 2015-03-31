@@ -135,7 +135,12 @@ angular
             if ($stateParams.taskId) {
                 Task.query({taskId: $stateParams.taskId, nested: 'tasks'}, function (tasks) {
                     $scope.tasks = tasks;
-                    $scope.task = Task.get({taskId: $stateParams.taskId});
+                    $scope.task = Task.get({taskId: $stateParams.taskId}, function (task) {
+                        if (task.parentTaskId) {
+                            $scope.parentTask = Task.get({taskId: task.parentTaskId});
+                        }
+                    });
+                    
                 });
             } else {
                 $scope.tasks = Task.query();
