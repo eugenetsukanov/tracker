@@ -17,60 +17,10 @@
 
 </div>
 
-<form ng-submit="save()">
-    <div class="form-group">
-        <input ng-model="newTask.title" type="text" class="form-control" placeholder="Task.." id="title"/>
-    </div>
+<div ng-include="'templates/form.html'"></div>
 
-    <div class="form-group" ng-show="newTask.title">
-        <p>Spent Time</p>
-        <input ng-model="newTask.spenttime" ng-if="newTask.simple" type="text" class="form-control" id="spentTime"
-               placeholder="Spent Time in hours"/>
-    </div>
 
-    <div class="form-group" ng-show="newTask.title"> <!-- Status-->
-        <div class="btn-group">
-            <p>Status</p>
-            <label ng-repeat="status in statuses" class="btn btn-default btn-sm" ng-model="newTask.status"
-                   btn-radio="status">{{status}}</label>
-        </div>
-    </div>
+<select ng-model="view" ng-options="view.name for view in views">
+</select>
 
-    <div class="form-group" ng-show="newTask.title"> <!-- Priority-->
-        <div class="btn-group">
-            <p>Priority</p>
-            <label ng-repeat="priority in priorities" class="btn btn-default btn-sm" ng-model="newTask.priority"
-                   btn-radio="priority">{{priority}}</label>
-        </div>
-    </div>
-
-    <div class="form-group" ng-show="newTask.title"> <!--Complexity-->
-        <div class="btn-group">
-            <p>Complexity</p>
-            <label ng-repeat="complexity in complexities" class="btn btn-default btn-sm" ng-model="newTask.complexity"
-                   btn-radio="complexity.value">{{complexity.name}}</label>
-        </div>
-    </div>
-
-    <div class="form-group" ng-show="newTask.title">
-        <button type="submit" class="btn btn-default">Save</button>
-    </div>
-</form>
-
-<div class="panel panel-default" ng-repeat="task in tasks">
-    <div class="panel-heading">
-        <h3 class="panel-title">{{task.title}}</h3>
-    </div>
-    <div class="panel-body">
-        <div><span>Velocity: {{task.velocity}}</span>
-            <span>Points: {{task.points}}</span>
-            <span>Spent Time: {{task.spenttime}}</span>
-            <span>Status: {{task.status}}</span>
-            <span>Estimated time: {{task.estimatedTime}}</span>
-            <span>Time TODO: {{task.timeToDo}}</span>
-        </div>
-        <button class="btn btn-default" ng-click="delete(task)">Delete</button>
-        <button class="btn btn-default" ng-click="edit(task)">Edit</button>
-        <a class="btn btn-default" ui-sref="app.task({taskId: task._id})">Details</a>
-    </div>
-</div>
+<div ng-include="'templates/task-view-'+view.name+'.html'"></div>

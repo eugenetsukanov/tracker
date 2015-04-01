@@ -121,6 +121,12 @@ angular
     })
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity) {
 
+        $scope.views =
+            [ { title: 'Default', name: 'default'},
+                { title: 'List', name: 'list'}];
+
+        $scope.view = $scope.views[0];
+
         $scope.statuses = [
             "open", "in progress", "done", "accepted"
         ];

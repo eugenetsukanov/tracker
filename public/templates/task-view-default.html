@@ -1,0 +1,19 @@
+<div class="panel panel-default" ng-repeat="task in tasks">
+    <div class="panel-heading">
+        <h3 class="panel-title">{{task.title}}</h3>
+    </div>
+
+    <div class="panel-body">
+        <div><span>Velocity: {{task.velocity}}</span>
+            <span>Points: {{task.points}}</span>
+            <span>Spent Time: {{task.spenttime}}</span>
+            <span>Status: {{task.status}}</span>
+            <span>Estimated time: {{task.estimatedTime}}</span>
+            <span>Time TODO: {{task.timeToDo}}</span>
+        </div>
+        <button class="btn btn-default" ng-click="delete(task)">Delete</button>
+        <button class="btn btn-default" ng-click="edit(task)">Edit</button>
+        <a class="btn btn-default" ui-sref="app.task({taskId: task._id})">Details</a>
+    </div>
+
+</div>
