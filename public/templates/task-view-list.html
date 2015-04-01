@@ -1,6 +1,8 @@
 <div class="panel panel-default" ng-repeat="task in tasks">
     <div class="panel-heading">
-        <h3 class="panel-title">{{task.title}}</h3>
+        <h3 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a>
+            <span  class="pull-right">{{task.spenttime}}/{{task.estimatedTime}} </span> <!-- SpentTime/EstimatedTime-->
+        </h3>
     </div>
 
 </div>
