@@ -1,4 +1,4 @@
-<div class="panel panel-default" ng-repeat="task in tasks">
+<div class="panel panel-default" ng-class="{'panel-success': task.status == 'accepted', 'panel-warning': task.status == 'in progress'}" ng-repeat="task in tasks">
     <div class="panel-heading">
         <h3 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a>
             <span  class="pull-right">{{task.spenttime}}/{{task.estimatedTime| round}} </span> <!-- SpentTime/EstimatedTime-->
