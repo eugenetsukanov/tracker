@@ -4,12 +4,15 @@
     </div>
 
     <div class="panel-body">
-        <div><span>Velocity: {{task.velocity}}</span>
-            <span>Points: {{task.points}}</span>
-            <span>Spent Time: {{task.spenttime}}</span>
+        <div>
             <span>Status: {{task.status}}</span>
+            <span>Priority: {{task.priority}}</span>
+            <span>Spent Time: {{task.spenttime}}</span>
             <span>Estimated time: {{task.estimatedTime}}</span>
             <span>Time TODO: {{task.timeToDo}}</span>
+            <span>Complexity: {{task.complexity | humanComplexity}}</span>
+            <span>Points: {{task.points}}</span>
+            <span>Velocity: {{task.velocity}}</span>
         </div>
         <button class="btn btn-default" ng-click="delete(task)">Delete</button>
         <button class="btn btn-default" ng-click="edit(task)">Edit</button>

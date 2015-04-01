@@ -19,8 +19,8 @@
 
 <div ng-include="'templates/form.html'"></div>
 
-
-<select ng-model="view" ng-options="view.name for view in views">
-</select>
+<div class="btn-group" role="group">
+    <button class="btn btn-default btn-sm" ng-click="loadView(view)" ng-repeat="view in views">{{view.title}}</button>
+</div>
 
 <div ng-include="'templates/task-view-'+view.name+'.html'"></div>
