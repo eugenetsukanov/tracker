@@ -128,11 +128,26 @@ angular
         };
 
     })
+    .filter('byStatus', function () {
+
+        return function (tasks, status) {
+            var result = [];
+            tasks.forEach(function (task) {
+                if (task.status == status) {
+                    result.push(task);
+                }
+            });
+            return result;
+        };
+
+    })
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity) {
 
         $scope.views =
             [ { title: 'Default', name: 'default'},
-                { title: 'List', name: 'list'}];
+                { title: 'List', name: 'list'},
+                { title: 'Board', name: 'board'}
+            ];
 
         $scope.view = $scope.views[0];
 
