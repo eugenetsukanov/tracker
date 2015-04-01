@@ -12,3 +12,7 @@
     display: inline;
     padding-right: 24px;
 }
+
+.overflow-hidden {
+    overflow: hidden;
+}

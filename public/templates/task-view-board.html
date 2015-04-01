@@ -6,7 +6,7 @@
              ng-repeat="task in tasks | byStatus : ''">
 
             <div class="panel-heading">
-                <h3 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
+                <h3 class="panel-title overflow-hidden"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
 
             </div>
 
@@ -33,7 +33,7 @@
              ng-repeat="task in tasks | byStatus: 'in progress'">
 
             <div class="panel-heading">
-                <h3 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
+                <h3 class="panel-title overflow-hidden"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
             </div>
 
             <div class="panel-body">
@@ -59,7 +59,7 @@
              ng-repeat="task in tasks | byStatus: 'accepted'">
 
             <div class="panel-heading">
-                <h3 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
+                <h3 class="panel-title overflow-hidden"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
             </div>
 
             <div class="panel-body">
