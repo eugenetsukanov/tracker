@@ -8,11 +8,11 @@
         <li>Status: {{task.status}}</li>
         <li>Priority: {{task.priority}}</li>
         <li>Spent Time: {{task.spenttime}}</li>
-        <li>Estimated Time: {{task.estimatedTime}}</li>
-        <li>Time TODO: {{task.timeToDo}}</li>
+        <li>Estimated Time: {{task.estimatedTime| round}}</li>
+        <li>Time TODO: {{task.timeToDo| round}}</li>
         <li>Complexity: {{task.complexity | humanComplexity}}</li>
         <li>Points: {{task.points}}</li>
-        <li>Velocity: {{task.velocity}}</li>
+        <li>Velocity: {{task.velocity| round}}</li>
     </ul>
 
 </div>

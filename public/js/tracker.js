@@ -119,6 +119,15 @@ angular
         };
 
     })
+    .filter('round', function ($filter) { // filter for rounding numbers
+        return function (number) {
+
+            var result = $filter('currency')(number, '');
+
+            return result;
+        };
+
+    })
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity) {
 
         $scope.views =
@@ -127,9 +136,7 @@ angular
 
         $scope.view = $scope.views[0];
 
-        $scope.statuses = [
-            "open", "in progress", "done", "accepted"
-        ];
+        $scope.statuses = ["in progress", "accepted"];
         $scope.loadView = function (view) {
             $scope.view = view;
         };
@@ -149,7 +156,7 @@ angular
                             $scope.parentTask = Task.get({taskId: task.parentTaskId});
                         }
                     });
-                    
+
                 });
             } else {
                 $scope.tasks = Task.query();
