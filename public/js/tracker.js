@@ -211,6 +211,10 @@ angular
                 init()
             });
         };
+        
+        $scope.close = function () {
+            init();
+        };
 
     })
 
