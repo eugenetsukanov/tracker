@@ -18,8 +18,7 @@
             <span>Velocity: {{task.velocity| round}}</span>
         </div>
         <button class="btn btn-default" ng-click="delete(task)">Delete</button>
-        <button class="btn btn-default" ng-click="edit(task)">Edit</button>
-        <a class="btn btn-default" ui-sref="app.task({taskId: task._id})">Details</a>
+        <button class="btn btn-default " ng-click="edit(task)"><i class="fa fa-pencil-square-o"></i></button>
     </div>
 
 </div>
