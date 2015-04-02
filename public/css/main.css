@@ -16,3 +16,12 @@
 .overflow-hidden {
     overflow: hidden;
 }
+
+.task-tree {
+    margin: 2em 0;
+}
+
+.task-tree task-tree {
+    margin: 1em 0 0 1em;
+    display: block;
+}

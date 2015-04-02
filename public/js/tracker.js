@@ -143,11 +143,12 @@ angular
     })
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity) {
 
-        $scope.views =
-            [ { title: 'Default', name: 'default'},
-                { title: 'List', name: 'list'},
-                { title: 'Board', name: 'board'}
-            ];
+        $scope.views = [
+            { title: 'Default', name: 'default'},
+            { title: 'List', name: 'list'},
+            { title: 'Board', name: 'board'},
+            { title: 'Tree', name: 'tree'}
+        ];
 
         $scope.view = $scope.views[0];
 
