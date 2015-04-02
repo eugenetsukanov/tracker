@@ -1,0 +1,24 @@
+
+<ul class="detail-line">
+
+    <li ng-if="task.status" tooltip="Status">
+            <span class="label"ng-class="{'label-success' : task.status == 'accepted', 'label-warning' : task.status == 'in progress'}">
+            {{task.status}}
+            </span>
+    </li>
+
+    <li ng-if="task.priority" tooltip="Priority"><i class="fa fa-star-half-o"></i>{{task.priority}}</li>
+
+    <li>
+        <i class="fa fa-clock-o" tooltip="Time"></i>
+        <span tooltip="Spent">{{task.spenttime}}</span>
+        / <span tooltip="Estimated">{{task.estimatedTime| round}}</span>
+        / <span tooltip="TODO">{{task.timeToDo| round}}</span>
+    </li>
+
+    <li tooltip="Complexity / Points">
+        <i class="fa fa-puzzle-piece"></i>
+        {{task.complexity | humanComplexity}} / {{task.points}}p
+    </li>
+    <li tooltip="Velocity"><i class="fa fa-line-chart"></i>{{task.velocity| round}}</li>
+</ul>

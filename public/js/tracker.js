@@ -211,7 +211,7 @@ angular
                 init()
             });
         };
-        
+
         $scope.close = function () {
             init();
         };
@@ -259,6 +259,15 @@ angular
 
         }
 
+    })
+    .directive('taskMetrics', function () {
+       return {
+           restrict: 'A',
+           templateUrl: 'templates/task/metrics.html',
+           scope: {
+                task: "=task"
+           }
+       }
     })
 
 
