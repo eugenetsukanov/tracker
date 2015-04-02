@@ -145,7 +145,6 @@ angular
 
         $scope.views = [
             {title: 'Default', name: 'default'},
-            {title: 'List', name: 'list'},
             {title: 'Board', name: 'board'},
             {title: 'Tree', name: 'tree'}
         ];
