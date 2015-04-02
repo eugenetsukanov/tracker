@@ -1,39 +1,71 @@
 <form ng-submit="save()">
+
+
+    <!--<li ng-if="task.status" tooltip="Status">-->
+    <!--<span class="label"-->
+    <!--ng-class="{'label-success' : task.status == 'accepted', 'label-warning' : task.status == 'in progress'}">-->
+    <!--{{task.status}}-->
+    <!--</span>-->
+    <!--</li>-->
+
+    <!--<li ng-if="task.priority" tooltip="Priority"><i class="fa fa-star-half-o"></i>{{task.priority}}</li>-->
+
+    <!--<li>-->
+    <!--<i class="fa fa-clock-o" tooltip="Time"></i>-->
+    <!--<span tooltip="Spent">{{task.spenttime}}</span>-->
+    <!--/ <span tooltip="Estimated">{{task.estimatedTime| round}}</span>-->
+    <!--/ <span tooltip="TODO">{{task.timeToDo| round}}</span>-->
+    <!--</li>-->
+
+    <!--<li tooltip="Complexity / Points">-->
+    <!--<i class="fa fa-puzzle-piece"></i>-->
+    <!--{{task.complexity | humanComplexity}} / {{task.points}}p-->
+    <!--</li>-->
+    <!--<li tooltip="Velocity"><i class="fa fa-line-chart"></i>{{task.velocity| round}}</li>-->
+    <!--</ul>-->
+
+
     <div class="form-group">
         <input ng-model="newTask.title" type="text" class="form-control" placeholder="Task.." id="title"/>
     </div>
 
-    <div class="form-group" ng-show="newTask.title">
-        <p>Spent Time</p>
-        <input ng-model="newTask.spenttime" ng-if="newTask.simple" type="text" class="form-control" id="spentTime"
-               placeholder="Spent Time in hours"/>
+    <div class="form-group clearfix" ng-show="newTask.title" ng-if="newTask.simple">
+        <i class="fa fa-clock-o fa-2x  vcenter pull-left"></i>
+
+        <!--<div class="col-md-11 pull-right">-->
+            <input ng-model="newTask.spenttime" type="text" class="form-control w-sm pull-left" id="spentTime"
+                   placeholder="Spent Time in hours"/>
+        <!--</div>-->
     </div>
 
     <div class="form-group" ng-show="newTask.title"> <!-- Status-->
+        <i class="fa fa-check-square-o fa-2x vcenter"></i>
+
         <div class="btn-group">
-            <p>Status</p>
             <label ng-repeat="status in statuses" class="btn btn-default btn-sm" ng-model="newTask.status"
                    btn-radio="status">{{status}}</label>
         </div>
     </div>
 
-    <div class="form-group" ng-show="newTask.title"> <!-- Priority-->
-        <div class="btn-group">
-            <p>Priority</p>
-            <label ng-repeat="priority in priorities" class="btn btn-default btn-sm" ng-model="newTask.priority"
-                   btn-radio="priority">{{priority}}</label>
-        </div>
-    </div>
-
     <div class="form-group" ng-show="newTask.title"> <!--Complexity-->
+        <i class="fa fa-puzzle-piece fa-2x vcenter"></i>
         <div class="btn-group">
-            <p>Complexity</p>
             <label ng-repeat="complexity in complexities" class="btn btn-default btn-sm" ng-model="newTask.complexity"
                    btn-radio="complexity.value">{{complexity.name}}</label>
         </div>
     </div>
 
+    <div class="form-group" ng-show="newTask.title"> <!-- Priority-->
+        <i class="fa fa-star-half-o fa-2x vcenter"></i>
+        <div class="btn-group">
+            <label ng-repeat="priority in priorities" class="btn btn-default btn-sm" ng-model="newTask.priority"
+                   btn-radio="priority">{{priority}}</label>
+        </div>
+    </div>
+
     <div class="form-group" ng-show="newTask.title">
-        <button type="submit" class="btn btn-success">Save</button>
+        <button class="btn btn-success">Save</button>
+        <a class="btn btn-default">Close</a>
+        <a ng-if="newTask._id" class="btn btn-danger" ng-click="delete(newTask)">Delete</a>
     </div>
 </form>

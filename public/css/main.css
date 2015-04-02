@@ -16,7 +16,16 @@
 .overflow-hidden {
     overflow: hidden;
 }
+.vcenter {
+    display: inline-block;
+    vertical-align: middle;
+    float: none;
+}
 
+.w-sm
+{
+    width: 20%;
+}
 .task-tree {
     margin: 2em 0;
 }
