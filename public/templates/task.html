@@ -20,7 +20,12 @@
 <div ng-include="'templates/form.html'"></div>
 
 <div class="btn-group mg" role="group">
-    <button class="btn btn-default btn-sm" ng-click="loadView(view)" ng-repeat="view in views">{{view.title}}</button>
+    <button class="btn btn-default btn-sm"
+            ng-click="loadView(aView)"
+            ng-repeat="aView in views"
+            ng-class="{'active': aView == view }">
+        {{aView.title}}
+    </button>
 </div>
 
 <div ng-include="'templates/task-view-'+view.name+'.html'"></div>
