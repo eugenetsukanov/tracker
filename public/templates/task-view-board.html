@@ -2,80 +2,21 @@
 
     <div class="col-md-4">
         <h3>New</h3>
-        <div class="panel panel-default"
-             ng-repeat="task in tasks | byStatus : ''">
 
-            <div class="panel-heading">
-                <h3 class="panel-title overflow-hidden"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
+        <div ng-repeat="task in tasks | byStatus : ''" task-panel task="task" task-on-edit="edit"></div>
 
-            </div>
-
-            <div class="panel-body">
-                <div>
-                    <span>Status: {{task.status}}</span>
-                    <span>Priority: {{task.priority}}</span>
-                    <span>Spent Time: {{task.spenttime}}</span>
-                    <span>Estimated time: {{task.estimatedTime| round}}</span>
-                    <span>Time TODO: {{task.timeToDo| round}}</span>
-                    <span>Complexity: {{task.complexity | humanComplexity}}</span>
-                    <span>Points: {{task.points}}</span>
-                    <span>Velocity: {{task.velocity| round}}</span>
-                </div>
-            </div>
-
-        </div>
     </div>
 
     <div class="col-md-4">
         <h3>In progress</h3>
-        <div class="panel panel-default"
-             ng-class="{'panel-warning': task.status == 'in progress'}"
-             ng-repeat="task in tasks | byStatus: 'in progress'">
 
-            <div class="panel-heading">
-                <h3 class="panel-title overflow-hidden"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
-            </div>
-
-            <div class="panel-body">
-                <div>
-                    <span>Status: {{task.status}}</span>
-                    <span>Priority: {{task.priority}}</span>
-                    <span>Spent Time: {{task.spenttime}}</span>
-                    <span>Estimated time: {{task.estimatedTime| round}}</span>
-                    <span>Time TODO: {{task.timeToDo| round}}</span>
-                    <span>Complexity: {{task.complexity | humanComplexity}}</span>
-                    <span>Points: {{task.points}}</span>
-                    <span>Velocity: {{task.velocity| round}}</span>
-                </div>
-            </div>
-
-        </div>
+        <div ng-repeat="task in tasks | byStatus: 'in progress'" task-panel task="task" task-on-edit="edit"></div>
     </div>
 
     <div class="col-md-4">
         <h3>Accepted</h3>
-        <div class="panel panel-default"
-             ng-class="{'panel-success': task.status == 'accepted'}"
-             ng-repeat="task in tasks | byStatus: 'accepted'">
 
-            <div class="panel-heading">
-                <h3 class="panel-title overflow-hidden"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
-            </div>
-
-            <div class="panel-body">
-                <div>
-                    <span>Status: {{task.status}}</span>
-                    <span>Priority: {{task.priority}}</span>
-                    <span>Spent Time: {{task.spenttime}}</span>
-                    <span>Estimated time: {{task.estimatedTime| round}}</span>
-                    <span>Time TODO: {{task.timeToDo| round}}</span>
-                    <span>Complexity: {{task.complexity | humanComplexity}}</span>
-                    <span>Points: {{task.points}}</span>
-                    <span>Velocity: {{task.velocity| round}}</span>
-                </div>
-            </div>
-
-        </div>
+        <div ng-repeat="task in tasks | byStatus: 'accepted'" task-panel task="task" task-on-edit="edit"></div>
     </div>
 
 </div>
