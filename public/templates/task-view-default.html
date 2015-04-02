@@ -3,7 +3,9 @@
      ng-repeat="task in tasks">
 
     <div class="panel-heading">
-        <h3 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a></h3>
+        <h4 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a>
+            <span class="label label-info vcenter pull-right" ng-if="!task.simple">complex</span>
+        </h4>
     </div>
 
     <div class="panel-body">
