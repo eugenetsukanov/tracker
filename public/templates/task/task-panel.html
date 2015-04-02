@@ -1,0 +1,17 @@
+<div class="panel panel-default"
+     ng-class="{'panel-success': task.status == 'accepted', 'panel-warning': task.status == 'in progress'}">
+
+    <div class="panel-heading">
+        <h4 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a>
+            <span ng-if="onEdit" class="fa fa-pencil-square-o vcenter pull-right" ng-click="edit(task)"></span>
+            <span class="label label-info vcenter pull-right" ng-if="!task.simple">complex</span>
+        </h4>
+    </div>
+
+    <div class="panel-body">
+
+        <div ng-click="edit(task)" task-metrics task="task"></div>
+
+    </div>
+
+</div>

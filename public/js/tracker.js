@@ -270,6 +270,24 @@ angular
        }
     })
 
+    .controller('taskPanelCtrl', function ($scope) {
+        $scope.edit = function (task) {
+            if($scope.onEdit) {
+                $scope.onEdit(task);
+            }
+        }
+    })
+    .directive('taskPanel', function () {
+        return {
+            restrict: 'A',
+            templateUrl: 'templates/task/task-panel.html',
+            controller: 'taskPanelCtrl',
+            scope: {
+                task: "=task",
+                onEdit: "=taskOnEdit"
+            }
+        }
+    })
 
 ;
 

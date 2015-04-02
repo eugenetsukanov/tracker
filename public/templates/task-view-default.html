@@ -1,17 +1,1 @@
-<div class="panel panel-default"
-     ng-class="{'panel-success': task.status == 'accepted', 'panel-warning': task.status == 'in progress'}"
-     ng-repeat="task in tasks">
-
-    <div class="panel-heading">
-        <h4 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a>
-            <span class="label label-info vcenter pull-right" ng-if="!task.simple">complex</span>
-        </h4>
-    </div>
-
-    <div class="panel-body">
-
-        <div ng-click="edit(task)" task-metrics task="task"></div>
-        <button class="btn btn-default " ng-click="edit(task)"><i class="fa fa-pencil-square-o"></i></button>
-    </div>
-
-</div>
+<div ng-repeat="task in tasks" task-panel task="task" task-on-edit="edit"></div>
