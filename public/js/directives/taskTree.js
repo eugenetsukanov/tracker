@@ -6,7 +6,8 @@ angular
         return {
             restrict: 'E',
             scope: {
-                task: '='
+                task: '=',
+                edit: '=taskOnEdit'
             },
             templateUrl: 'templates/task-tree.html',
             link: function (scope, element) {
@@ -19,8 +20,9 @@ angular
 
                             var myScope = scope.$root.$new();
                             myScope.task = task;
+                            myScope.edit = scope.edit || new Function();
 
-                            var $el = $compile("<task-tree task='task'></task-tree>")(myScope);
+                            var $el = $compile("<task-tree task='task' task-on-edit='edit'></task-tree>")(myScope);
                             element.append($el);
 
                         });

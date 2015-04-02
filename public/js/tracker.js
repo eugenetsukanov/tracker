@@ -144,10 +144,10 @@ angular
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity) {
 
         $scope.views = [
-            { title: 'Default', name: 'default'},
-            { title: 'List', name: 'list'},
-            { title: 'Board', name: 'board'},
-            { title: 'Tree', name: 'tree'}
+            {title: 'Default', name: 'default'},
+            {title: 'List', name: 'list'},
+            {title: 'Board', name: 'board'},
+            {title: 'Tree', name: 'tree'}
         ];
 
         $scope.view = $scope.views[0];
@@ -157,7 +157,7 @@ angular
             $scope.view = view;
         };
 
-        $scope.priorities = [0,1,2,3,4,5,6,7,8,9,10];
+        $scope.priorities = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
         $scope.complexities = taskComplexity;
 
@@ -261,19 +261,11 @@ angular
 
     })
     .directive('taskMetrics', function () {
-       return {
-           restrict: 'A',
-           templateUrl: 'templates/task/metrics.html',
-           scope: {
+        return {
+            restrict: 'A',
+            templateUrl: 'templates/task/metrics.html',
+            scope: {
                 task: "=task"
-           }
-       }
-    })
-
-    .controller('taskPanelCtrl', function ($scope) {
-        $scope.edit = function (task) {
-            if($scope.onEdit) {
-                $scope.onEdit(task);
             }
         }
     })
@@ -281,14 +273,19 @@ angular
         return {
             restrict: 'A',
             templateUrl: 'templates/task/task-panel.html',
-            controller: 'taskPanelCtrl',
+            controller: function ($scope) {
+                $scope.edit = function (task) {
+                    if ($scope.onEdit) {
+                        $scope.onEdit(task);
+                    }
+                }
+            },
             scope: {
                 task: "=task",
                 onEdit: "=taskOnEdit"
             }
         }
     })
-
 
 
 ;
