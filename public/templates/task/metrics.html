@@ -18,7 +18,7 @@
 
     <li tooltip="Complexity / Points">
         <i class="fa fa-puzzle-piece"></i>
-        {{task.complexity | humanComplexity}} / {{task.points}}p
+        <span ng-if="task.simple">{{task.complexity | humanComplexity}} / </span><span>{{task.points}}p</span>
     </li>
     <li tooltip="Velocity"><i class="fa fa-line-chart"></i>{{task.velocity| round}}</li>
 </ul>
