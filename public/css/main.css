@@ -26,6 +26,11 @@
 {
     width: 20%;
 }
+.fs-sm
+{
+    font-size: 0.9em;
+}
+
 .task-tree {
     margin: 2em 0;
 }
