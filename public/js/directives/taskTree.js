@@ -20,7 +20,7 @@ angular
 
                             var myScope = scope.$root.$new();
                             myScope.task = task;
-                            myScope.edit = scope.edit || new Function();
+                            myScope.edit = scope.edit || null;
 
                             var $el = $compile("<task-tree task='task' task-on-edit='edit'></task-tree>")(myScope);
                             element.append($el);
