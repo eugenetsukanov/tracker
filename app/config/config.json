@@ -2,6 +2,9 @@
   "app": {
     "port": 4000
   },
+  "session": {
+    "secret": "tracker$app$$secrettttt"
+  },
   "mongo": {
     "uri": "mongodb://localhost/tracker"
   },

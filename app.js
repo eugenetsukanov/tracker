@@ -16,7 +16,16 @@ mongoose.connect(app.config.get('mongo:uri'));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
-app.use(session({secret: 'tracker$app', resave: true, saveUninitialized: true}));
+
+var MongoSessionStore = require('connect-mongo')(session);
+
+app.use(session({
+    secret: app.config.get('session:secret'),
+    resave: true,
+    saveUninitialized: true,
+    store: new MongoSessionStore({ url: app.config.get('mongo:uri') })
+}));
+
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.static(__dirname + '/public'));
