@@ -25,6 +25,47 @@ module.exports = function (app) {
         res.json(req.Task);
     });
 
+    //________________________________________________________
+
+    app.get('/api/tasks/:taskId/move', function (req, res) {
+        var tasks = [];
+        req.Task.getParent(function (err, parent) {
+            if (err) {
+                res.sendStatus(500)
+            }
+            else if (!parent) {
+                res.json(tasks)
+            }
+            else {
+                parent.getParent(function (err, grandParent) {
+                    if (err) {
+                        res.sendStatus(500)
+                    }
+                    else if (!grandParent) {
+                        res.json(tasks)
+                    }
+                    else {
+                        tasks.push(grandParent);
+                        grandParent.getChildren(function (err, children) {
+                            if (err) {
+                                res.sendStatus(500)
+                            }
+                            else {
+                                tasks = tasks.concat(children);
+                                res.json(tasks)
+                            }
+                        })
+
+                    }
+                })
+            }
+        })
+
+    });
+
+
+    //________________________________________________________
+
     app.get('/api/tasks/:taskId/tasks', function (req, res) {
 
         Task.find({parentTaskId: req.Task._id}).sort('-priority date').exec(function (err, tasks) {
@@ -82,9 +123,16 @@ module.exports = function (app) {
     });
 
     app.param('taskId', function (req, res, next, taskId) {
+
         Task.findById(taskId, function (err, task) {
-            req.Task = task;
-            next();
+            if (!task) {
+                res.sendStatus(404)
+            }
+            else {
+                req.Task = task;
+                next();
+            }
+
         });
     });
 
@@ -108,6 +156,7 @@ module.exports = function (app) {
             task.status = req.form.status;
             task.priority = req.form.priority;
             task.complexity = req.form.complexity;
+            task.parentTaskId = req.body.parentTaskId;
 
             task.save(function (err, task) {
                 if (err) return next(err);

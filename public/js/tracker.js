@@ -54,6 +54,9 @@ angular
     .factory('Task', function ($resource) {
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
+    .factory('TaskMove', function ($resource) {
+        return $resource('/api/tasks/:taskId/move', {taskId: '@_id'}, {update: {method: 'PUT'}});
+    })
     .factory('taskComplexity', function () {
         return complexities = [
             {
@@ -141,7 +144,7 @@ angular
         };
 
     })
-    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity) {
+    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state) {
 
         $scope.views = [
             {title: 'Default', name: 'default'},
@@ -171,6 +174,8 @@ angular
                         }
                     });
 
+                }, function () {
+                    $state.go('app.tasks');
                 });
             } else {
                 $scope.tasks = Task.query();
@@ -209,11 +214,24 @@ angular
             task.$delete().then(function () {
                 init()
             });
+
         };
 
         $scope.close = function () {
             init();
         };
+
+        $scope.getTasksForMove = function () {
+            TaskMove.query({taskId: $stateParams.taskId}, function (tasks) {
+                $scope.tasksForMove = tasks;
+            })
+               
+        };
+
+        $scope.move = function (task) {
+            $scope.newTask.parentTaskId = task._id;
+            $scope.newTask.$update().then(init);
+        }
 
     })
 
