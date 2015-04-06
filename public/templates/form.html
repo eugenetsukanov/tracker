@@ -43,7 +43,7 @@
         <button class="btn btn-success">Save</button>
         <a class="btn btn-default" ng-click="close()">Close</a>
         <a ng-if="newTask._id" class="btn btn-danger" ng-click="delete(newTask)">Delete</a>
-        <a class="btn btn-default" ng-click="getTasksForMove()">Move</a>
+        <a ng-if="newTask._id" class="btn btn-default" ng-click="getTasksForMove()">Move</a>
     </div>
 </form>
 

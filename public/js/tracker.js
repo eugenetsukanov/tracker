@@ -186,6 +186,8 @@ angular
                 simple: true
             });
 
+            $scope.tasksForMove = [];
+
         };
 
         init();
@@ -223,17 +225,17 @@ angular
         };
 
         $scope.getTasksForMove = function () {
-            TaskMove.query({taskId: $stateParams.taskId}, function (tasks) {
-                $scope.tasksForMove = tasks;
-            })
-               
+            if ($scope.newTask) {
+                TaskMove.query({taskId: $scope.newTask._id}, function (tasks) {
+                    $scope.tasksForMove = tasks;
+                })
+            }
+
+
         };
 
         $scope.move = function (task) {
-
-            new TaskMove().$update({taskId: $stateParams.taskId,parentTaskId: task._id}).then(init);
-            $scope.tasksForMove = [];
-
+          new TaskMove().$update({taskId: $scope.newTask._id, parentTaskId: task._id}).then(init);
         }
 
     })

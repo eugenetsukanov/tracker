@@ -219,16 +219,11 @@ TaskSchema.methods = {
     },
 
     getSiblings: function (next) {
-        if (this.parentTaskId) {
-            Task.find({parentTaskId: this.parentTaskId, _id: {$ne: this}}, function (err, tasks) {
-                if (err) return next(err);
+        Task.find({parentTaskId: this.parentTaskId || null, _id: {$ne: this}}, function (err, tasks) {
+            if (err) return next(err);
 
-                next(null, tasks);
-            });
-        }
-        else {
-            next(null, []);
-        }
+            next(null, tasks);
+        });
     },
 
     getParent: function (next) {
@@ -241,6 +236,13 @@ TaskSchema.methods = {
         } else {
             next(null, null);
         }
+    },
+    getGrandParent: function (next) {
+        this.getParent(function (err, parent) {
+            if (err) return next(err);
+            if(!parent) return next(null, null);
+            parent.getParent(next);
+        });
     },
     isAccepted: function () {
         return this.status == 'accepted';

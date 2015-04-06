@@ -26,37 +26,38 @@ module.exports = function (app) {
     });
     //________________________________________________________
 
-    app.get('/api/tasks/:taskId/move', function (req, res) {
+
+    app.get('/api/tasks/:taskId/move', function (req, res, next) {
+
+
         var tasks = [];
-        req.Task.getParent(function (err, parent) {
-            if (err) {
-                res.sendStatus(500)
-            }
-            else if (!parent) {
-                res.json(tasks)
+        // grand parent
+        // children of grand parent
+        // current task children
+
+        req.Task.getGrandParent(function (err, grandParent) {
+            if (err) return next(err);
+
+            if (grandParent) {
+                tasks.push(grandParent);
+
+                grandParent.getChildren(function (err, children) {
+                    if (err) return next(err);
+                    tasks = tasks.concat(children);
+
+                    req.Task.getSiblings(function (err, siblings) {
+                        if (err) return next(err);
+                        tasks = tasks.concat(siblings);
+                        res.json(tasks);
+                    });
+                })
             }
             else {
-                parent.getParent(function (err, grandParent) {
-                    if (err) {
-                        res.sendStatus(500)
-                    }
-                    else if (!grandParent) {
-                        res.json(tasks)
-                    }
-                    else {
-                        tasks.push(grandParent);
-                        grandParent.getChildren(function (err, children) {
-                            if (err) {
-                                res.sendStatus(500)
-                            }
-                            else {
-                                tasks = tasks.concat(children);
-                                res.json(tasks)
-                            }
-                        })
-
-                    }
-                })
+                req.Task.getSiblings(function (err, siblings) {
+                    if (err) return next(err);
+                    tasks = tasks.concat(siblings);
+                    res.json(tasks);
+                });
             }
         })
 
@@ -193,6 +194,18 @@ module.exports = function (app) {
 
 
         //res.sendStatus(400);
+
+    });
+
+
+    app.use(function (err, req, res, next) {
+        if (err) {
+            console.error(err);
+            res.status(500).send(err.message);
+        }
+        else {
+            next();
+        }
 
     });
 
