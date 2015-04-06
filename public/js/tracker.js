@@ -55,8 +55,9 @@ angular
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
     .factory('TaskMove', function ($resource) {
-        return $resource('/api/tasks/:taskId/move', {taskId: '@_id'}, {update: {method: 'PUT'}});
+        return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
+
     .factory('taskComplexity', function () {
         return complexities = [
             {
@@ -229,8 +230,9 @@ angular
         };
 
         $scope.move = function (task) {
-            $scope.newTask.parentTaskId = task._id;
-            $scope.newTask.$update().then(init);
+
+            new TaskMove().$update({taskId: $stateParams.taskId,parentTaskId: task._id}).then(init);
+
         }
 
     })
