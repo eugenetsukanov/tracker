@@ -47,12 +47,4 @@
     </div>
 </form>
 
-
- <div >
-     <ul>
-         <li ng-repeat="task in tasksForMove"
-                 ng-click="move(task)">
-             {{task.title}}
-         </li>
-     </ul>
- </div>
+<div ng-include="'templates/tasks-for-move.html'" ng-if="tasksForMove"></div>

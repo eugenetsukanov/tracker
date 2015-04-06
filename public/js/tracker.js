@@ -232,6 +232,7 @@ angular
         $scope.move = function (task) {
 
             new TaskMove().$update({taskId: $stateParams.taskId,parentTaskId: task._id}).then(init);
+            $scope.tasksForMove = [];
 
         }
 
