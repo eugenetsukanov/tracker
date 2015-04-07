@@ -4,7 +4,7 @@
   "description": "Tracker",
   "main": "index.js",
   "scripts": {
-    "setup": "npm install && bower install --config.interactive=false",
+    "setup": "npm install && bower install --config.interactive=false --allow-root",
     "start.dev": "nodemon app.js -i node_modules/ -i public/",
     "start.prod": "NODE_ENV=prod pm2 restart app.js",
     "start": "npm run setup && npm run start.dev",

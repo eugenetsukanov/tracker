@@ -9,7 +9,7 @@ app:
   environment:
     NODE_ENV: 'production'
   ports:
-    - "4000:4000"
+    - "5000:5000"
 
 mongo:
   image: mongo:latest

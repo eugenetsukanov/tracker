@@ -1,6 +1,6 @@
 {
   "app": {
-    "port": 4000
+    "port": 5000
   },
   "session": {
     "secret": "tracker$app$23NjzU3v"
