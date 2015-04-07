@@ -5,3 +5,4 @@
 /public/lib
 .nodemon*
 *.log
+/app/config/parameters.json

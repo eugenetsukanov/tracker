@@ -1,0 +1,14 @@
+{
+  "app": {
+    "port": 4000
+  },
+  "session": {
+    "secret": "tracker$app$23NjzU3v"
+  },
+  "mongo": {
+    "uri": "mongodb://mongo/tracker"
+  },
+  "fixtures": {
+    "load": false
+  }
+}

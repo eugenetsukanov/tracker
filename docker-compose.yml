@@ -1,0 +1,15 @@
+app:
+  build: ./
+  working_dir: /project
+  links:
+    - mongo
+  volumes:
+    - ./:/project
+  command: forever app.js
+  environment:
+    NODE_ENV: 'production'
+  ports:
+    - "4000:4000"
+
+mongo:
+  image: mongo:latest
