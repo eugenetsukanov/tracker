@@ -13,3 +13,4 @@ app:
 
 mongo:
   image: mongo:latest
+  command: "/entrypoint.sh mongod --smallfiles"
