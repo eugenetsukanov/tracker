@@ -1,12 +1,14 @@
 .mg {
     margin-bottom: 15px;
 }
+
 .detail-line {
     overflow: hidden;
     margin: 0px;
     padding: 0px;
     padding-bottom: 12px;
 }
+
 .detail-line li {
     list-style: none;
     display: inline;
@@ -16,18 +18,18 @@
 .overflow-hidden {
     overflow: hidden;
 }
+
 .vcenter {
     display: inline-block;
     vertical-align: middle;
     float: none;
 }
 
-.w-sm
-{
+.w-sm {
     width: 20%;
 }
-.fs-sm
-{
+
+.fs-sm {
     font-size: 0.9em;
 }
 
@@ -39,4 +41,8 @@
     margin: 1em 0 0 3em;
     border-left: solid 1px #f4faf4;
     display: block;
+}
+
+.task-metrics {
+    cursor: pointer;
 }

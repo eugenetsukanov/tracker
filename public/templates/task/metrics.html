@@ -1,5 +1,5 @@
 
-<ul class="detail-line">
+<ul class="detail-line task-metrics">
 
     <li ng-if="task.status" tooltip="Status">
             <span class="label"ng-class="{'label-success' : task.status == 'accepted', 'label-warning' : task.status == 'in progress'}">
@@ -7,7 +7,7 @@
             </span>
     </li>
 
-    <li ng-if="task.priority" tooltip="Priority"><i class="fa fa-star-half-o"></i>{{task.priority}}</li>
+    <li ng-if="task.priority" tooltip="Priority"><i class="fa fa-star-half-o"></i> {{task.priority}}</li>
 
     <li>
         <i class="fa fa-clock-o" tooltip="Time"></i>
@@ -20,5 +20,5 @@
         <i class="fa fa-puzzle-piece"></i>
         <span ng-if="task.simple">{{task.complexity | humanComplexity}} / </span><span>{{task.points}}p</span>
     </li>
-    <li tooltip="Velocity"><i class="fa fa-line-chart"></i>{{task.velocity| round}}</li>
+    <li tooltip="Velocity"><i class="fa fa-line-chart"></i> {{task.velocity| round}}</li>
 </ul>
