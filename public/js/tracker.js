@@ -156,6 +156,13 @@ angular
         $scope.view = $scope.views[0];
 
         $scope.statuses = ["in progress", "accepted"];
+
+        $scope.statuses = [
+            {name: 'New', value: ""},
+            {name: 'In Progress', value: "in progress"},
+            {name: 'Accepted', value: "accepted"}
+        ];
+
         $scope.loadView = function (view) {
             $scope.view = view;
         };
@@ -183,7 +190,9 @@ angular
             }
 
             $scope.newTask = new Task({
-                simple: true
+                simple: true,
+                status: "",
+                priority: 5
             });
 
             $scope.tasksForMove = [];
