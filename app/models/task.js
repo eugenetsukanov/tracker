@@ -12,6 +12,7 @@ var TaskSchema = new Schema({
     velocity: {type: Number, default: 0},
     parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
     date: {type: Date, default: Date.now, index: true},
+    updatedAt: {type: Date, default: null, index: true},
     simple: {type: Boolean, default: true},
     estimatedTime: {type: Number, default: 0},
     timeToDo: {type: Number, default: 0}
@@ -24,6 +25,7 @@ TaskSchema.pre('init', function (next, task) {
 });
 
 TaskSchema.pre('save', function (next) {
+    this.updatedAt = Date.now();
     this.calculate(next);
 });
 

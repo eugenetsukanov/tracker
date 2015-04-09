@@ -21,4 +21,5 @@
         <span ng-if="task.simple">{{task.complexity | humanComplexity}} / </span><span>{{task.points}}p</span>
     </li>
     <li tooltip="Velocity"><i class="fa fa-line-chart"></i> {{task.velocity| round}}</li>
+    <li ng-if="task.updatedAt" tooltip="Updated {{task.updatedAt | date : 'yyyy/MM/dd HH:mm:ss'}}"><i class="fa fa-refresh"></i> {{task.updatedAt | fromNow}}</li>
 </ul>
