@@ -16,6 +16,7 @@ mongoose.connect(app.config.get('mongo:uri'));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.enable('trust proxy');
 
 var MongoSessionStore = require('connect-mongo')(session);
 
