@@ -50,3 +50,7 @@
 .pointer {
     cursor: pointer;
 }
+
+.m-l-sm {
+    margin-left: 10px;
+}

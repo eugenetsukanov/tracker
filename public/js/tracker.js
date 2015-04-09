@@ -155,8 +155,6 @@ angular
 
         $scope.view = $scope.views[0];
 
-        $scope.statuses = ["in progress", "accepted"];
-
         $scope.statuses = [
             {name: 'New', value: ""},
             {name: 'In Progress', value: "in progress"},
@@ -168,6 +166,25 @@ angular
         };
 
         $scope.priorities = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+
+        $scope.addTimeList = [
+            {
+                name: '5m',
+                value: 0.1
+            },
+            {
+                name: '15m',
+                value: 0.25
+            },
+            {
+                name: '30m',
+                value: 0.5
+            },
+            {
+                name: '1h',
+                value: 1
+            }
+        ];
 
         $scope.complexities = taskComplexity;
 
@@ -244,8 +261,18 @@ angular
         };
 
         $scope.move = function (task) {
-          new TaskMove().$update({taskId: $scope.newTask._id, parentTaskId: task._id}).then(init);
-        }
+            new TaskMove().$update({taskId: $scope.newTask._id, parentTaskId: task._id}).then(init);
+        };
+
+        $scope.addTime = function (time) {
+            if ($scope.newTask) {
+                var spenttime = $scope.newTask.spenttime || 0;
+                spenttime += time.value;
+
+                spenttime = parseInt(Math.ceil(spenttime * 100)) / 100;
+                $scope.newTask.spenttime = spenttime;
+            }
+        };
 
     })
 

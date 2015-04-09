@@ -10,6 +10,11 @@
         <input ng-model="newTask.spenttime" type="text" class="form-control w-sm pull-left" id="spentTime"
                placeholder="Spent Time in hours"/>
 
+        <div class="btn-group m-l-sm pull-left">
+            <label ng-click="addTime(time)" ng-repeat="time in addTimeList" class="btn btn-default btn-sm">+{{time.name}}</label>
+        </div>
+
+
     </div>
 
     <div class="form-group" ng-show="newTask.title"> <!-- Status-->
