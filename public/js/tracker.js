@@ -63,7 +63,7 @@ angular
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
     .factory('TaskUpdated', function ($resource) {
-        return $resource('/api/tasks/updated');
+        return $resource('/api/tasks/updated/:date');
     })
 
     .factory('taskComplexity', function () {
@@ -118,6 +118,12 @@ angular
             }
         ]
     })
+    .filter('toDate', function () {
+        return function (date, format) {
+            var format = format || 'ddd, DD-MM-YYYY';
+            return moment(date).format(format);
+        }
+    })
     .filter('humanComplexity', function (taskComplexity) {
 
         return function (complexity) {
@@ -156,11 +162,25 @@ angular
 
     .controller('ReportCtrl', function ($scope, TaskUpdated) {
 
-        $scope.date = moment().format("ddd, hh:mm");
+        $scope.date = new Date();
 
-        TaskUpdated.query(function (tasks) {
-            $scope.tasks = tasks;
+        var getTasks = function () {
+            TaskUpdated.query({date: $scope.date}, function (tasks) {
+                $scope.tasks = tasks;
+            })
+        };
+
+        $scope.openDatePicker = function($event) {
+            $event.preventDefault();
+            $event.stopPropagation();
+            $scope.opened = true;
+        };
+
+        $scope.$watch('date', function (date) {
+            getTasks();
         })
+
+
     })
 
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state) {

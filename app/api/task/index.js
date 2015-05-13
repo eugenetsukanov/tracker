@@ -22,10 +22,11 @@ module.exports = function (app) {
         })
     });
 
-    app.get('/api/tasks/updated', function (req, res) {
+    app.get('/api/tasks/updated/:date', function (req, res) {
 
-        var start = moment().startOf('day').valueOf();
-        var end = moment().startOf('day').add(1, 'd').valueOf();
+        var date = Date.parse(req.params.date);
+        var start = moment(date).startOf('day').toDate();
+        var end = moment(date).startOf('day').add(1, 'd').toDate();
 
         Task.find({updatedAt: {$gt: start, $lt: end}}).sort('-updatedAt').exec(function (err, tasks) {
             res.json(tasks);

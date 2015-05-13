@@ -17,7 +17,14 @@
             </label>
         </div>
 
-        <h5>Today is: {{ date }}</h5>
+        <h5>
+            Date:&nbsp;
+            <span class="pointer" datepicker-popup max-date="'{{date | toDate:'YYYY-MM-DD'}}'" is-open="opened"
+                  ng-model="date" show-button-bar="false" show-weeks="false" ng-click="openDatePicker($event)">
+                {{ date | toDate }}
+                <i class="glyphicon glyphicon-calendar"></i>
+            </span>
+        </h5>
 
         <ul>
             <li ng-repeat="task in tasks">
