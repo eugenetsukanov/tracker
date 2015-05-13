@@ -83,7 +83,7 @@ exports.tasks = [
         "simple" : true,
         "date" : ISODate("2015-03-27T11:37:16.072Z"),
         "updatedAt" : ISODate(moment().subtract(1, 'd').toDate()),
-        "parentTaskId" : ObjectId("551540d7210f64444cde2327"),
+        "parentTaskId" : null,
         "velocity" : 0,
         "points" : 2,
         "complexity" : 2,
