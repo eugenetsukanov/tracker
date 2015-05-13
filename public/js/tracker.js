@@ -36,6 +36,11 @@ angular
                 url: "/logout",
                 controller: "LogoutCtrl"
             })
+            .state('app.report', {
+                url: "/report",
+                controller: "ReportCtrl",
+                templateUrl: "templates/report.html"
+            })
         ;
 
     })
@@ -56,6 +61,9 @@ angular
     })
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
+    })
+    .factory('TaskUpdated', function ($resource) {
+        return $resource('/api/tasks/updated');
     })
 
     .factory('taskComplexity', function () {
@@ -145,6 +153,16 @@ angular
         };
 
     })
+
+    .controller('ReportCtrl', function ($scope, TaskUpdated) {
+
+        $scope.date = moment().format("ddd, hh:mm");
+
+        TaskUpdated.query(function (tasks) {
+            $scope.tasks = tasks;
+        })
+    })
+
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state) {
 
         $scope.views = [

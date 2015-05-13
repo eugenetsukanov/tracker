@@ -2,7 +2,7 @@ module.exports = function (app) {
 
     var form = require("express-form"),
         field = form.field;
-
+    
     var TaskForm = form(
         field("title").trim().required(),
         field("spenttime").trim().isNumeric(),
@@ -13,10 +13,21 @@ module.exports = function (app) {
 
     var Task = require('../../models/task');
 
+    var moment = require('moment');
     var _ = require('lodash');
 
     app.get('/api/tasks', function (req, res) {
         Task.find({parentTaskId: null}).sort('-priority date').exec(function (err, tasks) {
+            res.json(tasks);
+        })
+    });
+
+    app.get('/api/tasks/updated', function (req, res) {
+
+        var start = moment().startOf('day').valueOf();
+        var end = moment().startOf('day').add(1, 'd').valueOf();
+
+        Task.find({updatedAt: {$gt: start, $lt: end}}).sort('-updatedAt').exec(function (err, tasks) {
             res.json(tasks);
         })
     });
