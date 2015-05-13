@@ -1,10 +1,10 @@
 
 <ul class="detail-line task-metrics">
 
-    <li ng-if="task.status" tooltip="Status">
-            <span class="label"ng-class="{'label-success' : task.status == 'accepted', 'label-warning' : task.status == 'in progress'}">
-            {{task.status}}
-            </span>
+    <li tooltip="Status">
+        <span class="label"ng-class="{'label-success' : task.status == 'accepted', 'label-warning' : task.status == 'in progress', 'label-info' : task.status == '',}">
+            {{task.status || 'new'}}
+        </span>
     </li>
 
     <li ng-if="task.priority" tooltip="Priority"><i class="fa fa-star-half-o"></i> {{task.priority}}</li>

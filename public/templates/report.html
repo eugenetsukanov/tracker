@@ -4,11 +4,32 @@
 
         <h3>Report task for today</h3>
 
+        <div class="pull-right">
+            <strong>Filters:&nbsp;</strong>
+            <label>
+                <input type="checkbox" ng-model="status">
+                Status
+            </label>
+            &nbsp;
+            <label>
+                <input type="checkbox" ng-model="metrics">
+                Metrics
+            </label>
+        </div>
+
         <h5>Today is: {{ date }}</h5>
 
         <ul>
             <li ng-repeat="task in tasks">
-                {{task.title}}, {{task.status || 'new'}}
+                {{task.title}}
+                <span ng-show="status" class="label" ng-class="{
+                'label-success' : task.status == 'accepted',
+                'label-info' : task.status == '',
+                'label-warning' : task.status == 'in progress'}">
+                    {{task.status || 'new'}}
+                </span>
+
+                <div ng-show="metrics" task-metrics task="task"></div>
             </li>
         </ul>
 
