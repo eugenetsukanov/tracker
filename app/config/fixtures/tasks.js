@@ -1,4 +1,5 @@
 var id = require('pow-mongodb-fixtures').createObjectId;
+var moment = require('moment');
 
 function ObjectId(str) {
     return id(str);
@@ -16,6 +17,7 @@ exports.tasks = [
         "estimatedTime" : 0,
         "simple" : false,
         "date" : ISODate("2015-03-27T11:36:55.983Z"),
+        "updatedAt" : ISODate(moment().toDate()),
         "parentTaskId" : null,
         "velocity" : 1,
         "points" : 3,
@@ -31,6 +33,7 @@ exports.tasks = [
         "estimatedTime" : 0,
         "simple" : false,
         "date" : ISODate("2015-03-27T11:37:06.395Z"),
+        "updatedAt" : ISODate(moment().toDate()),
         "parentTaskId" : ObjectId("551540d7210f64444cde2327"),
         "velocity" : 1,
         "points" : 1,
@@ -63,6 +66,23 @@ exports.tasks = [
         "estimatedTime" : 0,
         "simple" : true,
         "date" : ISODate("2015-03-27T11:37:16.072Z"),
+        "parentTaskId" : ObjectId("551540d7210f64444cde2327"),
+        "velocity" : 0,
+        "points" : 2,
+        "complexity" : 2,
+        "spenttime" : null,
+        "priority" : null,
+        "__v" : 0
+    },
+    {
+
+        "_id" : ObjectId("551540ec210f64444cde2356"),
+        "title" : "task 2",
+        "status" : "",
+        "estimatedTime" : 0,
+        "simple" : true,
+        "date" : ISODate("2015-03-27T11:37:16.072Z"),
+        "updatedAt" : ISODate(moment().subtract(1, 'd').toDate()),
         "parentTaskId" : ObjectId("551540d7210f64444cde2327"),
         "velocity" : 0,
         "points" : 2,
