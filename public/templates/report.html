@@ -22,10 +22,8 @@
         <ul>
             <li ng-repeat="task in tasks">
                 {{task.title}}
-                <span ng-show="status" class="label" ng-class="{
-                'label-success' : task.status == 'accepted',
-                'label-info' : task.status == '',
-                'label-warning' : task.status == 'in progress'}">
+
+                <span ng-show="status" class="label task-status-label">
                     {{task.status || 'new'}}
                 </span>
 

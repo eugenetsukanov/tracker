@@ -2,7 +2,7 @@
 <ul class="detail-line task-metrics">
 
     <li tooltip="Status">
-        <span class="label"ng-class="{'label-success' : task.status == 'accepted', 'label-warning' : task.status == 'in progress', 'label-info' : task.status == '',}">
+        <span class="label task-status-label">
             {{task.status || 'new'}}
         </span>
     </li>
