@@ -1,7 +1,7 @@
 angular
     .module('Tracker')
 
-    .directive('reportTasksUpdated', function (TaskReport, TaskReportByDate) {
+    .directive('reportTasksUpdated', function (ReportByTaskId, ReportByDate) {
 
         return {
             restrict: 'E',
@@ -15,7 +15,7 @@ angular
             controller: function ($scope) {
 
                 if ($scope.taskId) {
-                    TaskReport.query({taskId: $scope.taskId}, function (tasks) {
+                    ReportByTaskId.query({taskId: $scope.taskId}, function (tasks) {
                         $scope.tasks = tasks;
                     })
                 } else {
@@ -23,7 +23,7 @@ angular
                     var date = $scope.date || new Date();
 
                     var getTasks = function (date) {
-                        TaskReportByDate.query({date: date}, function (tasks) {
+                        ReportByDate.query({date: date}, function (tasks) {
                             $scope.tasks = tasks;
                         });
                     };

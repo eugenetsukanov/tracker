@@ -62,11 +62,11 @@ angular
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
-    .factory('TaskReportByDate', function ($resource) {
-        return $resource('/api/tasks/report/:date');
+    .factory('ReportByDate', function ($resource) {
+        return $resource('/api/report/date/:date');
     })
-    .factory('TaskReport', function ($resource) {
-        return $resource('/api/tasks/:taskId/report', {taskId: '@_id'});
+    .factory('ReportByTaskId', function ($resource) {
+        return $resource('/api/report/task/:taskId', {taskId: '@_id'});
     })
 
     .factory('taskComplexity', function () {
