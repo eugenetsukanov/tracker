@@ -62,8 +62,8 @@ angular
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
-    .factory('TaskUpdated', function ($resource) { // @@TODO: need to refactor naming
-        return $resource('/api/tasks/updated/:date');
+    .factory('TaskReportByDate', function ($resource) {
+        return $resource('/api/tasks/report/:date');
     })
     .factory('TaskReport', function ($resource) {
         return $resource('/api/tasks/:taskId/report', {taskId: '@_id'});
@@ -163,7 +163,7 @@ angular
 
     })
 
-    .controller('ReportCtrl', function ($scope, TaskUpdated) {
+    .controller('ReportCtrl', function ($scope) {
 
         $scope.date = new Date();
 

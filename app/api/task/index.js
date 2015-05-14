@@ -16,19 +16,24 @@ module.exports = function (app) {
     var moment = require('moment');
     var _ = require('lodash');
 
+    var getStartDate = function (date) {
+        return moment(date).startOf('day').toDate()
+    };
+
+    var getEndDate = function (date) {
+        return moment(date).startOf('day').add(1, 'd').toDate();
+    };
+
     app.get('/api/tasks', function (req, res) {
         Task.find({parentTaskId: null}).sort('-priority date').exec(function (err, tasks) {
             res.json(tasks);
         })
     });
 
-    app.get('/api/tasks/updated/:date', function (req, res) {
+    app.get('/api/tasks/report/:date', function (req, res) {
 
         var date = Date.parse(req.params.date);
-        var start = moment(date).startOf('day').toDate();
-        var end = moment(date).startOf('day').add(1, 'd').toDate();
-
-        Task.find({updatedAt: {$gt: start, $lt: end}}).sort('-updatedAt').exec(function (err, tasks) {
+        Task.find({updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)}}).sort('-updatedAt').exec(function (err, tasks) {
             res.json(tasks);
         })
     });
@@ -36,11 +41,8 @@ module.exports = function (app) {
     app.get('/api/tasks/:taskId/report', function (req, res) {
 
         var date = new Date();
-        var start = moment(date).startOf('day').toDate();
-        var end = moment(date).startOf('day').add(1, 'd').toDate();
-
         var query = {
-            updatedAt: {$gt: start, $lt: end},
+            updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
             $or: [
                 { _id: req.Task },
                 { parentTaskId: req.Task }
