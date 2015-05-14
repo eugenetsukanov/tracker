@@ -6,11 +6,13 @@
 
     <div ng-click="edit(task)" task-metrics task="task"></div>
 
-
-
 </div>
 
 <div ng-include="'templates/form.html'"></div>
+
+<div class="pull-right" ng-if="taskId">
+    <button class="btn btn-sm btn-default" ng-click="loadView(report)">Report</button>
+</div>
 
 <div class="btn-group mg" role="group">
     <button class="btn btn-default btn-sm"

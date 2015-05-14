@@ -62,8 +62,11 @@ angular
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
-    .factory('TaskUpdated', function ($resource) {
+    .factory('TaskUpdated', function ($resource) { // @@TODO: need to refactor naming
         return $resource('/api/tasks/updated/:date');
+    })
+    .factory('TaskReport', function ($resource) {
+        return $resource('/api/tasks/:taskId/report', {taskId: '@_id'});
     })
 
     .factory('taskComplexity', function () {
@@ -164,22 +167,11 @@ angular
 
         $scope.date = new Date();
 
-        var getTasks = function () {
-            TaskUpdated.query({date: $scope.date}, function (tasks) {
-                $scope.tasks = tasks;
-            })
-        };
-
         $scope.openDatePicker = function($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
         };
-
-        $scope.$watch('date', function (date) {
-            getTasks();
-        })
-
 
     })
 
@@ -192,6 +184,11 @@ angular
         ];
 
         $scope.view = $scope.views[0];
+
+        $scope.report = {
+            title: 'Report',
+            name: "report"
+        }
 
         $scope.statuses = [
             {name: 'New', value: ""},
@@ -226,12 +223,14 @@ angular
 
         $scope.complexities = taskComplexity;
 
+        $scope.taskId = $stateParams.taskId;
+
         var init = function () {
 
-            if ($stateParams.taskId) {
-                Task.query({taskId: $stateParams.taskId, nested: 'tasks'}, function (tasks) {
+            if ($scope.taskId) {
+                Task.query({taskId: $scope.taskId, nested: 'tasks'}, function (tasks) {
                     $scope.tasks = tasks;
-                    $scope.task = Task.get({taskId: $stateParams.taskId}, function (task) {
+                    $scope.task = Task.get({taskId: $scope.taskId}, function (task) {
                         if (task.parentTaskId) {
                             $scope.parentTask = Task.get({taskId: task.parentTaskId});
                         }
@@ -260,8 +259,8 @@ angular
 
             if (!$scope.newTask._id) {
 
-                if ($stateParams.taskId) {
-                    $scope.newTask.$save({taskId: $stateParams.taskId, nested: 'tasks'}).then(init);
+                if ($scope.taskId) {
+                    $scope.newTask.$save({taskId: $scope.taskId, nested: 'tasks'}).then(init);
                 } else {
                     $scope.newTask.$save().then(init);
                 }

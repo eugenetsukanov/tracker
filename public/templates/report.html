@@ -26,17 +26,7 @@
             </span>
         </h5>
 
-        <ul>
-            <li ng-repeat="task in tasks">
-                {{task.title}}
-
-                <span ng-show="status" class="label task-status-label">
-                    {{task.status || 'new'}}
-                </span>
-
-                <div ng-show="metrics" task-metrics task="task"></div>
-            </li>
-        </ul>
+        <report-tasks-updated date="date" status="status" metrics="metrics"></report-tasks-updated>
 
     </div>
 
