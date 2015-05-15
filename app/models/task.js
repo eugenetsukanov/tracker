@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
+var _ = require('lodash');
 
 var TaskSchema = new Schema({
     title: String,
@@ -214,6 +215,16 @@ TaskSchema.methods = {
 
     getChildren: function (next) {
         Task.find({parentTaskId: this}, function (err, tasks) {
+            if (err) return next(err);
+
+            next(null, tasks);
+        })
+    },
+
+    getChildrenChanged: function (query, next) {
+        var query = _.extend({parentTaskId: this}, query);
+
+        Task.find(query, function (err, tasks) {
             if (err) return next(err);
 
             next(null, tasks);
