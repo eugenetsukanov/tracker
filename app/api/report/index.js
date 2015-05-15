@@ -42,6 +42,8 @@ module.exports = function (app) {
 
             var getChangedTasks = function (task, callback) {
 
+                if (!task) return callback();
+
                 task.getChildrenChanged(getAtDate, function (err, tasks) {
                     if (err) return next(err);
 
