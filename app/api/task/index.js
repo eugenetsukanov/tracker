@@ -19,7 +19,8 @@ module.exports = function (app) {
     app.get('/api/tasks', function (req, res) {
         Task
             .find({parentTaskId: null})
-            .populate([{path:'owner', select:'-local.passwordHashed -local.passwordSalt'}, {path:'developer', select:'-local.passwordHashed -local.passwordSalt'}])
+            .populate('owner', '-local.passwordHashed -local.passwordSalt')
+            .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .sort('-priority date')
             .exec(function (err, tasks) {
                 if (err) return console.log(err);
@@ -77,8 +78,8 @@ module.exports = function (app) {
 
         Task.find({parentTaskId: req.Task._id})
             .sort('-priority date')
-            .populate([{path:'owner', select:'-local.passwordHashed -local.passwordSalt'}, {path:'developer', select:'-local.passwordHashed -local.passwordSalt'}])
-
+            .populate('owner', '-local.passwordHashed -local.passwordSalt')
+            .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .exec(function (err, tasks) {
 
                 if (err) return next(err);
@@ -141,7 +142,8 @@ module.exports = function (app) {
 
         Task
             .findById(taskId)
-            .populate([{path:'owner', select:'-local.passwordHashed -local.passwordSalt'}, {path:'developer', select:'-local.passwordHashed -local.passwordSalt'}])
+            .populate('owner', '-local.passwordHashed -local.passwordSalt')
+            .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .exec(function (err, task) {
 
                 if (err) return next(err);
@@ -168,7 +170,7 @@ module.exports = function (app) {
         });
     });
 
-    app.put('/api/tasks/:taskId', TaskForm, function (req, res) {
+    app.put('/api/tasks/:taskId', TaskForm, function (req, res, next) {
 
         var task = req.Task;
 
@@ -178,7 +180,8 @@ module.exports = function (app) {
             task.status = req.form.status;
             task.priority = req.form.priority;
             task.complexity = req.form.complexity;
-            task.parentTaskId = req.body.parentTaskId;
+            task.parentTaskId = req.body.parentTaskId || null;
+            task.developer = req.form.developer;
 
             task.save(function (err, task) {
                 if (err) return next(err);
