@@ -37,4 +37,11 @@ module.exports = function (app, passport) {
         res.json(req.user);
     });
 
+    app.get('/api/users', function (req, res) {
+        User.find({},'-local.passwordHashed, -local.passwordSalt', function (err, users) {
+            res.json(users);
+        });
+
+    });
+
 };

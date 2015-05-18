@@ -8,7 +8,8 @@ module.exports = function (app) {
         field("spenttime").trim().isNumeric(),
         field("status").trim(),
         field("priority").trim().isInt(),
-        field("complexity").trim().isInt()
+        field("complexity").trim().isInt(),
+        field("developer")
     );
 
     var Task = require('../../models/task');
@@ -16,9 +17,15 @@ module.exports = function (app) {
     var _ = require('lodash');
 
     app.get('/api/tasks', function (req, res) {
-        Task.find({parentTaskId: null}).sort('-priority date').exec(function (err, tasks) {
-            res.json(tasks);
-        })
+        Task
+            .find({parentTaskId: null})
+            .populate([{path:'owner', select:'-local.passwordHashed -local.passwordSalt'}, {path:'developer', select:'-local.passwordHashed -local.passwordSalt'}])
+            .sort('-priority date')
+            .exec(function (err, tasks) {
+                if (err) return console.log(err);
+                res.json(tasks);
+            });
+
     });
 
     app.get('/api/tasks/:taskId', function (req, res) {
@@ -68,17 +75,22 @@ module.exports = function (app) {
 
     app.get('/api/tasks/:taskId/tasks', function (req, res) {
 
-        Task.find({parentTaskId: req.Task._id}).sort('-priority date').exec(function (err, tasks) {
-            if (err) return next(err);
+        Task.find({parentTaskId: req.Task._id})
+            .sort('-priority date')
+            .populate([{path:'owner', select:'-local.passwordHashed -local.passwordSalt'}, {path:'developer', select:'-local.passwordHashed -local.passwordSalt'}])
 
-            if (!tasks) {
-                res.json({});
-            }
-            else {
-                res.json(tasks);
-            }
+            .exec(function (err, tasks) {
 
-        })
+                if (err) return next(err);
+
+                if (!tasks) {
+                    res.json({});
+                }
+                else {
+                    res.json(tasks);
+                }
+
+            })
     });
 
     app.post('/api/tasks', TaskForm, function (req, res, next) {
@@ -86,6 +98,8 @@ module.exports = function (app) {
 
         if (req.form.isValid) {
             var task = new Task(req.form);
+            task.owner = req.user._id;
+
             task.save(function (err) {
                 if (err) return next(err);
                 task.updateParent(function (err) {
@@ -107,6 +121,7 @@ module.exports = function (app) {
             var task = new Task(req.form);
 
             task.parentTaskId = req.Task._id;
+            task.owner = req.user._id;
 
             task.save(function (err, task) {
                 if (err) return next(err);
@@ -124,16 +139,23 @@ module.exports = function (app) {
 
     app.param('taskId', function (req, res, next, taskId) {
 
-        Task.findById(taskId, function (err, task) {
-            if (!task) {
-                res.sendStatus(404)
-            }
-            else {
-                req.Task = task;
-                next();
-            }
+        Task
+            .findById(taskId)
+            .populate([{path:'owner', select:'-local.passwordHashed -local.passwordSalt'}, {path:'developer', select:'-local.passwordHashed -local.passwordSalt'}])
+            .exec(function (err, task) {
 
-        });
+                if (err) return next(err);
+
+                if (!task) {
+                    res.sendStatus(404);
+                }
+                else {
+                    req.Task = task;
+                    next();
+                }
+
+            });
+
     });
 
     app.delete('/api/tasks/:taskId', function (req, res, next) {
@@ -190,7 +212,7 @@ module.exports = function (app) {
                     }
                 });
             });
-        })
+        });
 
 
         //res.sendStatus(400);

@@ -45,6 +45,10 @@
     </div>
 
     <div class="form-group" ng-show="newTask.title">
+        <select ng-model="newTask.developer" ng-options="user._id as user.local.username for user in users" ></select>
+    </div>
+
+    <div class="form-group" ng-show="newTask.title">
         <button class="btn btn-success">Save</button>
         <a class="btn btn-default" ng-click="close()">Close</a>
         <a ng-if="newTask._id" class="btn btn-danger" ng-click="delete(newTask)">Delete</a>

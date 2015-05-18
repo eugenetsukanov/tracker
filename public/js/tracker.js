@@ -59,6 +59,9 @@ angular
     .factory('Task', function ($resource) {
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
+    .factory('User', function ($resource) {
+        return $resource('/api/users');
+    })
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
@@ -175,7 +178,7 @@ angular
 
     })
 
-    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state) {
+    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User) {
 
         $scope.views = [
             {title: 'Default', name: 'default'},
@@ -188,7 +191,7 @@ angular
         $scope.report = {
             title: 'Report',
             name: "report"
-        }
+        };
 
         $scope.statuses = [
             {name: 'New', value: ""},
@@ -223,6 +226,8 @@ angular
 
         $scope.complexities = taskComplexity;
 
+        $scope.users = User.query();
+
         $scope.taskId = $stateParams.taskId;
 
         var init = function () {
@@ -256,7 +261,7 @@ angular
         init();
 
         $scope.save = function () {
-
+            console.log($scope.newTask);
             if (!$scope.newTask._id) {
 
                 if ($scope.taskId) {
