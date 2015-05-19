@@ -222,7 +222,7 @@ angular
             {title: 'Tree', name: 'tree'}
         ];
 
-        $scope.view = $scope.views[0];
+        $scope.view = $scope.views[1];
 
         $scope.report = {
             title: 'Report',
