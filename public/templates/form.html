@@ -65,6 +65,24 @@
         <a ng-if="newTask._id" class="btn btn-danger" ng-click="delete(newTask)">Delete</a>
         <a ng-if="newTask._id" class="btn btn-default" ng-click="getTasksForMove()">Move</a>
     </div>
+
+    <div>
+        watching model:
+
+        <!--<div class="button" ngf-select ng-model="files">Upload using model $watch</div>-->
+        <div class="button" ngf-select ngf-change="upload($files)">Upload on file change</div>
+        Drop File:
+        <div ngf-drop ng-model="files" class="drop-box"
+             ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
+             ngf-accept="'.jpg,.png,.pdf'">Drop Images or PDFs files here</div>
+        <div ngf-no-file-drop>File Drag/Drop is not supported for this browser</div>
+
+        <!--Image thumbnail: <img ngf-src="files[0]" ngf-default-src="/thumb.jpg" ngf-accept="image/*">-->
+        <div ng-model="newTask.filesName">
+            {{filesName}}
+        </div>
+    </div>
+
 </form>
 
 <div class="row" ng-include="'templates/tasks-for-move.html'" ng-if="tasksForMove.length"></div>

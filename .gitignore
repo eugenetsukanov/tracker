@@ -3,6 +3,7 @@
 /.vagrant
 /node_modules
 /public/lib
+/public/uploads
 .nodemon*
 *.log
 /app/config/parameters.json

@@ -1,5 +1,5 @@
 angular
-    .module('Tracker', ['ui.router', 'ngResource', 'ui.bootstrap'])
+    .module('Tracker', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngFileUpload'])
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
@@ -13,11 +13,6 @@ angular
                 templateUrl: "templates/app.html",
 
                 controller: function ($scope, UserService) {
-                    //
-                    //$scope.UserService = UserService;
-                    //$scope.$watch('UserService.user._id', function () {
-                    //    $scope.me =
-                    //})
                 }
             })
             .state('app.tasks', {
@@ -214,7 +209,32 @@ angular
 
         return self
     })
-    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, UserService, $location, $anchorScroll) {
+
+    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, Upload, UserService, $location, $anchorScroll) {
+
+        $scope.files = [];
+        $scope.$watch('files', function () {
+            $scope.upload($scope.files);
+        });
+
+        $scope.upload = function (files) {
+            if (files && files.length) {
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    Upload.upload({
+                        url: '/api/upload',
+                        fields: {'username': $scope.username},
+                        file: file
+                    }).progress(function (evt) {
+                        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                        console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+                    }).success(function (data, status, headers, config) {
+                        console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
+                        $scope.newTask.filesName = data
+                    });
+                }
+            }
+        };
 
         $scope.views = [
             {title: 'Board', name: 'board'},
@@ -298,6 +318,7 @@ angular
         init();
 
         $scope.save = function () {
+            console.log($scope.newTask);
             if (!$scope.newTask._id) {
 
                 if ($scope.taskId) {

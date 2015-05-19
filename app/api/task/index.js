@@ -10,7 +10,8 @@ module.exports = function (app) {
         field("status").trim(),
         field("priority").trim().isInt(),
         field("complexity").trim().isInt(),
-        field("developer")
+        field("developer"),
+        field("filesName")
     );
 
     var Task = require('../../models/task');
@@ -120,7 +121,6 @@ module.exports = function (app) {
     });
 
     app.post('/api/tasks/:taskId/tasks', TaskForm, function (req, res, next) {
-
 
 
         if (req.form.isValid) {

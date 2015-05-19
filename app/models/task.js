@@ -20,7 +20,9 @@ var TaskSchema = new Schema({
     estimatedTime: {type: Number, default: 0},
     timeToDo: {type: Number, default: 0},
     owner: {type: Schema.Types.ObjectId, ref: "User"},
-    developer: {type: Schema.Types.ObjectId, ref: "User"}
+    developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
+    filesName: String
+
 });
 
 TaskSchema.set('toJSON', {getters: true, virtuals: true});
@@ -83,8 +85,6 @@ TaskSchema.methods = {
             if (parent) {
                 parent.save(function (err) {
                     if (err) return next(err);
-
-
 
                     parent.updateEstimateTime(function (err) {
                         if (err) return next(err);
