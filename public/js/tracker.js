@@ -10,7 +10,23 @@ angular
         $stateProvider
             .state('app', {
                 url: "/app",
-                templateUrl: "templates/app.html"
+                templateUrl: "templates/app.html",
+
+                controller: function ($scope, UserService) {
+                    //
+                    //$scope.UserService = UserService;
+                    //$scope.$watch('UserService.user._id', function () {
+                    //    $scope.me =
+                    //})
+                },
+
+                resolve: {
+                    me: function ($q, UserService) {
+                        return $q(function (resolve, reject) {
+                            UserService.load().then(resolve, resolve)
+                        });
+                    }
+                }
             })
             .state('app.tasks', {
                 url: "/tasks",
@@ -60,7 +76,7 @@ angular
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
     .factory('User', function ($resource) {
-        return $resource('/api/users');
+        return $resource('/api/users/:nested');
     })
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
@@ -170,7 +186,7 @@ angular
 
         $scope.date = new Date();
 
-        $scope.openDatePicker = function($event) {
+        $scope.openDatePicker = function ($event) {
             $event.preventDefault();
             $event.stopPropagation();
             $scope.opened = true;
@@ -178,7 +194,29 @@ angular
 
     })
 
-    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User) {
+    .factory('UserService', function ($q, User) {
+        var self = {
+
+            user: null,
+
+            getUser: function () {
+                return this.user
+            },
+            getUsers: function () {
+                return User.query();
+            },
+            load: function () {
+                return $q(function (resolve, reject) {
+                    self.user = User.get({nested: 'me'}, resolve, reject);
+                });
+            }
+        };
+
+        self.load();
+
+        return self
+    })
+    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, UserService) {
 
         $scope.views = [
             {title: 'Default', name: 'default'},
@@ -226,7 +264,7 @@ angular
 
         $scope.complexities = taskComplexity;
 
-        $scope.users = User.query();
+        $scope.users = UserService.getUsers()
 
         $scope.taskId = $stateParams.taskId;
 
@@ -250,6 +288,7 @@ angular
 
             $scope.newTask = new Task({
                 simple: true,
+                developer: UserService.getUser()._id,
                 status: "",
                 priority: 5
             });
@@ -279,6 +318,10 @@ angular
 
         $scope.edit = function (task) {
             $scope.newTask = task;
+
+            if (task.developer && task.developer._id) {
+                task.developer = task.developer._id;
+            }
         };
 
         $scope.delete = function (task) {

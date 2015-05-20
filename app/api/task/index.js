@@ -99,6 +99,9 @@ module.exports = function (app) {
 
 
         if (req.form.isValid) {
+
+            req.form.developer = req.form.developer || req.user._id;
+
             var task = new Task(req.form);
             task.owner = req.user._id;
 
@@ -119,7 +122,12 @@ module.exports = function (app) {
     app.post('/api/tasks/:taskId/tasks', TaskForm, function (req, res, next) {
 
 
+
         if (req.form.isValid) {
+
+            req.form.developer = req.form.developer || req.user._id;
+
+
             var task = new Task(req.form);
 
             task.parentTaskId = req.Task._id;
@@ -182,7 +190,7 @@ module.exports = function (app) {
             task.priority = req.form.priority;
             task.complexity = req.form.complexity;
             task.parentTaskId = req.body.parentTaskId || null;
-            task.developer = req.form.developer;
+            task.developer = req.form.developer || req.user;
 
             task.save(function (err, task) {
                 if (err) return next(err);

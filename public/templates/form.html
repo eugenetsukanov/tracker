@@ -55,7 +55,12 @@
     </div>
 
     <div class="form-group" ng-show="newTask.title">
-        <select ng-model="newTask.developer" ng-options="user._id as user.local.username for user in users"></select>
+        <div class="row">
+        <i class="fa fa-user fa-2x vcenter pull-left"></i>
+        <div class="">
+            <select ng-model="newTask.developer" ng-options="user._id as user.local.username for user in users" class="form-control input-sm"></select>
+        </div>
+        </div>
     </div>
 
     <div class="form-group" ng-show="newTask.title">

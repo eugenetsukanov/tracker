@@ -20,7 +20,6 @@ var TaskSchema = new Schema({
     timeToDo: {type: Number, default: 0},
     owner: {type: Schema.Types.ObjectId, ref: "User"},
     developer: {type: Schema.Types.ObjectId, ref: "User"}
-
 });
 
 TaskSchema.set('toJSON', {getters: true, virtuals: true});
