@@ -10,7 +10,15 @@
 
     <div class="panel-body">
 
+
         <div ng-click="edit(task)" class="fs-sm" task-metrics task="task"></div>
+
+
+        <div ng-if="task.description">
+            <hr/>
+            <div text-extend="task.description"></div>
+        </div>
+
 
     </div>
 

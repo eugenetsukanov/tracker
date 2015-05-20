@@ -1,0 +1,8 @@
+<span ng-click="showMore = !showMore" class="pointer">
+                <span ng-if="!showMore">
+                    {{text | limitTo:aLimit}}
+                    <span ng-if="text.length > aLimit">...</span>
+                </span>
+                <span ng-if="showMore">{{text}}</span>
+
+            </span>

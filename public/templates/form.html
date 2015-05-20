@@ -1,7 +1,17 @@
 <form ng-submit="save()">
 
     <div class="form-group">
-        <input ng-model="newTask.title" type="text" class="form-control" placeholder="Task.." id="title"/>
+        <div class="input-group">
+            <input ng-model="newTask.title" type="text" class="form-control" placeholder="Task.." id="title"/>
+            <span class="input-group-btn">
+                <button ng-click="showDescription = !showDescription" ng-class="{active: showDescription}" class="btn btn-default" type="button" tooltip="Description">D</button>
+            </span>
+        </div>
+    </div>
+
+    <div class="form-group" ng-if="showDescription">
+        <textarea ng-show="newTask.title" ng-model="newTask.description" class="form-control"
+                  placeholder="Task description.."></textarea>
     </div>
 
     <div class="form-group clearfix" ng-show="newTask.title" ng-if="newTask.simple">
@@ -45,7 +55,7 @@
     </div>
 
     <div class="form-group" ng-show="newTask.title">
-        <select ng-model="newTask.developer" ng-options="user._id as user.local.username for user in users" ></select>
+        <select ng-model="newTask.developer" ng-options="user._id as user.local.username for user in users"></select>
     </div>
 
     <div class="form-group" ng-show="newTask.title">

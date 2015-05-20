@@ -5,6 +5,7 @@ var _ = require('lodash');
 var TaskSchema = new Schema({
     title: String,
     user: String,
+    description: {type: String, default: null },
     priority: {type: Number, default: 5, index: true},
     status: String,
     spenttime: {type: Number, default: 0},

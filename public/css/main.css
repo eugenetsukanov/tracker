@@ -15,6 +15,10 @@
     padding-right: 10px;
 }
 
+hr {
+    margin: 10px 0;
+}
+
 .overflow-hidden {
     overflow: hidden;
 }
@@ -53,4 +57,8 @@
 
 .m-l-sm {
     margin-left: 10px;
+}
+
+.panel.panel-default .detail-line {
+    padding-bottom: 0;
 }

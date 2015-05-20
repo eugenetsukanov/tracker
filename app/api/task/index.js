@@ -5,6 +5,7 @@ module.exports = function (app) {
 
     var TaskForm = form(
         field("title").trim().required(),
+        field("description").trim(),
         field("spenttime").trim().isNumeric(),
         field("status").trim(),
         field("priority").trim().isInt(),

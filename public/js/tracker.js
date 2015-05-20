@@ -369,6 +369,20 @@ angular
             }
         }
     })
+    .directive('textExtend', function () {
+        return {
+            restrict: 'A',
+            templateUrl: 'templates/task/text-extend.html',
+            controller: function ($scope) {
+                $scope.aLimit = $scope.limit || 80;
+
+            },
+            scope: {
+                text: "=textExtend",
+                limit: "=textLimit"
+            }
+        }
+    })
     .directive('taskPanel', function () {
         return {
             restrict: 'A',

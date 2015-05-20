@@ -3,6 +3,7 @@
     <h4>
         <a ng-if="parentTask" ui-sref="app.task({taskId: parentTask._id})"> {{parentTask.title}}</a>
     </h4>
+    <div ng-if="task.description" class="mg" text-extend="task.description" text-limit="170"></div>
 
     <div ng-click="edit(task)" task-metrics task="task"></div>
 
