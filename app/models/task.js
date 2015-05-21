@@ -6,7 +6,6 @@ var TaskSchema = new Schema({
     title: String,
     description: String,
     user: String,
-    description: {type: String, default: null },
     priority: {type: Number, default: 5, index: true},
     status: String,
     spenttime: {type: Number, default: 0},

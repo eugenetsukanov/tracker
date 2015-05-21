@@ -242,7 +242,7 @@ angular
             {title: 'Tree', name: 'tree'}
         ];
 
-        $scope.view = $scope.views[1];
+        $scope.view = $scope.views[0];
 
         $scope.report = {
             title: 'Report',
@@ -318,7 +318,6 @@ angular
         init();
 
         $scope.save = function () {
-            console.log($scope.newTask);
             if (!$scope.newTask._id) {
 
                 if ($scope.taskId) {
