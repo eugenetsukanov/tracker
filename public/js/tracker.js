@@ -213,6 +213,7 @@ angular
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, Upload, UserService, $location, $anchorScroll) {
 
         $scope.files = [];
+        $scope.uploadedFiles = [];
         $scope.$watch('files', function () {
             $scope.upload($scope.files);
         });
@@ -228,11 +229,14 @@ angular
                     }).progress(function (evt) {
                         var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
                         console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
+                        $scope.files.progress = progressPercentage;
                     }).success(function (data, status, headers, config) {
                         console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
-                        $scope.newTask.filesName = data
+
+                        $scope.uploadedFiles.push(data);
                     });
                 }
+                console.log($scope.uploadedFiles);
             }
         };
 
@@ -288,6 +292,8 @@ angular
 
         var init = function () {
 
+            $scope.uploadedFiles = [];
+
             if ($scope.taskId) {
                 Task.query({taskId: $scope.taskId, nested: 'tasks'}, function (tasks) {
                     $scope.tasks = tasks;
@@ -308,7 +314,8 @@ angular
                 simple: true,
                 developer: UserService.getUser()._id,
                 status: "",
-                priority: 5
+                priority: 5,
+                filesName: []
             });
 
             $scope.tasksForMove = [];
@@ -318,7 +325,10 @@ angular
         init();
 
         $scope.save = function () {
+
             if (!$scope.newTask._id) {
+
+                $scope.newTask.filesName = $scope.uploadedFiles;
 
                 if ($scope.taskId) {
                     $scope.newTask.$save({taskId: $scope.taskId, nested: 'tasks'}).then(init);
@@ -328,6 +338,7 @@ angular
             }
 
             else {
+                $scope.newTask.filesName = $scope.newTask.filesName.concat($scope.uploadedFiles);
                 $scope.newTask.$update().then(init);
             }
 

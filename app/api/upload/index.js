@@ -4,9 +4,9 @@ module.exports = function (app) {
     app.use('/api/upload', multer({ dest: './public/uploads/'}));
 
     app.post('/api/upload', function (req, res) {
-        var file = req.files.file.name;
-        console.log(req.files.file.path);
-        res.send(file);
+        console.log(req.files.file);
+        var fileName = req.files.file.name;
+        res.send(fileName);
     })
 
 };
