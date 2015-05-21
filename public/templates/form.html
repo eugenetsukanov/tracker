@@ -1,4 +1,4 @@
-<form ng-submit="save()">
+<form ng-submit="save()" id="form">
 
     <div class="form-group">
         <div class="input-group">
@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="form-group" ng-show="newTask.title"> <!--Complexity-->
+    <div ng-if="newTask.simple" class="form-group" ng-show="newTask.title"> <!--Complexity-->
         <i class="fa fa-puzzle-piece fa-2x vcenter" tooltip="Complexity"></i>
 
         <div class="btn-group">
@@ -55,12 +55,8 @@
     </div>
 
     <div class="form-group" ng-show="newTask.title">
-        <div class="row">
-        <i class="fa fa-user fa-2x vcenter pull-left"></i>
-        <div class="">
-            <select ng-model="newTask.developer" ng-options="user._id as user.local.username for user in users" class="form-control input-sm"></select>
-        </div>
-        </div>
+        <i class="fa fa-user fa-2x vcenter"></i>
+        <select ng-model="newTask.developer" ng-options="user._id as user.local.username for user in users" class="1form-control 1input-sm"></select>
     </div>
 
     <div class="form-group" ng-show="newTask.title">
@@ -72,3 +68,5 @@
 </form>
 
 <div class="row" ng-include="'templates/tasks-for-move.html'" ng-if="tasksForMove.length"></div>
+
+<hr ng-show="newTask.title" class="mg"/>

@@ -18,14 +18,6 @@ angular
                     //$scope.$watch('UserService.user._id', function () {
                     //    $scope.me =
                     //})
-                },
-
-                resolve: {
-                    me: function ($q, UserService) {
-                        return $q(function (resolve, reject) {
-                            UserService.load().then(resolve, resolve)
-                        });
-                    }
                 }
             })
             .state('app.tasks', {
@@ -207,20 +199,25 @@ angular
             },
             load: function () {
                 return $q(function (resolve, reject) {
-                    self.user = User.get({nested: 'me'}, resolve, reject);
+                    self.user = User.get({nested: 'me'}, function () {
+                        resolve(self.user);
+                    }, function (err) {
+                        reject(err);
+                    });
                 });
             }
         };
+
 
         self.load();
 
         return self
     })
-    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, UserService) {
+    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, UserService, $location, $anchorScroll) {
 
         $scope.views = [
-            {title: 'Default', name: 'default'},
             {title: 'Board', name: 'board'},
+            {title: 'List', name: 'list'},
             {title: 'Tree', name: 'tree'}
         ];
 
@@ -264,7 +261,7 @@ angular
 
         $scope.complexities = taskComplexity;
 
-        $scope.users = UserService.getUsers()
+        $scope.users = UserService.getUsers();
 
         $scope.taskId = $stateParams.taskId;
 
@@ -300,7 +297,6 @@ angular
         init();
 
         $scope.save = function () {
-            console.log($scope.newTask);
             if (!$scope.newTask._id) {
 
                 if ($scope.taskId) {
@@ -318,6 +314,13 @@ angular
 
         $scope.edit = function (task) {
             $scope.newTask = task;
+
+            var scrollTop = function () {
+                $location.hash('form');
+                $anchorScroll();
+            };
+
+            scrollTop();
 
             if (task.developer && task.developer._id) {
                 task.developer = task.developer._id;
