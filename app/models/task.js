@@ -83,9 +83,18 @@ TaskSchema.methods = {
                 parent.save(function (err) {
                     if (err) return next(err);
 
+
+
                     parent.updateEstimateTime(function (err) {
                         if (err) return next(err);
-                        parent.save(next);
+                        parent.save(function (err) {
+                            if (err) return next(err);
+
+                            parent.updateParentStatus(function (err) {
+                                if (err) return next(err);
+                                parent.save(next);
+                            });
+                        });
                     });
 
                 });
@@ -94,6 +103,38 @@ TaskSchema.methods = {
 
         }.bind(this));
 
+    },
+
+    updateParentStatus: function (next) {
+
+        this.getChildren(function (err, tasks) {
+            if (err) return next(err);
+            if (!tasks.length) return next();
+
+            var countInProgress = 0;
+            var countAccepted = 0;
+            var countNew = 0;
+
+            tasks.forEach(function (task) {
+                if (task.status == 'in progress'){
+                    countInProgress += 1;
+                }  else if (task.status == 'accepted'){
+                    countAccepted += 1;
+                } else {
+                    countNew += 1;
+                }
+            });
+
+            if ( (countInProgress > 0 || (countAccepted > 0 && countAccepted < tasks.length))){
+                this.status = 'in progress';
+            } else if (countAccepted == tasks.length) {
+                this.status = 'accepted';
+            } else {
+                this.status = '';
+            }
+
+            next()
+        }.bind(this));
     },
 
     calculate: function (next) {
