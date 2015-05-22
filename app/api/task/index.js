@@ -11,7 +11,7 @@ module.exports = function (app) {
         field("priority").trim().isInt(),
         field("complexity").trim().isInt(),
         field("developer"),
-        field("filesName").array()
+        field("files").array()
     );
 
     var Task = require('../../models/task');
@@ -191,7 +191,8 @@ module.exports = function (app) {
             task.complexity = req.form.complexity;
             task.parentTaskId = req.body.parentTaskId || null;
             task.developer = req.form.developer || req.user;
-            task.filesName = req.form.filesName;
+            task.description = req.form.description;
+            task.files = req.form.files;
 
             task.save(function (err, task) {
                 if (err) return next(err);

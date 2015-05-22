@@ -212,33 +212,6 @@ angular
 
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, Upload, UserService, $location, $anchorScroll) {
 
-        $scope.files = [];
-        $scope.uploadedFiles = [];
-        $scope.$watch('files', function () {
-            $scope.upload($scope.files);
-        });
-
-        $scope.upload = function (files) {
-            if (files && files.length) {
-                for (var i = 0; i < files.length; i++) {
-                    var file = files[i];
-                    Upload.upload({
-                        url: '/api/upload',
-                        fields: {'username': $scope.username},
-                        file: file
-                    }).progress(function (evt) {
-                        var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                        console.log('progress: ' + progressPercentage + '% ' + evt.config.file.name);
-                        $scope.files.progress = progressPercentage;
-                    }).success(function (data, status, headers, config) {
-                        console.log('file ' + config.file.name + 'uploaded. Response: ' + data);
-
-                        $scope.uploadedFiles.push(data);
-                    });
-                }
-                console.log($scope.uploadedFiles);
-            }
-        };
 
         $scope.views = [
             {title: 'Board', name: 'board'},
@@ -292,14 +265,15 @@ angular
 
         var init = function () {
 
-            $scope.uploadedFiles = [];
-
             if ($scope.taskId) {
                 Task.query({taskId: $scope.taskId, nested: 'tasks'}, function (tasks) {
                     $scope.tasks = tasks;
-                    $scope.task = Task.get({taskId: $scope.taskId}, function (task) {
+                    Task.get({taskId: $scope.taskId}, function (task) {
+                        $scope.task = task;
                         if (task.parentTaskId) {
-                            $scope.parentTask = Task.get({taskId: task.parentTaskId});
+                            Task.get({taskId: task.parentTaskId}, function (parentTask) {
+                                $scope.parentTask = parentTask;
+                            });
                         }
                     });
 
@@ -307,7 +281,9 @@ angular
                     $state.go('app.tasks');
                 });
             } else {
-                $scope.tasks = Task.query();
+                 Task.query(function (tasks) {
+                     $scope.tasks = tasks;
+                 });
             }
 
             $scope.newTask = new Task({
@@ -315,7 +291,7 @@ angular
                 developer: UserService.getUser()._id,
                 status: "",
                 priority: 5,
-                filesName: []
+                files: []
             });
 
             $scope.tasksForMove = [];
@@ -328,8 +304,6 @@ angular
 
             if (!$scope.newTask._id) {
 
-                $scope.newTask.filesName = $scope.uploadedFiles;
-
                 if ($scope.taskId) {
                     $scope.newTask.$save({taskId: $scope.taskId, nested: 'tasks'}).then(init);
                 } else {
@@ -338,7 +312,6 @@ angular
             }
 
             else {
-                $scope.newTask.filesName = $scope.newTask.filesName.concat($scope.uploadedFiles);
                 $scope.newTask.$update().then(init);
             }
 
@@ -348,7 +321,7 @@ angular
             $scope.newTask = task;
 
             var scrollTop = function () {
-                $location.hash('form');
+                $location.hash('navBar');
                 $anchorScroll();
             };
 
@@ -437,6 +410,53 @@ angular
 
         }
 
+    })
+    .directive('uploader', function () {
+        return {
+            restrict: 'A',
+            templateUrl: 'templates/uploader.html',
+            controller: function ($scope, Upload) {
+                $scope.upload = function (files) {
+
+                    var filesInProgress = 0;
+                    $scope.totalProgress = 0;
+
+                    if (files && files.length) {
+                        for (var i = 0; i < files.length; i++) {
+                            var file = files[i];
+                            Upload.upload({
+                                url: '/api/upload',
+                                fields: {'username': $scope.username},
+                                file: file
+                            }).progress(function (evt) {
+                                //var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                            }).success(function (data, status, headers, config) {
+                                filesInProgress += 1;
+                                $scope.totalProgress = ( filesInProgress / files.length ) * 100;
+                                $scope.newTask.files.push(data);
+                            });
+                        }
+                    }
+                };
+            },
+            scope: {
+                newTask: "=files"
+            }
+        }
+    })
+    .directive('filesView', function () {
+        return {
+            restrict: 'A',
+            templateUrl: 'templates/files-view.html',
+            controller: function ($scope) {
+                $scope.isImage = function (file) {
+                    return /\.(jpg|png|gif|jpeg|bmp)$/.test(file);
+                };
+            },
+            scope: {
+                newTask: "=files"
+            }
+        }
     })
     .directive('taskMetrics', function () {
         return {

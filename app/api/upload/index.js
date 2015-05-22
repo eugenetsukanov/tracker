@@ -7,6 +7,6 @@ module.exports = function (app) {
         console.log(req.files.file);
         var fileName = req.files.file.name;
         res.send(fileName);
-    })
+    });
 
 };
