@@ -11,7 +11,9 @@ module.exports = function (app) {
         field("priority").trim().isInt(),
         field("complexity").trim().isInt(),
         field("developer"),
+        field("share").array(),
         field("files").array()
+
     );
 
     var Task = require('../../models/task');
@@ -190,6 +192,7 @@ module.exports = function (app) {
             task.priority = req.form.priority;
             task.complexity = req.form.complexity;
             task.parentTaskId = req.body.parentTaskId || null;
+            task.share = req.form.share || req.user;
             task.developer = req.form.developer || req.user;
             task.description = req.form.description;
             task.files = req.form.files;

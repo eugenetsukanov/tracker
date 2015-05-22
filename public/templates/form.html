@@ -12,8 +12,12 @@
     </div>
 
     <div class="form-group" ng-if="showDescription">
-        <textarea ng-show="newTask.title" ng-model="newTask.description" class="form-control"
-                  placeholder="Task description.."></textarea>
+        <textarea msd-elastic
+                  ng-show="newTask.title"
+                  ng-model="newTask.description"
+                  class="form-control"
+                  placeholder="Task description..">
+        </textarea>
     </div>
 
     <div class="form-group clearfix" ng-show="newTask.title" ng-if="newTask.simple">
@@ -62,6 +66,16 @@
                 class="1form-control 1input-sm"></select>
     </div>
 
+    <div class="form-group" ng-show="newTask.title">
+
+        <ui-select multiple ng-model="newTask.share" style="width: 300px;">
+            <ui-select-match placeholder="Select user...">{{$item.local.username}}</ui-select-match>
+            <ui-select-choices repeat="user._id as user in users | filter:$select.search">
+                {{user.local.username}}
+            </ui-select-choices>
+        </ui-select>
+    </div>
+
     <div uploader files="newTask"></div>
 
     <div class="form-group task-edit-menu" ng-show="newTask.title">
@@ -69,12 +83,11 @@
             <div class="wrapper">
 
 
-
                 <div class="">
-                <button class="btn btn-success">Save</button>
-                <a class="btn btn-default" ng-click="close()">Close</a>
-        <a ng-if="newTask._id" class="btn btn-default" ng-click="getTasksForMove()">Move</a>
-                <a ng-if="newTask._id" class="btn btn-danger" ng-click="delete(newTask)">Delete</a>
+                    <button class="btn btn-success">Save</button>
+                    <a class="btn btn-default" ng-click="close()">Close</a>
+                    <a ng-if="newTask._id" class="btn btn-default" ng-click="getTasksForMove()">Move</a>
+                    <a ng-if="newTask._id" class="btn btn-danger" ng-click="delete(newTask)">Delete</a>
                 </div>
 
                 <div class="row" ng-include="'templates/tasks-for-move.html'" ng-if="tasksForMove.length"></div>
@@ -85,7 +98,6 @@
 
 
 </form>
-
 
 
 <hr ng-show="newTask.title" class="mg"/>

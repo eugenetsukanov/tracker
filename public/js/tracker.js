@@ -1,5 +1,5 @@
 angular
-    .module('Tracker', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngFileUpload'])
+    .module('Tracker', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize'])
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
@@ -127,6 +127,38 @@ angular
             }
         ]
     })
+
+    .filter('propsFilter', function () {
+        return function (items, props) {
+            var out = [];
+
+            if (angular.isArray(items)) {
+                items.forEach(function (item) {
+                    var itemMatches = false;
+
+                    var keys = Object.keys(props);
+                    for (var i = 0; i < keys.length; i++) {
+                        var prop = keys[i];
+                        var text = props[prop].toLowerCase();
+                        if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
+                            itemMatches = true;
+                            break;
+                        }
+                    }
+
+                    if (itemMatches) {
+                        out.push(item);
+                    }
+                });
+            } else {
+                // Let the output be the input untouched
+                out = items;
+            }
+
+            return out;
+        };
+    })
+
     .filter('toDate', function () {
         return function (date, format) {
             var format = format || 'ddd, DD-MM-YYYY';
@@ -281,9 +313,9 @@ angular
                     $state.go('app.tasks');
                 });
             } else {
-                 Task.query(function (tasks) {
-                     $scope.tasks = tasks;
-                 });
+                Task.query(function (tasks) {
+                    $scope.tasks = tasks;
+                });
             }
 
             $scope.newTask = new Task({
@@ -291,7 +323,8 @@ angular
                 developer: UserService.getUser()._id,
                 status: "",
                 priority: 5,
-                files: []
+                files: [],
+                share: []
             });
 
             $scope.tasksForMove = [];
