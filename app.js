@@ -3,6 +3,7 @@ var express = require('express');
 var app = express();
 app.application = require('./app/config/application');
 app.config = app.application.config;
+app.container = app.application.container;
 
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -10,8 +11,9 @@ var session = require('express-session');
 
 var passport = require('passport');
 
-var mongoose = require('mongoose');
-mongoose.connect(app.config.get('mongo:uri'));
+
+app.container.get('Mongoose');
+app.container.get('GridFS');
 
 app.use(cookieParser());
 app.use(bodyParser.json());
