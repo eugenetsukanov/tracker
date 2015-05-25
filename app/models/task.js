@@ -20,7 +20,7 @@ var TaskSchema = new Schema({
     timeToDo: {type: Number, default: 0},
     owner: {type: Schema.Types.ObjectId, ref: "User"},
     developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
-    share: [{type: Schema.Types.ObjectId, ref: "User", default: null}],
+    share: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
     files: [String]
 
 });
