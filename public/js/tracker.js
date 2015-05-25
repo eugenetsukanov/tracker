@@ -392,7 +392,7 @@ angular
 
         $scope.addTime = function (time) {
             if ($scope.newTask) {
-                var spenttime = $scope.newTask.spenttime || 0;
+                var spenttime = parseFloat($scope.newTask.spenttime || 0);
                 spenttime += time.value;
 
                 spenttime = parseInt(Math.ceil(spenttime * 100)) / 100;
