@@ -69,7 +69,7 @@
     <div class="form-group" ng-show="newTask.title">
 
         <ui-select multiple ng-model="newTask.share" style="width: 300px;">
-            <ui-select-match placeholder="Select user...">{{$item.local.username}}</ui-select-match>
+            <ui-select-match placeholder="Share...">{{$item.local.username}}</ui-select-match>
             <ui-select-choices repeat="user._id as user in users | filter:$select.search">
                 {{user.local.username}}
             </ui-select-choices>
