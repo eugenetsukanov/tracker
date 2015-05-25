@@ -28,12 +28,12 @@ angular
             .state('app.login', {
                 url: "/login",
                 controller: "LoginCtrl",
-                templateUrl: "templates/login.html"
+                templateUrl: "js/modules/auth/views/login.html"
             })
             .state('app.register', {
                 url: "/register",
                 controller: "RegisterCtrl",
-                templateUrl: "templates/register.html"
+                templateUrl: "js/modules/auth/views/register.html"
             })
             .state('app.logout', {
                 url: "/logout",
@@ -62,9 +62,7 @@ angular
     .factory('Task', function ($resource) {
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
-    .factory('User', function ($resource) {
-        return $resource('/api/users/:nested');
-    })
+
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
@@ -214,33 +212,6 @@ angular
 
     })
 
-    .factory('UserService', function ($q, User) {
-        var self = {
-
-            user: null,
-
-            getUser: function () {
-                return this.user
-            },
-            getUsers: function () {
-                return User.query();
-            },
-            load: function () {
-                return $q(function (resolve, reject) {
-                    self.user = User.get({nested: 'me'}, function () {
-                        resolve(self.user);
-                    }, function (err) {
-                        reject(err);
-                    });
-                });
-            }
-        };
-
-
-        self.load();
-
-        return self
-    })
 
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, Upload, UserService, $location, $anchorScroll) {
 
@@ -402,48 +373,7 @@ angular
 
     })
 
-    .factory('Login', function ($resource) {
-        return $resource('/api/login');
-    })
-    .controller('LoginCtrl', function ($scope, Login, $state) {
 
-        $scope.login = function () {
-
-            Login.save({
-                username: $scope.userName,
-                password: $scope.userPassword
-            }, function () {
-                $state.go('app.tasks');
-            })
-
-        }
-
-    })
-    .factory('Logout', function ($resource) {
-        return $resource('/api/logout');
-    })
-    .controller('LogoutCtrl', function ($scope, Logout, $state) {
-        Logout.save(function () {
-            $state.go('app.login');
-        });
-    })
-    .factory('Register', function ($resource) {
-        return $resource('/api/register');
-    })
-    .controller('RegisterCtrl', function ($scope, Register, $state) {
-
-        $scope.register = function () {
-
-            Register.save({
-                username: $scope.userName,
-                password: $scope.userPassword
-            }, function () {
-                $state.go('app.tasks');
-            })
-
-        }
-
-    })
     .directive('uploader', function () {
         return {
             restrict: 'A',
