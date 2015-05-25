@@ -1,0 +1,19 @@
+angular
+    .module('Tracker')
+    .directive('taskPanel', function () {
+        return {
+            restrict: 'A',
+            templateUrl: 'js/modules/task/directives/taskPanel/taskPanel.html',
+            controller: function ($scope) {
+                $scope.edit = function (task) {
+                    if ($scope.onEdit) {
+                        $scope.onEdit(task);
+                    }
+                }
+            },
+            scope: {
+                task: "=task",
+                onEdit: "=taskOnEdit"
+            }
+        }
+    });

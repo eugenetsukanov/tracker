@@ -42,7 +42,7 @@ angular
             .state('app.report', {
                 url: "/report",
                 controller: "ReportCtrl",
-                templateUrl: "templates/report.html"
+                templateUrl: "js/modules/report/report.html"
             })
         ;
 
@@ -65,12 +65,6 @@ angular
 
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
-    })
-    .factory('ReportByDate', function ($resource) {
-        return $resource('/api/report/date/:date');
-    })
-    .factory('ReportByTaskId', function ($resource) {
-        return $resource('/api/report/task/:taskId', {taskId: '@_id'});
     })
 
     .factory('taskComplexity', function () {
@@ -126,43 +120,7 @@ angular
         ]
     })
 
-    .filter('propsFilter', function () {
-        return function (items, props) {
-            var out = [];
 
-            if (angular.isArray(items)) {
-                items.forEach(function (item) {
-                    var itemMatches = false;
-
-                    var keys = Object.keys(props);
-                    for (var i = 0; i < keys.length; i++) {
-                        var prop = keys[i];
-                        var text = props[prop].toLowerCase();
-                        if (item[prop].toString().toLowerCase().indexOf(text) !== -1) {
-                            itemMatches = true;
-                            break;
-                        }
-                    }
-
-                    if (itemMatches) {
-                        out.push(item);
-                    }
-                });
-            } else {
-                // Let the output be the input untouched
-                out = items;
-            }
-
-            return out;
-        };
-    })
-
-    .filter('toDate', function () {
-        return function (date, format) {
-            var format = format || 'ddd, DD-MM-YYYY';
-            return moment(date).format(format);
-        }
-    })
     .filter('humanComplexity', function (taskComplexity) {
 
         return function (complexity) {
@@ -199,19 +157,6 @@ angular
         };
 
     })
-
-    .controller('ReportCtrl', function ($scope) {
-
-        $scope.date = new Date();
-
-        $scope.openDatePicker = function ($event) {
-            $event.preventDefault();
-            $event.stopPropagation();
-            $scope.opened = true;
-        };
-
-    })
-
 
     .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, Upload, UserService, $location, $anchorScroll) {
 
@@ -372,74 +317,6 @@ angular
         };
 
     })
-
-
-
-    .directive('taskMetrics', function () {
-        return {
-            restrict: 'A',
-            templateUrl: 'templates/task/metrics.html',
-            scope: {
-                task: "=task"
-            }
-        }
-    })
-    .directive('textExtend', function () {
-        return {
-            restrict: 'A',
-            templateUrl: 'templates/task/text-extend.html',
-            controller: function ($scope) {
-                $scope.aLimit = $scope.limit || 80;
-
-            },
-            scope: {
-                text: "=textExtend",
-                limit: "=textLimit"
-            }
-        }
-    })
-    .directive('taskPanel', function () {
-        return {
-            restrict: 'A',
-            templateUrl: 'templates/task/task-panel.html',
-            controller: function ($scope) {
-                $scope.edit = function (task) {
-                    if ($scope.onEdit) {
-                        $scope.onEdit(task);
-                    }
-                }
-            },
-            scope: {
-                task: "=task",
-                onEdit: "=taskOnEdit"
-            }
-        }
-    })
-    .directive('taskStatusLabel', function () {
-        return {
-            restrict: 'C',
-            link: function (scope, element, attrs) {
-                var getClass = function () {
-                    var cl = 'label-info';
-
-                    if (scope.task.status == 'accepted') {
-                        cl = 'label-success';
-                    }
-
-                    if (scope.task.status == 'in progress') {
-                        cl = 'label-warning'
-                    }
-
-                    return cl
-
-                };
-
-                attrs.$addClass(getClass());
-
-            }
-        }
-    })
-
 
 ;
 

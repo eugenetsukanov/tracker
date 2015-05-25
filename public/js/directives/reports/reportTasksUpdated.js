@@ -5,7 +5,7 @@ angular
 
         return {
             restrict: 'E',
-            templateUrl: 'templates/report/tasks-updated.html',
+            templateUrl: 'js/directives/reports/reportTasksUpdated.html',
             scope: {
                 taskId: '=',
                 date: '=',
