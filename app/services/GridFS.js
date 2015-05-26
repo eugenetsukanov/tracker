@@ -20,10 +20,6 @@ var GridFS = function (uri) {
         return this.gfs;
     }
 
-    this.hasFs = function () {
-        return !!this.gfs;
-    }
-
     this.getWriteStream = function (options) {
         return this.getFs().createWriteStream(options);
     }
@@ -38,7 +34,6 @@ var GridFS = function (uri) {
 
             if (err) return next(err);
             if (!file) return next();
-
 
             file.stream = self.getReadStreamForFile(file);
             next(null, file);
