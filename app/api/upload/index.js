@@ -1,16 +1,18 @@
 module.exports = function (app) {
 
     var GridFS = app.container.get('GridFS');
-    var multer  = require('multer');
-    app.use('/api/upload', multer({ dest: './public/uploads/'}));
+    var multer = require('multer');
+    app.use('/api/upload', multer({dest: './public/uploads/'}));
 
     app.post('/api/upload', function (req, res) {
 
-        var fs = require('fs-extra');
         var file = req.files.file;
+
+        var fs = require('fs-extra');
 
         var writeStream = GridFS.getWriteStream({
             filename: file.name,
+            content_type: file.mimetype,
             metadata: file
         });
 
@@ -29,19 +31,13 @@ module.exports = function (app) {
 
     app.get('/api/files/:file', function (req, res, next) {
 
-        var file = req.params.file;
+        GridFS.getFileWithStream(req.params.file, function (err, file) {
 
-        GridFS.getFs().files.findOne({ filename: file }, function (err, file) {
             if (err) return next(err);
-            if(!file) return res.sendStatus(404);
+            if (!file) return res.sendStatus(404);
 
-            res.header("Content-Type", file.metadata.mimetype);
-
-            var readstream = GridFS.getFs().createReadStream({
-                _id: file._id
-            });
-
-            readstream.pipe(res);
+            res.header("Content-Type", file.content_type);
+            file.stream.pipe(res);
         });
 
     });
