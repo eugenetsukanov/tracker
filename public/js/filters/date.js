@@ -1,5 +1,3 @@
-'use strict';
-
 angular.module('Tracker')
     .filter('fromNow', function () {
         return function (date) {
