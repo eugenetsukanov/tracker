@@ -90,7 +90,7 @@
                     <a ng-if="newTask._id" class="btn btn-danger" ng-click="delete(newTask)">Delete</a>
                 </div>
 
-                <div class="row" ng-include="'templates/tasks-for-move.html'" ng-if="tasksForMove.length"></div>
+                <div class="row" ng-include="'tracker/modules/task/views/tasks-for-move.html'" ng-if="tasksForMove.length"></div>
 
             </div>
         </div>

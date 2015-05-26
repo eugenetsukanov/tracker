@@ -10,19 +10,19 @@ angular
         $stateProvider
             .state('app', {
                 url: "/app",
-                templateUrl: "templates/app.html",
+                templateUrl: "tracker/tracker.html",
 
                 controller: function ($scope, UserService) {
                 }
             })
             .state('app.tasks', {
                 url: "/tasks",
-                templateUrl: "templates/task.html",
+                templateUrl: "tracker/modules/task/views/task.html",
                 controller: 'TaskCtrl'
             })
             .state('app.task', {
                 url: "/tasks/:taskId",
-                templateUrl: "templates/task.html",
+                templateUrl: "tracker/modules/task/views/task.html",
                 controller: 'TaskCtrl'
             })
             .state('app.login', {
@@ -33,7 +33,7 @@ angular
             .state('app.register', {
                 url: "/register",
                 controller: "RegisterCtrl",
-                templateUrl: "tracker/modules/auth/views/register.html"
+                templateUrl: "js/modules/auth/views/register.html"
             })
             .state('app.logout', {
                 url: "/logout",
@@ -42,7 +42,7 @@ angular
             .state('app.report', {
                 url: "/report",
                 controller: "ReportCtrl",
-                templateUrl: "tracker/modules/report/report.html"
+                templateUrl: "js/modules/report/report.html"
             })
         ;
 

@@ -9,7 +9,7 @@ angular
                 task: '=',
                 edit: '=taskOnEdit'
             },
-            templateUrl: 'templates/task-tree.html',
+            templateUrl: 'tracker/modules/task/directives/taskTree/taskTree.html',
             link: function (scope, element) {
 
                 if (!scope.task.simple) {

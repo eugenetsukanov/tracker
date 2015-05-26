@@ -13,7 +13,7 @@
 
 </div>
 
-<div ng-include="'templates/form.html'"></div>
+<div ng-include="'tracker/modules/task/views/form.html'"></div>
 
 <div class="pull-right" ng-if="taskId">
     <button class="btn btn-sm btn-default" ng-click="loadView(report)">Report</button>
@@ -28,4 +28,4 @@
     </button>
 </div>
 
-<div ng-include="'templates/view/task-view-'+view.name+'.html'"></div>
+<div ng-include="'tracker/modules/task/views/view/task-view-'+view.name+'.html'"></div>
