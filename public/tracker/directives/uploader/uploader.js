@@ -4,7 +4,7 @@ angular
     .directive('uploader', function () {
         return {
             restrict: 'A',
-            templateUrl: 'js/directives/uploader/uploader.html',
+            templateUrl: 'tracker/directives/uploader/uploader.html',
             controller: function ($scope, Upload) {
                 $scope.upload = function (files) {
 

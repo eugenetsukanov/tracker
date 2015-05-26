@@ -3,7 +3,7 @@ angular
     .directive('taskPanel', function () {
         return {
             restrict: 'A',
-            templateUrl: 'js/modules/task/directives/taskPanel/taskPanel.html',
+            templateUrl: 'tracker/modules/task/directives/taskPanel/taskPanel.html',
             controller: function ($scope) {
                 $scope.edit = function (task) {
                     if ($scope.onEdit) {

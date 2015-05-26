@@ -3,7 +3,7 @@ angular
     .directive('textExtend', function () {
         return {
             restrict: 'A',
-            templateUrl: 'js/directives/textExtend/textExtend.html',
+            templateUrl: 'tracker/directives/textExtend/textExtend.html',
             controller: function ($scope) {
                 $scope.aLimit = $scope.limit || 80;
 
