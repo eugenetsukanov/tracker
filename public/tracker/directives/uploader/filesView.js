@@ -11,7 +11,7 @@ angular
                 };
             },
             scope: {
-                newTask: "=files"
+                files: "=files"
             }
         }
     });

@@ -6,7 +6,8 @@ angular
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskMetrics/taskMetrics.html',
             scope: {
-                task: "=task"
+                task: "=task",
+                options: "=taskOptions"
             }
         }
     });

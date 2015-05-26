@@ -5,7 +5,7 @@ angular
         return {
             restrict: 'A',
             templateUrl: 'tracker/directives/uploader/uploader.html',
-            controller: function ($scope, Upload) {
+            controller: function ($scope, Upload, $timeout) {
                 $scope.upload = function (files) {
 
                     var filesInProgress = 0;
@@ -23,14 +23,21 @@ angular
                             }).success(function (data, status, headers, config) {
                                 filesInProgress += 1;
                                 $scope.totalProgress = ( filesInProgress / files.length ) * 100;
-                                $scope.newTask.files.push(data);
+                                $scope.files.push(data);
+
+                                if ($scope.totalProgress == 100){
+                                    $timeout(function(){
+                                        filesInProgress = 0;
+                                        $scope.totalProgress = 0;
+                                    }, 3000);
+                                }
                             });
                         }
                     }
                 };
             },
             scope: {
-                newTask: "=files"
+                files: "=files"
             }
         }
     });

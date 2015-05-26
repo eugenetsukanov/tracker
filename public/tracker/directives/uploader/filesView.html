@@ -1,6 +1,6 @@
 
     <ul class="images-list">
-        <li ng-repeat="file in newTask.files">
+        <li ng-repeat="file in files">
             <a ng-if="isImage(file)" href="/uploads/{{file}}" target="_blank" class="img" style="background: url('/uploads/{{file}}'); background-size: cover;"></a>
             <a ng-if="!isImage(file)" href="/uploads/{{file}}" target="_blank"><i class="fa fa-file"></i>&nbsp;{{file}}</a>
         </li>

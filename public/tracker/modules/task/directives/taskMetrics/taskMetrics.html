@@ -1,13 +1,13 @@
 
 <ul class="detail-line task-metrics">
 
-    <li tooltip="Status">
+    <li tooltip="Status" ng-hide="options.hideStatus">
         <span class="label task-status-label">
             {{task.status || 'new'}}
         </span>
     </li>
 
-    <li ng-if="task.priority" tooltip="Priority"><i class="fa fa-star-half-o"></i> {{task.priority}}</li>
+    <li ng-if="task.priority" tooltip="Priority"><i class="fa fa-bolt"></i> {{task.priority}}</li>
 
     <li>
         <i class="fa fa-clock-o" tooltip="Time"></i>

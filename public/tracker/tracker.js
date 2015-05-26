@@ -33,7 +33,7 @@ angular
             .state('app.register', {
                 url: "/register",
                 controller: "RegisterCtrl",
-                templateUrl: "js/modules/auth/views/register.html"
+                templateUrl: "tracker/modules/auth/views/register.html"
             })
             .state('app.logout', {
                 url: "/logout",
@@ -42,7 +42,7 @@ angular
             .state('app.report', {
                 url: "/report",
                 controller: "ReportCtrl",
-                templateUrl: "js/modules/report/report.html"
+                templateUrl: "tracker/modules/report/report.html"
             })
         ;
 

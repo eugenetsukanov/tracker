@@ -13,7 +13,8 @@ angular
             },
             scope: {
                 task: "=task",
-                onEdit: "=taskOnEdit"
+                onEdit: "=taskOnEdit",
+                options: "=taskOptions"
             }
         }
     });
