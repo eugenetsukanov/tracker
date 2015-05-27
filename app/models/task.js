@@ -295,6 +295,16 @@ TaskSchema.methods = {
             next(null, null);
         }
     },
+    getRoot: function (next) {
+        if (this.parentTaskId){
+            this.getParent(function (err, parent) {
+                if (err) return next(err);
+                parent.getRoot(next);
+            });
+        } else {
+            Task.findById(this._id, next);
+        }
+    },
     getGrandParent: function (next) {
         this.getParent(function (err, parent) {
             if (err) return next(err);

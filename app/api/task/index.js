@@ -172,8 +172,20 @@ module.exports = function (app) {
                     res.sendStatus(404);
                 }
                 else {
-                    req.Task = task;
-                    next();
+                    task.getRoot(function (err, root) {
+                        console.log(root);
+                        if(
+                            (root.owner.toString() == req.user._id.toString()) ||
+                            (_.find(root.share, function (userId) {
+                                return userId.toString() == req.user._id.toString();
+                            }))
+                        ){
+                            req.Task = task;
+                            next();
+                        } else {
+                            res.sendStatus(403);
+                        }
+                    });
                 }
 
             });
