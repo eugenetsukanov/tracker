@@ -1,0 +1,121 @@
+<form ng-submit="save()" id="form">
+
+    <div class="row">
+
+        <!--left-side-->
+        <div ng-class="task.title ? 'col-md-6' : 'col-md-12'">
+
+            <div class="form-group">
+                <input ng-model="task.title" type="text" class="form-control" placeholder="Add Task" id="title"/>
+            </div>
+
+            <div ng-show="task.title">
+
+                <div class="form-group">
+                <textarea ng-focus="msd-elastic" msd-elastic
+                          ng-model="task.description"
+                          class="form-control description-height"
+                          placeholder="Task description"
+                          rows="1">
+                </textarea>
+                </div>
+
+                <div uploader files="task.files"></div>
+
+                <div ng-if="task.files.length">
+                    <div files-view files="task.files"></div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!--right-side-->
+        <div class="col-md-6 tech-info" ng-show="task.title">
+
+            <hr class="mg hidden-lg hidden-md"/>
+
+            <div ng-if="task.simple" class="form-group"> <!-- Status-->
+                <i class="fa fa-check-square-o fa-md vcenter" tooltip="Status"></i>
+
+                <div class="btn-group">
+                    <label ng-repeat="status in statuses" class="btn btn-default btn-sm" ng-model="task.status"
+                           btn-radio="status.value">{{status.name}}</label>
+                </div>
+            </div>
+
+            <hr ng-if="task.simple" class="mg"/>
+
+            <div ng-if="task.simple" class="form-group" ng-show="task.title"> <!--Complexity-->
+                <i class="fa fa-puzzle-piece fa-md vcenter" tooltip="Complexity"></i>
+
+                <div class="btn-group complexity">
+                    <label ng-repeat="complexity in complexities" class="btn btn-default btn-sm"
+                           ng-model="task.complexity"
+                           btn-radio="complexity.value">{{complexity.name}}</label>
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="task.title"> <!-- Priority-->
+                <i class="fa fa-bolt fa-md vcenter" tooltip="Priority"></i>
+
+                <div class="btn-group priority">
+                    <label ng-repeat="priority in priorities" class="btn btn-default btn-sm" ng-model="task.priority"
+                           btn-radio="priority">{{priority}}</label>
+                </div>
+            </div>
+
+            <hr ng-if="task.simple" class="mg"/>
+
+            <div class="form-group clearfix" ng-show="task.title" ng-if="task.simple">
+                <i class="fa fa-clock-o fa-md vcenter pull-left" tooltip="Spent time"></i>
+
+                <input ng-model="task.spenttime" type="text" class="form-control w-xs pull-left input-sm"
+                       id="spentTime"
+                       placeholder="Spent time"/>
+
+                <div class="btn-group m-l-sm pull-left">
+                    <label ng-click="addTime(time)" ng-repeat="time in addTimeList" class="btn btn-default btn-sm">+{{time.name}}</label>
+                </div>
+            </div>
+
+            <hr class="mg"/>
+
+            <div class="form-group clearfix" ng-show="task.title">
+                <i class="fa fa-user fa-md vcenter pull-left" tooltip="Assigned to..."></i>
+                <select ng-model="task.developer" ng-options="member._id as member.local.username for member in team"
+                        class="form-control input-sm w-sm pull-left"></select>
+            </div>
+
+            <div class="form-group clearfix" ng-if="task.parentTaskId == null" ng-show="task.title">
+
+                <i class="fa fa-user-plus fa-md vcenter pull-left" tooltip="Shared for..."></i>
+
+                <ui-select multiple ng-model="task.team" class="pull-left input-sm w-sm">
+                    <ui-select-match placeholder="Share...">{{$item.local.username}}</ui-select-match>
+                    <ui-select-choices repeat="user._id as user in users | filter:$select.search">
+                        {{user.local.username}}
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+
+        </div>
+    </div>
+
+    <hr ng-show="task.title" class="mg"/>
+
+    <div class="form-group clearfix" ng-show="task.title">
+        <div class="">
+            <button class="btn btn-success btn-sm">Save</button>
+            <a class="btn btn-default btn-sm" ng-click="close()">Close</a>
+            <a ng-if="task._id" class="btn btn-default btn-sm" ng-click="getTasksForMove()">Move</a>
+            <a ng-if="task._id" class="btn btn-danger btn-sm" ng-click="delete(task)">Delete</a>
+        </div>
+
+        <div class="row" ng-include="'tracker/modules/task/views/tasks-for-move.html'"
+             ng-if="tasksForMove.length"></div>
+    </div>
+
+    <hr ng-show="task.title" class="mg"/>
+
+</form>

@@ -22,6 +22,10 @@ angular
 
         $scope.view = $scope.views[0];
 
+        $scope.loadView = function (view) {
+            $scope.view = view;
+        };
+
         $scope.report = {
             title: 'Report',
             name: "report"
@@ -32,10 +36,6 @@ angular
             {name: 'In Progress', value: "in progress"},
             {name: 'Accepted', value: "accepted"}
         ];
-
-        $scope.loadView = function (view) {
-            $scope.view = view;
-        };
 
         $scope.priorities = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
@@ -97,7 +97,7 @@ angular
                 developer: UserService.getUser()._id,
                 status: "",
                 priority: 5,
-                parentTaskId: $scope.taskId || null,
+                parentTaskId: $scope.taskId || undefined,
                 files: [],
                 team: []
             });
@@ -124,6 +124,10 @@ angular
             }
 
         };
+
+        $scope.init = function () {
+            init();
+        }
 
         $scope.edit = function (task) {
             $scope.newTask = task;
