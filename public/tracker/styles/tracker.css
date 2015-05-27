@@ -28,35 +28,44 @@ hr {
     vertical-align: middle;
     float: none;
 }
+
 .fa.vcenter {
     color: #999;
     width: 32px;
     margin-right: 5px;
     text-align: center;
 }
+
 .panel-title .fa.vcenter {
     width: auto;
     margin-right: 0;
 }
+
 .tech-info .btn-group {
     margin-left: -4px;
 }
+
 .tech-info .btn-group.priority label {
     text-align: center;
     min-width: 35px;
 }
+
 .tech-info .btn-group.complexity label:nth-child(-n+5) {
     border-bottom: 2px solid green;
 }
-.tech-info .btn-group.complexity label:nth-child(n+5):nth-child(-n+8)  {
+
+.tech-info .btn-group.complexity label:nth-child(n+5):nth-child(-n+8) {
     border-bottom: 2px solid orange;
 }
-.tech-info .btn-group.complexity label:nth-child(n+9):nth-child(-n+13)  {
+
+.tech-info .btn-group.complexity label:nth-child(n+9):nth-child(-n+13) {
     border-bottom: 2px solid red;
 }
+
 .tech-info .m-l-sm {
     margin-left: 10px;
 }
+
 .total-progress {
     padding-top: 7px;
 }
@@ -64,6 +73,7 @@ hr {
 .w-sm {
     width: 25%;
 }
+
 .w-xs {
     width: 15%;
 }
@@ -97,10 +107,16 @@ hr {
 .panel.panel-default .detail-line {
     padding-bottom: 0;
 }
+
 .images-list {
-    padding: 0;
-    margin: 0 0 20px;
+    margin-bottom: 20px;
 }
+
+.images-list ul {
+    padding: 0;
+    margin: 0;
+}
+
 .images-list li {
     list-style-type: none;
     padding: 0;
@@ -108,14 +124,17 @@ hr {
     font-size: 0;
     display: inline-block;
 }
+
 .images-list li a {
     font-size: 14px;
     display: block;
     clear: both;
 }
+
 .images-list li a i.fa {
-    padding-right:5px;
+    padding-right: 5px;
 }
+
 .images-list li a.img {
     display: inline-block;
     width: 75px;
@@ -124,9 +143,11 @@ hr {
     border: 4px solid #fff;
     box-shadow: 0 0 1px #333;
 }
+
 .images-list li a.img:hover {
     border-color: #5bc0de;
 }
+
 .task-edit-menu {
     position: fixed;
     background: #fff;
@@ -136,37 +157,44 @@ hr {
     z-index: 100;
     box-shadow: 0 1px 1px #ccc;
 }
+
 .task-edit-menu .wrapper {
     padding: 7px 0;
 }
+
 .move-view ul {
     margin-bottom: 0;
 }
+
 .board-buttons {
     margin-top: 0;
     position: relative;
     top: -25px;
     z-index: 1;
 }
+
 .edit-form {
     margin-bottom: 30px;
 }
+
 .board-view h3 {
     margin-top: 0;
 }
+
 .fa-md {
     font-size: 1.6em;
     line-height: 1.2em;
 }
 
-
 /*bootstrap fixes*/
 .ui-select-multiple.ui-select-bootstrap {
     padding: 3px 10px 0;
 }
-.ui-select-bootstrap .ui-select-choices-row>a {
+
+.ui-select-bootstrap .ui-select-choices-row > a {
     padding: 3px 20px;
 }
+
 .dropdown-menu {
     font-size: 12px;
 }

@@ -7,6 +7,7 @@ var GridFS = application.get('GridFS');
 
 var FileSchema = require('./file.schema');
 
+
 var TaskSchema = new Schema({
     title: String,
     description: String,
@@ -26,8 +27,7 @@ var TaskSchema = new Schema({
     owner: {type: Schema.Types.ObjectId, ref: "User"},
     developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
     team: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
-    files: [String]
-
+    files: [FileSchema]
 });
 
 TaskSchema.set('toJSON', {getters: true, virtuals: true});

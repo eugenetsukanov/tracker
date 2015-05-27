@@ -1,7 +1,13 @@
-
-    <ul class="images-list">
-        <li ng-repeat="file in files" tooltip="{{file.metadata.originalname}}">
-            <a ng-if="isImage(file.filename)" href="/api/files/{{file.filename}}" target="_blank" class="img" style="background: url('/api/files/{{file.filename}}'); background-size: cover;"></a>
-            <a ng-if="!isImage(file.filename)" href="/api/files/{{file.filename}}" target="_blank"><i class="fa fa-file"></i>&nbsp;{{file.metadata.originalname}}</a>
+<div class="images-list">
+    <ul>
+        <li ng-repeat="file in files" tooltip="{{file.metadata.originalname}}" ng-if="isImage(file.filename)">
+            <a href="/api/files/{{file.filename}}" target="_blank" class="img" style="background: url('/api/files/{{file.filename}}'); background-size: cover;"></a>
         </li>
     </ul>
+
+    <ul>
+        <li ng-repeat="file in files" tooltip="{{file.metadata.originalname}}" ng-if="!isImage(file.filename)">
+            <a href="/api/files/{{file.filename}}" target="_blank"><i class="fa fa-file"></i>&nbsp;{{file.metadata.originalname}}</a>
+        </li>
+    </ul>
+</div>
