@@ -15,7 +15,7 @@ angular
                         for (var i = 0; i < files.length; i++) {
                             var file = files[i];
                             Upload.upload({
-                                url: '/api/upload',
+                                url: '/api/files',
                                 fields: {'username': $scope.username},
                                 file: file
                             }).progress(function (evt) {

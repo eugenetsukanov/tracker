@@ -2,6 +2,8 @@ var GridFS = function (uri) {
 
     var Grid = require('gridfs-stream');
     var mongoose = require('mongoose');
+    var fs = require('fs-extra');
+
 
     var self = this;
 
@@ -51,6 +53,36 @@ var GridFS = function (uri) {
 
     this.getReadStreamForFile = function (file) {
         return this.getReadStream({_id: file._id});
+    }
+
+    this.save = function (filePath, options, next) {
+
+
+        fs.exists(filePath, function (exists) {
+
+            var cleanup = function () {
+                fs.remove(filePath, new Function);
+            };
+
+            if (!exists) return next(new Error('File is not exists: ' + filePath));
+
+            var writeStream = self.getWriteStream(options);
+            var readStream = fs.createReadStream(filePath);
+
+            readStream.pipe(writeStream);
+
+            readStream.on('error', function (err) {
+                cleanup();
+                next(err);
+            });
+
+            writeStream.on('close', function (file) {
+                cleanup();
+                next(null, file);
+            });
+
+        });
+
     }
 };
 
