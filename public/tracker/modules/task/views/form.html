@@ -87,7 +87,7 @@
                         class="form-control input-sm w-sm pull-left"></select>
             </div>
 
-            <div class="form-group clearfix" ng-show="newTask.title">
+            <div class="form-group clearfix" ng-if="newTask.parentTaskId == null" ng-show="newTask.title">
 
                 <i class="fa fa-user-plus fa-md vcenter pull-left" tooltip="Shared for..."></i>
 

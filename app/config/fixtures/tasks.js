@@ -24,6 +24,7 @@ exports.tasks = [
         "complexity" : null,
         "spenttime" : 0,
         "priority" : null,
+        "owner":ObjectId("5514462ae4eb270b4f115c2c"),
         "__v" : 0
     },
     {
@@ -89,6 +90,7 @@ exports.tasks = [
         "complexity" : 2,
         "spenttime" : null,
         "priority" : null,
+        "owner":ObjectId("5514462ae4eb270b4f115c2c"),
         "__v" : 0
     }
 

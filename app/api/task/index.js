@@ -21,8 +21,17 @@ module.exports = function (app) {
     var _ = require('lodash');
 
     app.get('/api/tasks', function (req, res) {
+
+        var q = {
+            parentTaskId: null,
+            $or: [
+                {owner: req.user},
+                {share: req.user}
+            ]
+        };
+
         Task
-            .find({parentTaskId: null})
+            .find(q)
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .sort('-priority date')
