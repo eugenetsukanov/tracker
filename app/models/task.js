@@ -2,6 +2,9 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
 
+var application = require('../config/application');
+var GridFS = application.get('GridFS');
+
 var FileSchema = require('./file.schema');
 
 var TaskSchema = new Schema({
@@ -336,6 +339,10 @@ TaskSchema.methods = {
     },
     countChildren: function (next) {
         Task.count({parentTaskId: this._id}, next);
+    },
+    removeFiles: function (next) {
+        next = next || new Function();
+        GridFS.remove(this.files, next);
     }
 
 
@@ -351,6 +358,7 @@ TaskSchema.post('remove', function (task) {
 
 TaskSchema.post('remove', function (task) {
     task.removeChildren();
+    task.removeFiles();
 });
 
 var Task = mongoose.model('Task', TaskSchema);

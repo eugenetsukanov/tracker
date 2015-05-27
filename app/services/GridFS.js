@@ -3,7 +3,8 @@ var GridFS = function (uri) {
     var Grid = require('gridfs-stream');
     var mongoose = require('mongoose');
     var fs = require('fs-extra');
-
+    var _ = require('lodash');
+    var async = require('async');
 
     var self = this;
 
@@ -81,6 +82,41 @@ var GridFS = function (uri) {
                 next(null, file);
             });
 
+        });
+
+    }
+
+    this.remove = function (file, next) {
+        if (_.isArray(file)) {
+            this.removeFiles(file, next)
+        }
+        else {
+            this.removeFile(file);
+        }
+    }
+
+    this.removeFiles = function (files, next) {
+
+        async.each(files, function (file, next) {
+            self.removeFile(file, next);
+        }, next)
+    }
+
+    this.removeFile = function (file, next) {
+
+        var options = {};
+
+        if (_.isObject(file)) {
+            options._id = file._id || undefined;
+            options.filename = file.filename || undefined;
+        } else {
+            options.filename = file;
+        }
+
+        this.getFs().remove(options, function (err) {
+            if (err) return next(err);
+            console.log('removed', file);
+            next();
         });
 
     }
