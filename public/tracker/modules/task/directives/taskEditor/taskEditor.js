@@ -7,10 +7,11 @@ angular
             templateUrl: 'tracker/modules/task/directives/taskEditor/taskEditor.html',
             controller: function ($scope,
                                   Task,
-                                  taskComplexity,
+                                  TaskComplexity,
                                   TaskMove,
                                   UserService,
                                   Team) {
+
                 $scope.statuses = [
                     {name: 'New', value: ""},
                     {name: 'In Progress', value: "in progress"},
@@ -38,7 +39,7 @@ angular
                     }
                 ];
 
-                $scope.complexities = taskComplexity;
+                $scope.complexities = TaskComplexity;
 
                 $scope.users = UserService.getUsers();
 
@@ -62,6 +63,9 @@ angular
 
                     }
 
+                    if ($scope.task.developer && $scope.task.developer._id) {
+                        $scope.task.developer = $scope.task.developer._id;
+                    }
 
                     $scope.tasksForMove = [];
 
@@ -101,9 +105,7 @@ angular
                 };
 
                 $scope.delete = function (task) {
-                    task.$delete().then(function () {
-                        init()
-                    }).then($scope.onComplete);
+                    task.$delete().then($scope.onComplete);
                 };
 
                 $scope.close = function () {

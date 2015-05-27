@@ -13,7 +13,7 @@ angular
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
 
-    .factory('taskComplexity', function () {
+    .factory('TaskComplexity', function () {
         return complexities = [
             {
                 name: '0',
