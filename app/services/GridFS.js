@@ -107,7 +107,6 @@ var GridFS = function (uri) {
 
         this.getFs().remove(options, function (err) {
             if (err) return next(err);
-            console.log('removed', file);
             next();
         });
 
