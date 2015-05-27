@@ -16,7 +16,6 @@ angular
                             var file = files[i];
                             Upload.upload({
                                 url: '/api/files',
-                                fields: {'username': $scope.username},
                                 file: file
                             }).progress(function (evt) {
                                 //var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);

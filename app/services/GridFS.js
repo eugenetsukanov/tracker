@@ -30,7 +30,7 @@ var GridFS = function (uri) {
         this.findFile({filename: fileName}, next);
     }
 
-    this.getFileWithStream = function (fileName, next) {
+    this.getFileWithReadStream = function (fileName, next) {
 
         this.getFile(fileName, function (err, file) {
 

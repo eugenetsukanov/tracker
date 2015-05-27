@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
 
+var FileSchema = require('./file.schema');
+
 var TaskSchema = new Schema({
     title: String,
     description: String,

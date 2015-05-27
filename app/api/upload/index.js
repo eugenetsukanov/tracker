@@ -16,14 +16,14 @@ module.exports = function (app) {
             }
         }, function (err, file) {
             if (err) return next(err);
-            res.send(file.filename);
+            res.json(file);
         });
 
     });
 
     app.get('/api/files/:file', function (req, res, next) {
 
-        GridFS.getFileWithStream(req.params.file, function (err, file) {
+        GridFS.getFileWithReadStream(req.params.file, function (err, file) {
 
             if (err) return next(err);
             if (!file) return res.sendStatus(404);
