@@ -9,14 +9,12 @@ var GridFS = function (uri) {
     var self = this;
 
     this.gfs = null;
-
-
     Grid.mongo = mongoose.mongo;
 
-    var conn = mongoose.createConnection(uri);
+    var connection = mongoose.createConnection(uri);
 
-    conn.once('open', function () {
-        this.gfs = Grid(conn.db);
+    connection.once('open', function () {
+        this.gfs = Grid(connection.db);
     }.bind(this));
 
     this.getFs = function () {
@@ -88,18 +86,12 @@ var GridFS = function (uri) {
 
     this.remove = function (file, next) {
         if (_.isArray(file)) {
-            this.removeFiles(file, next)
+            async.each(file, function (file, next) {
+                self.removeFile(file, next);
+            }, next)
+        } else {
+            this.removeFile(file, next);
         }
-        else {
-            this.removeFile(file);
-        }
-    }
-
-    this.removeFiles = function (files, next) {
-
-        async.each(files, function (file, next) {
-            self.removeFile(file, next);
-        }, next)
     }
 
     this.removeFile = function (file, next) {
@@ -119,6 +111,35 @@ var GridFS = function (uri) {
             next();
         });
 
+    }
+
+    this.connect = function (file, next) {
+        if (_.isArray(file)) {
+            async.each(file, function (file, next) {
+                self.connectFile(file, next);
+            }, next)
+        } else {
+            this.connectFile(file, next);
+        }
+    }
+
+    this.connectFile = function (file, next) {
+        var File = connection.db.collection('fs.files');
+
+        var id = _.isObject(file) ? file._id : file;
+
+        File.update(
+            {
+                _id: id,
+                'metadata.connected': {$exists: false}
+            },
+            {
+                $set: {'metadata.connected': true}
+            },
+            function (err, result) {
+                if (err) return next(err);
+                next();
+            });
     }
 };
 

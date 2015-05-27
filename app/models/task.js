@@ -343,6 +343,10 @@ TaskSchema.methods = {
     removeFiles: function (next) {
         next = next || new Function();
         GridFS.remove(this.files, next);
+    },
+    connectFiles: function (next) {
+        next = next || new Function();
+        GridFS.connect(this.files, next);
     }
 
 
@@ -350,6 +354,7 @@ TaskSchema.methods = {
 
 TaskSchema.post('save', function (task) {
     task.updateParent();
+    task.connectFiles();
 });
 
 TaskSchema.post('remove', function (task) {
