@@ -70,7 +70,7 @@ TaskSchema.methods = {
             });
 
             this.estimatedTime = estimatedTime;
-            this.timeToDo = this.estimatedTime  - this.spenttime;
+            this.timeToDo = this.estimatedTime - this.spenttime;
 
             next();
         }.bind(this));
@@ -117,16 +117,16 @@ TaskSchema.methods = {
             var countNew = 0;
 
             tasks.forEach(function (task) {
-                if (task.status == 'in progress'){
+                if (task.status == 'in progress') {
                     countInProgress += 1;
-                }  else if (task.status == 'accepted'){
+                } else if (task.status == 'accepted') {
                     countAccepted += 1;
                 } else {
                     countNew += 1;
                 }
             });
 
-            if ( (countInProgress > 0 || (countAccepted > 0 && countAccepted < tasks.length))){
+            if ((countInProgress > 0 || (countAccepted > 0 && countAccepted < tasks.length))) {
                 this.status = 'in progress';
             } else if (countAccepted == tasks.length) {
                 this.status = 'accepted';
@@ -233,7 +233,7 @@ TaskSchema.methods = {
                         task.estimatedTime = task.points / velocity;
                     }
 
-                    task.timeToDo = task.estimatedTime  - task.spenttime;
+                    task.timeToDo = task.estimatedTime - task.spenttime;
 
                     next();
                 });
@@ -296,7 +296,7 @@ TaskSchema.methods = {
         }
     },
     getRoot: function (next) {
-        if (this.parentTaskId){
+        if (this.parentTaskId) {
             this.getParent(function (err, parent) {
                 if (err) return next(err);
                 parent.getRoot(next);
@@ -308,12 +308,29 @@ TaskSchema.methods = {
     getGrandParent: function (next) {
         this.getParent(function (err, parent) {
             if (err) return next(err);
-            if(!parent) return next(null, null);
+            if (!parent) return next(null, null);
             parent.getParent(next);
         });
     },
     isAccepted: function () {
         return this.status == 'accepted';
+    },
+    hasAccess: function (user, next) {
+        this.getRoot(function (err, root) {
+            if (err) return next(err);
+
+            var imOwner = (root.owner.toString() == user._id.toString());
+
+            var sharedToMe = _.find(root.share, function (userId) {
+                return userId.toString() == user._id.toString();
+            });
+
+            if ( imOwner || sharedToMe ) {
+                next(null, true);
+            } else {
+                next(null, false);
+            }
+        });
     },
     countChildren: function (next) {
         Task.count({parentTaskId: this._id}, next);

@@ -172,14 +172,8 @@ module.exports = function (app) {
                     res.sendStatus(404);
                 }
                 else {
-                    task.getRoot(function (err, root) {
-                        console.log(root);
-                        if(
-                            (root.owner.toString() == req.user._id.toString()) ||
-                            (_.find(root.share, function (userId) {
-                                return userId.toString() == req.user._id.toString();
-                            }))
-                        ){
+                    task.hasAccess(req.user, function (err, access) {
+                        if (access) {
                             req.Task = task;
                             next();
                         } else {
@@ -187,7 +181,6 @@ module.exports = function (app) {
                         }
                     });
                 }
-
             });
 
     });
