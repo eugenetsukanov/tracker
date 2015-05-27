@@ -45,6 +45,15 @@ hr {
     text-align: center;
     min-width: 35px;
 }
+.tech-info .btn-group.complexity label:nth-child(-n+5) {
+    border-bottom: 2px solid green;
+}
+.tech-info .btn-group.complexity label:nth-child(n+5):nth-child(-n+8)  {
+    border-bottom: 2px solid orange;
+}
+.tech-info .btn-group.complexity label:nth-child(n+9):nth-child(-n+13)  {
+    border-bottom: 2px solid red;
+}
 .tech-info .m-l-sm {
     margin-left: 10px;
 }

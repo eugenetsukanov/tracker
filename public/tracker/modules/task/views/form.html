@@ -49,7 +49,7 @@
             <div ng-if="newTask.simple" class="form-group" ng-show="newTask.title"> <!--Complexity-->
                 <i class="fa fa-puzzle-piece fa-md vcenter" tooltip="Complexity"></i>
 
-                <div class="btn-group">
+                <div class="btn-group complexity">
                     <label ng-repeat="complexity in complexities" class="btn btn-default btn-sm"
                            ng-model="newTask.complexity"
                            btn-radio="complexity.value">{{complexity.name}}</label>
