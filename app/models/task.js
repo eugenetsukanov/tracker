@@ -20,7 +20,7 @@ var TaskSchema = new Schema({
     timeToDo: {type: Number, default: 0},
     owner: {type: Schema.Types.ObjectId, ref: "User"},
     developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
-    share: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
+    team: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
     files: [String]
 
 });
@@ -321,7 +321,7 @@ TaskSchema.methods = {
 
             var imOwner = (root.owner.toString() == user._id.toString());
 
-            var sharedToMe = _.find(root.share, function (userId) {
+            var sharedToMe = _.find(root.team, function (userId) {
                 return userId.toString() == user._id.toString();
             });
 

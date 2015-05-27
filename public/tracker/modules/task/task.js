@@ -83,7 +83,7 @@ angular
                 status: "",
                 priority: 5,
                 files: [],
-                share: []
+                team: []
             });
 
             $scope.tasksForMove = [];

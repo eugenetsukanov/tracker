@@ -91,7 +91,7 @@
 
                 <i class="fa fa-user-plus fa-md vcenter pull-left" tooltip="Shared for..."></i>
 
-                <ui-select multiple ng-model="newTask.share" class="pull-left input-sm w-sm">
+                <ui-select multiple ng-model="newTask.team" class="pull-left input-sm w-sm">
                     <ui-select-match placeholder="Share...">{{$item.local.username}}</ui-select-match>
                     <ui-select-choices repeat="user._id as user in users | filter:$select.search">
                         {{user.local.username}}

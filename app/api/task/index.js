@@ -11,7 +11,7 @@ module.exports = function (app) {
         field("priority").trim().isInt(),
         field("complexity").trim().isInt(),
         field("developer"),
-        field("share").array(),
+        field("team").array(),
         field("files").array()
 
     );
@@ -26,7 +26,7 @@ module.exports = function (app) {
             parentTaskId: null,
             $or: [
                 {owner: req.user},
-                {share: req.user}
+                {team: req.user}
             ]
         };
 
@@ -81,6 +81,10 @@ module.exports = function (app) {
                 });
             }
         })
+
+    });
+
+    app.get('/api/tasks/:taskId/shared', function (req, res) {
 
     });
 
@@ -206,7 +210,7 @@ module.exports = function (app) {
             task.priority = req.form.priority;
             task.complexity = req.form.complexity;
             task.parentTaskId = req.body.parentTaskId || null;
-            task.share = req.form.share || [req.user];
+            task.team = req.form.team || [req.user];
             task.developer = req.form.developer || req.user;
             task.description = req.form.description;
             task.files = req.form.files;
