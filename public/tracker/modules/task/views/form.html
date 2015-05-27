@@ -83,7 +83,7 @@
 
             <div class="form-group clearfix" ng-show="newTask.title">
                 <i class="fa fa-user fa-md vcenter pull-left" tooltip="Assigned to..."></i>
-                <select ng-model="newTask.developer" ng-options="user._id as user.local.username for user in users"
+                <select ng-model="newTask.developer" ng-options="member._id as member.local.username for member in team"
                         class="form-control input-sm w-sm pull-left"></select>
             </div>
 

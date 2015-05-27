@@ -17,6 +17,7 @@ module.exports = function (app) {
     );
 
     var Task = require('../../models/task');
+    var User = require('../../models/user');
 
     var _ = require('lodash');
 
@@ -84,10 +85,17 @@ module.exports = function (app) {
 
     });
 
-    app.get('/api/tasks/:taskId/shared', function (req, res) {
-
+    app.get('/api/tasks/:taskId/team', function (req, res, next) {
+        req.Task.getRoot(function (err, root) {
+            var team = root.team;
+            team.push(root.owner);
+            User.find({_id: {$in: team}}, '-local.passwordHashed -local.passwordSalt')
+                .exec(function (err, users) {
+                    if (err) return next(err);
+                    res.json(users);
+                });
+        });
     });
-
 
     //________________________________________________________
 

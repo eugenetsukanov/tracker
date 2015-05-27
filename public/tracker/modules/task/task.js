@@ -1,7 +1,17 @@
 angular
     .module('Tracker')
 
-    .controller('TaskCtrl', function ($scope, Task, $stateParams, taskComplexity, TaskMove, $state, User, Upload, UserService, $location, $anchorScroll) {
+    .controller('TaskCtrl', function (
+        $scope,
+        Task,
+        $stateParams,
+        taskComplexity,
+        TaskMove,
+        $state,
+        UserService,
+        $location,
+        $anchorScroll,
+        Team) {
 
 
         $scope.views = [
@@ -57,6 +67,11 @@ angular
         var init = function () {
 
             if ($scope.taskId) {
+
+                Team.query({taskId: $scope.taskId}, function (team) {
+                    $scope.team = team;
+                });
+
                 Task.query({taskId: $scope.taskId, nested: 'tasks'}, function (tasks) {
                     $scope.tasks = tasks;
                     Task.get({taskId: $scope.taskId}, function (task) {
@@ -82,6 +97,7 @@ angular
                 developer: UserService.getUser()._id,
                 status: "",
                 priority: 5,
+                parentTaskId: $scope.taskId || null,
                 files: [],
                 team: []
             });
@@ -111,6 +127,10 @@ angular
 
         $scope.edit = function (task) {
             $scope.newTask = task;
+
+            Team.query({taskId: task._id}, function (team) {
+                $scope.team = team;
+            });
 
             var scrollTop = function () {
                 $location.hash('navBar');
