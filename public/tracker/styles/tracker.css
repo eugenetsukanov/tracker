@@ -185,6 +185,10 @@ hr {
     font-size: 1.6em;
     line-height: 1.2em;
 }
+.navbar {
+    border-radius: 0;
+    border-width: 1px 0;
+}
 
 /*bootstrap fixes*/
 .ui-select-multiple.ui-select-bootstrap {
