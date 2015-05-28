@@ -1,10 +1,10 @@
 angular
     .module('Tracker')
-    .filter('humanComplexity', function (taskComplexity) {
+    .filter('humanComplexity', function (TaskComplexity) {
 
         return function (complexity) {
             var result = '';
-            taskComplexity.forEach(function (item) {
+            TaskComplexity.forEach(function (item) {
                 if (item.value == complexity) {
                     result = item.name;
                 }
