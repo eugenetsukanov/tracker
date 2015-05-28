@@ -116,6 +116,6 @@
              ng-if="tasksForMove.length"></div>
     </div>
 
-    <hr ng-show="task.title" class="mg"/>
+    <hr ng-if="!task._id" ng-show="task.title" class="mg"/>
 
 </form>

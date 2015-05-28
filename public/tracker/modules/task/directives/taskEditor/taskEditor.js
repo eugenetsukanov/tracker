@@ -7,8 +7,8 @@ angular
             templateUrl: 'tracker/modules/task/directives/taskEditor/taskEditor.html',
             controller: function ($scope,
                                   Task,
-                                  TaskComplexity,
                                   TaskMove,
+                                  TaskComplexity,
                                   UserService,
                                   Team) {
 
@@ -76,7 +76,7 @@ angular
                     if ($scope.taskOnComplete) {
                         $scope.taskOnComplete();
                     }
-                }
+                };
 
                 $scope.save = function () {
 

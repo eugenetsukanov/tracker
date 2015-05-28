@@ -185,6 +185,36 @@ hr {
     font-size: 1.6em;
     line-height: 1.2em;
 }
+.modal-box {
+    padding: 30px 30px 15px;
+}
+
+.navbar {
+    border-radius: 0;
+    border: none;
+    background: #5BC0DE;
+}
+.navbar-default .navbar-brand,
+.navbar-default .navbar-nav>li>a {
+    color: #fff;
+}
+.navbar-default .navbar-brand:hover,
+.navbar-default .navbar-nav>li>a:hover {
+    color: #effbff;
+    background: #4BADCA;
+}
+.navbar-default .navbar-brand:focus,
+.navbar-default .navbar-nav>li>a:focus,
+.navbar-default .navbar-brand:active,
+.navbar-default .navbar-nav>li>a:active {
+    color: #effbff;
+}
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #fff;
+}
+.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
+    background-color: #3DA1BE;
+}
 
 /*bootstrap fixes*/
 .ui-select-multiple.ui-select-bootstrap {
@@ -193,44 +223,54 @@ hr {
 .ui-select-bootstrap .ui-select-choices-row > a {
     padding: 3px 20px;
 }
-.navbar {
-    border-radius: 0;
-    border: none;
-    border-bottom: 3px solid #3DA1BE;
-    background: #5BC0DE;
+.dropdown-menu {
+    font-size: 12px;
 }
-.navbar-default .navbar-brand,
-.navbar-default .navbar-nav>li>a {
-    padding-bottom: 12px;
-    position: relative;
-    color: #fff;
-    border-top: 0px solid transparent;
+.modal-open .modal {
     -webkit-transition: all 200ms ease 200ms;
     -moz-transition: all 200ms ease 200ms;
     -o-transition: all 200ms ease 200ms;
     transition: all 200ms ease 200ms;
 }
-.navbar-default .navbar-brand:focus,
-.navbar-default .navbar-nav>li>a:focus,
-.navbar-default .navbar-brand:active,
-.navbar-default .navbar-nav>li>a:active {
-    color: #effbff;
+
+
+/*responsive*/
+@media (min-width: 992px) {
+    .modal-lg {
+        width: 920px;
+    }
 }
-.navbar-default .navbar-brand {
-    padding-bottom: 15px;
-}
-.navbar-default .navbar-brand:hover,
-.navbar-default .navbar-nav>li>a:hover {
-    color: #effbff;
-    border-top: 3px solid #fff;
-    background: #4BADCA;
-}
-.navbar-default .navbar-toggle .icon-bar {
-    background-color: #fff;
-}
-.navbar-default .navbar-toggle:focus, .navbar-default .navbar-toggle:hover {
-    background-color: #3DA1BE;
-}
-.dropdown-menu {
-    font-size: 12px;
+
+@media (min-width: 768px) {
+    .navbar {
+        border-radius: 0;
+        border: none;
+        background: #5BC0DE;
+    }
+    .navbar-default .navbar-brand,
+    .navbar-default .navbar-nav>li>a {
+        padding-bottom: 12px;
+        position: relative;
+        color: #fff;
+        border-top: 0px solid transparent;
+        -webkit-transition: all 200ms ease 200ms;
+        -moz-transition: all 200ms ease 200ms;
+        -o-transition: all 200ms ease 200ms;
+        transition: all 200ms ease 200ms;
+    }
+    .navbar-default .navbar-brand:focus,
+    .navbar-default .navbar-nav>li>a:focus,
+    .navbar-default .navbar-brand:active,
+    .navbar-default .navbar-nav>li>a:active {
+        color: #effbff;
+    }
+    .navbar-default .navbar-brand {
+        padding-bottom: 15px;
+    }
+    .navbar-default .navbar-brand:hover,
+    .navbar-default .navbar-nav>li>a:hover {
+        color: #effbff;
+        border-top: 3px solid #effbff;
+        background: #4BADCA;
+    }
 }

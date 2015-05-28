@@ -2,13 +2,12 @@ angular
     .module('Tracker')
 
     .controller('TaskCtrl', function (
+        $modal,
         $scope,
-        $stateParams,
         $state,
+        $stateParams,
         Task,
-        UserService,
-        $location,
-        $anchorScroll) {
+        UserService) {
 
 
         $scope.views = [
@@ -69,20 +68,28 @@ angular
 
         };
 
+        var init = $scope.init;
         $scope.init();
 
 
         $scope.edit = function (task) {
             $scope.newTask = task;
 
-            var scrollTop = function () {
-                $location.hash('navBar');
-                $anchorScroll();
-            };
 
-            scrollTop();
+            var modal = $modal.open({
+                size: 'lg',
+                //animation: false,
+                templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
+                controller: function ($scope) {
+                    $scope.task = task;
+                    
+                    $scope.done = function () {
+                        init();
+                        modal.close();
+                    }
+                }
+            });
         };
-
 
     })
 

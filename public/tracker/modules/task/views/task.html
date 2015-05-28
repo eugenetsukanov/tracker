@@ -14,7 +14,7 @@
 
 </div>
 
-<div task-editor task="newTask" task-on-complete="init" class="edit-form"></div>
+<div ng-if="!newTask._id" task-editor task="newTask" task-on-complete="init" class="edit-form"></div>
 
 <hr/>
 
