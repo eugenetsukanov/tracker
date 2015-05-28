@@ -2,8 +2,8 @@
 
     <h2 ng-hide="task._id == newTask._id">{{task.title}}</h2>
 
-    <h5>
-        <a ng-if="parentTask" ui-sref="app.task({taskId: parentTask._id})"><i class="fa fa-long-arrow-left"></i> {{parentTask.title}}</a>
+    <h5 ng-if="parentTask">
+        <a ui-sref="app.task({taskId: parentTask._id})"><i class="fa fa-long-arrow-left"></i> {{parentTask.title}}</a>
     </h5>
 
     <div ng-hide="task._id == newTask._id" ng-click="edit(task)" task-metrics task="task"></div>
