@@ -5,7 +5,7 @@
         <h3>Report task for today</h3>
 
         <div class="pull-right">
-            <strong>Filters:&nbsp;</strong>
+            <i class="fa fa-filter"></i> <strong>Filters:&nbsp;</strong>
             <label>
                 <input type="checkbox" ng-model="status">
                 Status
@@ -22,7 +22,8 @@
             <span class="pointer" datepicker-popup max-date="'{{date | toDate:'YYYY-MM-DD'}}'" is-open="opened"
                   ng-model="date" show-button-bar="false" show-weeks="false" ng-click="openDatePicker($event)">
                 {{ date | toDate }}
-                <i class="glyphicon glyphicon-calendar"></i>
+                <!--<i class="glyphicon glyphicon-calendar"></i>-->
+                 &nbsp;<i class="fa fa-calendar"></i>
             </span>
         </h5>
 

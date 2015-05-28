@@ -16,9 +16,24 @@ module.exports = function (app) {
     app.get('/api/report/date/:date', function (req, res) {
 
         var date = Date.parse(req.params.date);
-        Task.find({updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)}}).sort('-updatedAt').exec(function (err, tasks) {
-            res.json(tasks);
-        })
+        Task.find({updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)}})
+            .sort('-updatedAt')
+            .exec(function (err, tasks) {
+                var tasksReport = [];
+                async.each(tasks, function (task, next) {
+                    task.hasAccess(req.user, function (err, access) {
+                        if (access) {
+                            tasksReport.push(task);
+                            next();
+                        } else {
+                            next();
+                        }
+                    });
+                }, function (err) {
+                    if (err) return res.json([]);
+                    res.json(tasksReport);
+                });
+            });
     });
 
     app.get('/api/report/task/:taskId', function (req, res) {
