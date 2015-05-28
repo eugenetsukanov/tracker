@@ -2,10 +2,10 @@ angular
     .module('Tracker')
 
     .factory('ReportByDate', function ($resource) {
-        return $resource('/api/report/date/:date');
+        return $resource('/api/tasks/report/:date');
     })
     .factory('ReportByTaskId', function ($resource) {
-        return $resource('/api/report/task/:taskId', {taskId: '@_id'});
+        return $resource('/api/tasks/:taskId/report/:date', {taskId: '@_id'});
     })
 
     .controller('ReportCtrl', function ($scope) {

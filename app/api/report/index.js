@@ -13,7 +13,7 @@ module.exports = function (app) {
         return moment(date).startOf('day').add(1, 'd').toDate();
     };
 
-    app.get('/api/report/date/:date', function (req, res) {
+    app.get('/api/tasks/report/:date', function (req, res) {
 
         var date = Date.parse(req.params.date);
         Task.find({updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)}})
@@ -36,9 +36,11 @@ module.exports = function (app) {
             });
     });
 
-    app.get('/api/report/task/:taskId', function (req, res) {
+    app.get('/api/tasks/:taskId/report/:date', function (req, res) {
 
-        var date = new Date();
+        //var date = new Date();
+
+        var date = Date.parse(req.params.date) || Date.now();
 
         var getAtDate = {
             updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)}
@@ -53,11 +55,12 @@ module.exports = function (app) {
         Task.findOne(_.extend(query, getAtDate), function (err, task) {
             if (err) return next(err);
 
-            updatedTasks.push(task);
-
+            if (!task) {
+                return res.json(updatedTasks)
+            } else {
+                updatedTasks.push(task);
+            }
             var getChangedTasks = function (task, callback) {
-
-                if (!task) return callback();
 
                 task.getChildrenChanged(getAtDate, function (err, tasks) {
                     if (err) return next(err);
@@ -65,8 +68,9 @@ module.exports = function (app) {
                     async.each(tasks, function (task, callback) {
                         updatedTasks.push(task);
                         getChangedTasks(task, callback);
-                    }, function () {
-                        callback(null);
+                    }, function (err) {
+                        if (err) return next(err);
+                        callback();
                     })
 
                 });

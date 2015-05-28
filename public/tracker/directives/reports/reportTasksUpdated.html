@@ -1,4 +1,12 @@
-<ul ng-show="tasks">
+
+<h5>
+            <span class="pointer" datepicker-popup max-date="'{{date | toDate:'YYYY-MM-DD'}}'" is-open="opened"
+                  ng-model="date" show-button-bar="false" show-weeks="false" ng-click="openDatePicker($event)">
+                {{ date | toDate }} <i class="fa fa-calendar"></i>
+            </span>
+</h5>
+
+<ul ng-show="tasks.length">
     <li ng-repeat="task in tasks">
         {{task.title}}
 
@@ -10,4 +18,4 @@
     </li>
 </ul>
 
-<p ng-show="!tasks">No changes for today</p>
+<p ng-show="!tasks.length">No changes for today</p>
