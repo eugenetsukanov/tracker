@@ -3,6 +3,6 @@
                     {{text | limitTo:aLimit}}
                     <span ng-if="text.length > aLimit">...</span>
                 </span>
-                <span ng-if="showMore">{{text}}</span>
+                <span ng-if="showMore" ng-bind-html="text | text"></span>
 
             </span>

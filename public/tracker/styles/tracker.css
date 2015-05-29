@@ -194,6 +194,13 @@ hr {
     border: none;
     background: #5BC0DE;
 }
+.navbar-default .navbar-nav>li>span {
+    position: relative;
+    display: none;
+    padding: 10px 15px;
+    line-height: 20px;
+}
+.navbar-default .navbar-nav>li>span,
 .navbar-default .navbar-brand,
 .navbar-default .navbar-nav>li>a {
     color: #fff;
@@ -272,5 +279,10 @@ hr {
         color: #effbff;
         border-top: 3px solid #effbff;
         background: #4BADCA;
+    }
+    .navbar-default .navbar-nav>li>span {
+        display: block;
+        padding-top: 15px;
+        padding-bottom: 12px;
     }
 }

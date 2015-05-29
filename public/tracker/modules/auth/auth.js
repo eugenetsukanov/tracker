@@ -5,7 +5,7 @@ angular
         return $resource('/api/users/:nested');
     })
 
-    .factory('UserService', function ($q, User) {
+    .factory('UserService', function ($q, User, Logout) {
         var self = {
 
             user: null,
@@ -24,19 +24,28 @@ angular
                         reject(err);
                     });
                 });
+            },
+            logout: function () {
+                return $q(function (resolve, reject) {
+                    Logout.save(function () {
+                        self.user = null;
+                        resolve();
+                    }, reject);
+                });
+
             }
         };
 
 
         self.load();
 
-        return self
+        return self;
     })
 
     .factory('Login', function ($resource) {
         return $resource('/api/login');
     })
-    .controller('LoginCtrl', function ($scope, Login, $state) {
+    .controller('LoginCtrl', function ($scope, Login, $state, UserService) {
 
         $scope.login = function () {
 
@@ -44,7 +53,10 @@ angular
                 username: $scope.userName,
                 password: $scope.userPassword
             }, function () {
-                $state.go('app.tasks');
+                UserService.load().then(function () {
+                    $state.go('app.tasks');
+                });
+
             })
 
         }
@@ -55,8 +67,8 @@ angular
         return $resource('/api/logout');
     })
 
-    .controller('LogoutCtrl', function ($scope, Logout, $state) {
-        Logout.save(function () {
+    .controller('LogoutCtrl', function ($scope, Logout, $state, UserService) {
+        UserService.logout().then(function () {
             $state.go('app.login');
         });
     })
@@ -65,17 +77,17 @@ angular
         return $resource('/api/register');
     })
 
-    .controller('RegisterCtrl', function ($scope, Register, $state) {
+    .controller('RegisterCtrl', function ($scope, Register, $state, UserService) {
 
         $scope.register = function () {
-
             Register.save({
                 username: $scope.userName,
                 password: $scope.userPassword
             }, function () {
-                $state.go('app.tasks');
-            })
-
+                UserService.load().then(function () {
+                    $state.go('app.tasks');
+                });
+            });
         }
 
     });

@@ -11,8 +11,17 @@ angular
             .state('app', {
                 url: "/app",
                 templateUrl: "tracker/tracker.html",
-
                 controller: function ($scope, UserService) {
+
+                    $scope.UserService = UserService;
+
+                    $scope.$watch('UserService.user._id', function (id) {
+                        if (id) {
+                            $scope.user = UserService.getUser();
+                        } else {
+                            $scope.user = null;
+                        }
+                    });
                 }
             })
             .state('app.tasks', {

@@ -2,6 +2,7 @@ angular
     .module('Tracker')
 
     .controller('TaskCtrl', function (
+        $sce,
         $modal,
         $scope,
         $state,
@@ -78,7 +79,6 @@ angular
 
             var modal = $modal.open({
                 size: 'lg',
-                //animation: false,
                 templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
                 controller: function ($scope) {
                     $scope.task = task;
