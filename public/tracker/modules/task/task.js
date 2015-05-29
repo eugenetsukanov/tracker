@@ -89,6 +89,8 @@ angular
                     }
                 }
             });
+
+            modal.result.then(init, init);
         };
 
     })

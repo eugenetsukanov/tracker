@@ -109,7 +109,7 @@
             <button class="btn btn-success btn-sm">Save</button>
             <a class="btn btn-default btn-sm" ng-click="close()">Close</a>
             <a ng-if="task._id" class="btn btn-default btn-sm" ng-click="getTasksForMove()">Move</a>
-            <a ng-if="task._id" class="btn btn-danger btn-sm" ng-click="delete(task)">Delete</a>
+            <a ng-if="task._id && task.status != 'in progress'" class="btn btn-danger btn-sm pull-right" ng-click="delete(task)">Delete</a>
         </div>
 
         <div class="row" ng-include="'tracker/modules/task/views/tasks-for-move.html'"
