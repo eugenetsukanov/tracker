@@ -15,8 +15,7 @@ module.exports = function (app) {
         field("developer"),
         field("team").array(),
         field("files").array(),
-        field("tags").array(),
-        field("tagsList").array()
+        field("tags").array()
 
     );
 
@@ -82,21 +81,21 @@ module.exports = function (app) {
                 req.Task.getSiblings(function (err, siblings) {
                     if (err) return next(err);
                     async.each(siblings, function (neighbor, next) {
-                        neighbor.hasAccess(req.user, function (err, access) {
+                            neighbor.hasAccess(req.user, function (err, access) {
+                                if (err) return next(err);
+                                if (access) {
+                                    tasks.push(neighbor);
+                                    next();
+                                }
+                                else {
+                                    next();
+                                }
+                            });
+                        },
+                        function (err) {
                             if (err) return next(err);
-                            if (access) {
-                                tasks.push(neighbor);
-                                next();
-                            }
-                            else {
-                                next();
-                            }
+                            res.json(tasks);
                         });
-                    },
-                    function (err) {
-                        if (err) return next(err);
-                        res.json(tasks);
-                    });
                 });
             }
         });
@@ -137,6 +136,17 @@ module.exports = function (app) {
             })
     });
 
+    app.get('/api/tasks/:taskId/tagsList', function (req, res, next) {
+        req.Task.getRoot(function (err, root) {
+            if (err) return next(err);
+
+            res.json(root.tagsList);
+
+        });
+    });
+    //________________________________________________________
+
+
     app.post('/api/tasks', TaskForm, function (req, res, next) {
 
 
@@ -146,6 +156,8 @@ module.exports = function (app) {
 
             var task = new Task(req.form);
             task.owner = req.user._id;
+            task.tagsList.concat(req.form.tags);
+            console.log(req.form.tags);
 
             task.save(function (err) {
                 if (err) return next(err);
@@ -174,6 +186,17 @@ module.exports = function (app) {
             task.parentTaskId = req.Task._id;
             task.owner = req.user._id;
 
+            req.Task.getRoot(function (err, root) {
+                console.log(root);
+                //if (err) return next(err);
+                //root.tagsList.concat(task.tags);
+                //root.save(function (err, root) {
+                //    if (err) return next(err);
+                //    next();
+                //})
+            });
+
+
             task.save(function (err, task) {
                 if (err) return next(err);
                 task.updateParent(function (err) {
@@ -188,14 +211,6 @@ module.exports = function (app) {
 
     });
 
-    //app.post('/api/tasks/:taskId/tags', function (req, res) {
-    //
-    //
-    //
-    //        res.sendStatus(400);
-    //
-    //
-    //});
 
     app.param('taskId', function (req, res, next, taskId) {
 
