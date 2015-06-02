@@ -27,7 +27,9 @@ var TaskSchema = new Schema({
     owner: {type: Schema.Types.ObjectId, ref: "User"},
     developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
     team: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
-    files: [FileSchema]
+    files: [FileSchema],
+    tags: [String],
+    tagsList: [String]
 });
 
 TaskSchema.set('toJSON', {getters: true, virtuals: true});

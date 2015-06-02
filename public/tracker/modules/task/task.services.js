@@ -4,6 +4,9 @@ angular
     .factory('Task', function ($resource) {
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
+    //.factory('Tags', function ($resource) {
+    //    return $resource('/api/tasks/:taskId/tags', {taskId: '@_id'}, {update: {method: 'PUT'}});
+    //})
 
     .factory('Team', function ($resource) {
         return $resource('/api/tasks/:taskId/team', {taskId: '@_id'});

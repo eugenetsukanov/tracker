@@ -14,7 +14,9 @@ module.exports = function (app) {
         field("complexity").trim().isInt(),
         field("developer"),
         field("team").array(),
-        field("files").array()
+        field("files").array(),
+        field("tags").array(),
+        field("tagsList").array()
 
     );
 
@@ -185,6 +187,15 @@ module.exports = function (app) {
         }
 
     });
+
+    //app.post('/api/tasks/:taskId/tags', function (req, res) {
+    //
+    //
+    //
+    //        res.sendStatus(400);
+    //
+    //
+    //});
 
     app.param('taskId', function (req, res, next, taskId) {
 

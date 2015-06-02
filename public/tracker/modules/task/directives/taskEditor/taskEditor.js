@@ -38,6 +38,7 @@ angular
                         value: 1
                     }
                 ];
+                $scope.tagsList = [];
 
                 $scope.complexities = TaskComplexity;
 
