@@ -45,10 +45,17 @@ hr {
     margin-left: -4px;
 }
 
+.tech-info .btn-group.complexity label {
+    text-align: center;
+    min-width: 28px;
+    padding: 5px 5px
+}
 .tech-info .btn-group.priority label {
     text-align: center;
-    min-width: 35px;
+    min-width: 30px;
+    padding: 5px 10px
 }
+
 
 .tech-info .btn-group.complexity label:nth-child(-n+5) {
     border-bottom: 2px solid green;
@@ -238,6 +245,10 @@ hr {
     -moz-transition: all 200ms ease 200ms;
     -o-transition: all 200ms ease 200ms;
     transition: all 200ms ease 200ms;
+}
+.btn-group-sm>.btn,
+.btn-sm {
+    padding: 5px 9px;
 }
 
 
