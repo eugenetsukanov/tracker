@@ -3,6 +3,8 @@ module.exports = function (app) {
     var form = require("express-form"),
         field = form.field;
 
+    var async = require('async');
+
     var TaskForm = form(
         field("title").trim().required(),
         field("description").trim(),
@@ -77,11 +79,25 @@ module.exports = function (app) {
             else {
                 req.Task.getSiblings(function (err, siblings) {
                     if (err) return next(err);
-                    tasks = tasks.concat(siblings);
-                    res.json(tasks);
+                    async.each(siblings, function (neighbor, next) {
+                        neighbor.hasAccess(req.user, function (err, access) {
+                            if (err) return next(err);
+                            if (access) {
+                                tasks.push(neighbor);
+                                next();
+                            }
+                            else {
+                                next();
+                            }
+                        });
+                    },
+                    function (err) {
+                        if (err) return next(err);
+                        res.json(tasks);
+                    });
                 });
             }
-        })
+        });
 
     });
 
@@ -248,11 +264,8 @@ module.exports = function (app) {
                 task.updateParent(function (err) {
                     if (err) return next(err);
                     res.json(task);
-                    if (papa) {
-                        papa.save(function () {
-
-                        })
-                    }
+                    res.json(task);
+                    if (papa) papa.save();
                 });
             });
         });
