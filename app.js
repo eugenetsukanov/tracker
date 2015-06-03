@@ -24,6 +24,7 @@ var MongoSessionStore = require('connect-mongo')(session);
 
 app.use(session({
     secret: app.config.get('session:secret'),
+    cookie: { maxAge: 4*7*24*60*1000 }, // 4 weeks
     resave: true,
     saveUninitialized: true,
     store: new MongoSessionStore({ url: app.config.get('mongo:uri') })
