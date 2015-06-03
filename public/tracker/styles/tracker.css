@@ -256,6 +256,7 @@ hr {
     padding: .2em .8em .3em;
     border-radius: 10px;
     font-weight: normal;
+    display: inline-block;
 }
 .tags.tags-task {
     margin: 0 0 20px;
