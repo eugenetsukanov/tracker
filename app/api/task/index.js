@@ -17,7 +17,6 @@ module.exports = function (app) {
         field("files").array(),
         field("tags").array(),
         field("tagsList").array()
-
     );
 
     var Task = require('../../models/task');
@@ -155,7 +154,6 @@ module.exports = function (app) {
 
             var task = new Task(req.form);
             task.owner = req.user._id;
-            task.tags = req.form.tags;
 
             task.save(function (err) {
                 if (err) return next(err);
@@ -177,7 +175,6 @@ module.exports = function (app) {
         if (req.form.isValid) {
 
             req.form.developer = req.form.developer || req.user._id;
-
 
             var task = new Task(req.form);
 

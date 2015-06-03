@@ -357,7 +357,7 @@ TaskSchema.methods = {
 
         this.getRoot(function (err, root) {
             if (err) return next(err);
-            root.tagsList = _.uniq( root.tagsList.concat(self.tags));
+            root.tagsList = _.uniq(root.tagsList.concat(self.tags));
 
             root.save(function (err) {
                 if (err) return next(err);
