@@ -17,6 +17,8 @@
             <div text-extend="task.description"></div>
         </div>
 
+        <hr ng-if="task.tags.length"/>
+
         <div ng-if="task.tags.length" class="tags tags-panel">
             <i class="fa fa-tags"></i>&nbsp;
             <span class="label" ng-repeat="tag in task.tags">{{tag}}</span>
