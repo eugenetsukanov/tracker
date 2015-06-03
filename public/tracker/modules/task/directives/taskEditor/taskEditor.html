@@ -107,7 +107,10 @@
                 <i class="fa fa-tags fa-md vcenter" tooltip="Tags"></i>
 
                 <div class="field-fix">
-                <ui-select tagging tagging-label="(add)" tagging-tokens="," multiple ng-model="task.tags" class="input-sm field-full">
+                <ui-select tagging tagging-label="(add)"
+                           tagging-tokens="," multiple
+                           ng-model="task.tags"
+                           class="input-sm field-full">
                     <ui-select-match placeholder="Add Tags...">{{$item}}</ui-select-match>
 
                     <ui-select-choices repeat="tag in tagsList | filter:$select.search">
