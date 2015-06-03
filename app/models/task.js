@@ -35,6 +35,7 @@ var TaskSchema = new Schema({
 TaskSchema.set('toJSON', {getters: true, virtuals: true});
 
 TaskSchema.pre('init', function (next, task) {
+    this._origin = _.merge({}, task);
     this.calculateEstimatedTime(task, next);
 });
 
@@ -355,6 +356,16 @@ TaskSchema.methods = {
 
         var self = this;
 
+        var originTags = self._origin && self._origin.tags || [];
+
+        var glue = '|||';
+
+        var tagsModified =
+            (self.tags.length || originTags.length)
+            && (self.tags.join(glue) != originTags.join(glue));
+
+        if(!tagsModified) return next();
+
         this.getRoot(function (err, root) {
             if (err) return next(err);
             root.tagsList = _.uniq(root.tagsList.concat(self.tags));
@@ -362,7 +373,7 @@ TaskSchema.methods = {
             root.save(function (err) {
                 if (err) return next(err);
                 next();
-            })
+            });
         });
 
     }

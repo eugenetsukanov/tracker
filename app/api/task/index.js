@@ -267,23 +267,21 @@ module.exports = function (app) {
 
 
     app.put('/api/tasks/:taskId/move/:parentTaskId', TaskForm, function (req, res) {
-
         var task = req.Task;
-        req.Task.getParent(function (err, papa) {
+        req.Task.getParent(function (err, parent) {
             task.parentTaskId = req.params.parentTaskId;
             task.save(function (err, task) {
+
                 if (err) return next(err);
+
                 task.updateParent(function (err) {
                     if (err) return next(err);
+                    if (parent) parent.save(new Function());
                     res.json(task);
-                    res.json(task);
-                    if (papa) papa.save();
                 });
+
             });
         });
-
-
-        //res.sendStatus(400);
 
     });
 
