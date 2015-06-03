@@ -12,12 +12,18 @@
 
         <div ng-click="edit(task)" class="fs-sm" task-metrics task="task" task-options="options"></div>
 
-
         <div ng-if="task.description">
             <hr/>
             <div text-extend="task.description"></div>
         </div>
 
+        <hr ng-if="task.tags.length"/>
+
+        <!-- extract to directive -->
+        <div ng-if="task.tags.length" class="tags tags-panel">
+            <i class="fa fa-tags"></i>&nbsp;
+            <span class="label" ng-repeat="tag in task.tags">{{tag}}</span>
+        </div>
 
     </div>
 
