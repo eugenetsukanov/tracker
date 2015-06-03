@@ -52,8 +52,11 @@ angular
 
                 });
 
-                //$scope.tagsList = TagsList.query({taskId: $scope.task._id});
-                $scope.tagsList = [];
+                if ($scope.task._id) {
+                    $scope.tagsList = TagsList.query({taskId: $scope.task._id});
+                } else {
+                    $scope.tagsList = [];
+                }
 
                 var init = function () {
 

@@ -104,8 +104,9 @@
             <hr class="mg"/>
 
             <div class="form-group clearfix">
-                <ui-select tagging tagging-tokens="," multiple ng-model="task.tags" class="pull-left input-sm w-sm">
+                <ui-select tagging tagging-label="+" tagging-tokens="," multiple ng-model="task.tags" class="pull-left input-sm w-sm">
                     <ui-select-match placeholder="Add Tags...">{{$item}}</ui-select-match>
+
                     <ui-select-choices repeat="tag in tagsList | filter:$select.search">
                         {{tag}}
                     </ui-select-choices>
