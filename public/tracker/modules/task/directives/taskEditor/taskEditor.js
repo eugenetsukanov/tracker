@@ -54,11 +54,7 @@ angular
 
                 var init = function () {
 
-                    if ($scope.task._id) {
-                        $scope.tagsList = TagsList.query({taskId: $scope.task._id});
-                    } else {
-                        $scope.tagsList = [];
-                    }
+                    $scope.tagsList = [];
 
                     if ($scope.task._id || $scope.task.parentTaskId) {
 
@@ -67,6 +63,8 @@ angular
                         Team.query({taskId: id}, function (team) {
                             $scope.team = team;
                         });
+
+                        $scope.tagsList = TagsList.query({taskId: id});
 
                     }
 

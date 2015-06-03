@@ -232,7 +232,7 @@ hr {
 
 .panel {
     margin-bottom: 15px;
-    box-shadow: 0 1px 5px -1px transparent;
+    box-shadow: 0 1px 0 0 transparent;
     -webkit-transition: all 100ms ease;
     -moz-transition:    all 100ms ease;
     -o-transition:      all 100ms ease;
