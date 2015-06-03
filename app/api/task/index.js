@@ -15,7 +15,8 @@ module.exports = function (app) {
         field("developer"),
         field("team").array(),
         field("files").array(),
-        field("tags").array()
+        field("tags").array(),
+        field("tagsList").array()
 
     );
 
@@ -139,9 +140,7 @@ module.exports = function (app) {
     app.get('/api/tasks/:taskId/tagsList', function (req, res, next) {
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);
-
             res.json(root.tagsList);
-
         });
     });
     //________________________________________________________
@@ -156,8 +155,7 @@ module.exports = function (app) {
 
             var task = new Task(req.form);
             task.owner = req.user._id;
-            task.tagsList.concat(req.form.tags);
-            console.log(req.form.tags);
+            task.tags = req.form.tags;
 
             task.save(function (err) {
                 if (err) return next(err);
@@ -185,17 +183,6 @@ module.exports = function (app) {
 
             task.parentTaskId = req.Task._id;
             task.owner = req.user._id;
-
-            req.Task.getRoot(function (err, root) {
-                console.log(root);
-                //if (err) return next(err);
-                //root.tagsList.concat(task.tags);
-                //root.save(function (err, root) {
-                //    if (err) return next(err);
-                //    next();
-                //})
-            });
-
 
             task.save(function (err, task) {
                 if (err) return next(err);
@@ -264,6 +251,7 @@ module.exports = function (app) {
             task.developer = req.form.developer || req.user;
             task.description = req.form.description;
             task.files = req.form.files;
+            task.tags = req.form.tags;
 
             task.save(function (err, task) {
                 if (err) return next(err);

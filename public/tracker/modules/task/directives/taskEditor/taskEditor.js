@@ -10,7 +10,8 @@ angular
                                   TaskMove,
                                   TaskComplexity,
                                   UserService,
-                                  Team, TagsList) {
+                                  Team,
+                                  TagsList) {
 
                 $scope.statuses = [
                     {name: 'New', value: ""},
@@ -38,7 +39,6 @@ angular
                         value: 1
                     }
                 ];
-                $scope.tagsList = TagsList.query({taskId: $scope.task._id});
 
                 $scope.complexities = TaskComplexity;
 
@@ -51,6 +51,9 @@ angular
                     }
 
                 });
+
+                //$scope.tagsList = TagsList.query({taskId: $scope.task._id});
+                $scope.tagsList = [];
 
                 var init = function () {
 

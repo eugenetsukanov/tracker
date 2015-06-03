@@ -349,6 +349,22 @@ TaskSchema.methods = {
     connectFiles: function (next) {
         next = next || new Function();
         GridFS.connect(this.files, next);
+    },
+    updateRootTags: function (next) {
+        next = next || new Function();
+
+        var self = this;
+
+        this.getRoot(function (err, root) {
+            if (err) return next(err);
+            root.tagsList = _.uniq( root.tagsList.concat(self.tags));
+
+            root.save(function (err) {
+                if (err) return next(err);
+                next();
+            })
+        });
+
     }
 
 
@@ -357,6 +373,7 @@ TaskSchema.methods = {
 TaskSchema.post('save', function (task) {
     task.updateParent();
     task.connectFiles();
+    task.updateRootTags();
 });
 
 TaskSchema.post('remove', function (task) {
