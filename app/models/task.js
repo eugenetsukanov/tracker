@@ -27,12 +27,15 @@ var TaskSchema = new Schema({
     owner: {type: Schema.Types.ObjectId, ref: "User"},
     developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
     team: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
-    files: [FileSchema]
+    files: [FileSchema],
+    tags: [String],
+    tagsList: [String]
 });
 
 TaskSchema.set('toJSON', {getters: true, virtuals: true});
 
 TaskSchema.pre('init', function (next, task) {
+    this._origin = _.merge({}, task);
     this.calculateEstimatedTime(task, next);
 });
 
@@ -347,6 +350,32 @@ TaskSchema.methods = {
     connectFiles: function (next) {
         next = next || new Function();
         GridFS.connect(this.files, next);
+    },
+    updateRootTags: function (next) {
+        next = next || new Function();
+
+        var self = this;
+
+        var originTags = self._origin && self._origin.tags || [];
+
+        var glue = '|||';
+
+        var tagsModified =
+            (self.tags.length || originTags.length)
+            && (self.tags.join(glue) != originTags.join(glue));
+
+        if(!tagsModified) return next();
+
+        this.getRoot(function (err, root) {
+            if (err) return next(err);
+            root.tagsList = _.uniq(root.tagsList.concat(self.tags));
+
+            root.save(function (err) {
+                if (err) return next(err);
+                next();
+            });
+        });
+
     }
 
 
@@ -355,6 +384,7 @@ TaskSchema.methods = {
 TaskSchema.post('save', function (task) {
     task.updateParent();
     task.connectFiles();
+    task.updateRootTags();
 });
 
 TaskSchema.post('remove', function (task) {

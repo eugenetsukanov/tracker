@@ -20,10 +20,11 @@
         <i class="fa fa-puzzle-piece"></i>
         <span ng-if="task.simple">{{task.complexity | humanComplexity}} / </span><span>{{task.points}}p</span>
     </li>
-    <li tooltip="Velocity"><i class="fa fa-line-chart"></i> {{task.velocity| round}}</li>
+    <li ng-if="task.velocity" tooltip="Velocity"><i class="fa fa-line-chart"></i> {{task.velocity| round}}</li>
     <li ng-if="task.updatedAt" tooltip="Updated {{task.updatedAt | date : 'yyyy/MM/dd HH:mm:ss'}}"><i class="fa fa-refresh"></i> {{task.updatedAt | fromNow}}</li>
-    <li tooltip="Owner"> {{task.owner.local.username}}</li>
-    <li tooltip="Developer"> {{task.developer.local.username}}</li>
-    <li tooltip="Attachments" ng-if="task.files.length > 0"><i class="fa fa-paperclip"></i> {{task.files.length}}</li>
+    <li ng-if="task.owner" tooltip="Owner"> {{task.owner.local.username}}</li>
+    <li ng-if="task.developer" tooltip="Developer"> {{task.developer.local.username}}</li>
+
+    <li ng-if="task.files.length > 0" tooltip="Attachments"><i class="fa fa-paperclip"></i> {{task.files.length}}</li>
 </ul>
 

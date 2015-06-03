@@ -3,6 +3,8 @@ module.exports = function (app) {
     var form = require("express-form"),
         field = form.field;
 
+    var async = require('async');
+
     var TaskForm = form(
         field("title").trim().required(),
         field("description").trim(),
@@ -12,8 +14,9 @@ module.exports = function (app) {
         field("complexity").trim().isInt(),
         field("developer"),
         field("team").array(),
-        field("files").array()
-
+        field("files").array(),
+        field("tags").array(),
+        field("tagsList").array()
     );
 
     var Task = require('../../models/task');
@@ -77,11 +80,25 @@ module.exports = function (app) {
             else {
                 req.Task.getSiblings(function (err, siblings) {
                     if (err) return next(err);
-                    tasks = tasks.concat(siblings);
-                    res.json(tasks);
+                    async.each(siblings, function (neighbor, next) {
+                            neighbor.hasAccess(req.user, function (err, access) {
+                                if (err) return next(err);
+                                if (access) {
+                                    tasks.push(neighbor);
+                                    next();
+                                }
+                                else {
+                                    next();
+                                }
+                            });
+                        },
+                        function (err) {
+                            if (err) return next(err);
+                            res.json(tasks);
+                        });
                 });
             }
-        })
+        });
 
     });
 
@@ -119,6 +136,16 @@ module.exports = function (app) {
             })
     });
 
+    app.get('/api/tasks/:taskId/tagsList', function (req, res, next) {
+        //sorting
+        req.Task.getRoot(function (err, root) {
+            if (err) return next(err);
+            res.json(root.tagsList);
+        });
+    });
+    //________________________________________________________
+
+
     app.post('/api/tasks', TaskForm, function (req, res, next) {
 
 
@@ -150,7 +177,6 @@ module.exports = function (app) {
 
             req.form.developer = req.form.developer || req.user._id;
 
-
             var task = new Task(req.form);
 
             task.parentTaskId = req.Task._id;
@@ -169,6 +195,7 @@ module.exports = function (app) {
         }
 
     });
+
 
     app.param('taskId', function (req, res, next, taskId) {
 
@@ -222,6 +249,7 @@ module.exports = function (app) {
             task.developer = req.form.developer || req.user;
             task.description = req.form.description;
             task.files = req.form.files;
+            task.tags = req.form.tags;
 
             task.save(function (err, task) {
                 if (err) return next(err);
@@ -239,26 +267,21 @@ module.exports = function (app) {
 
 
     app.put('/api/tasks/:taskId/move/:parentTaskId', TaskForm, function (req, res) {
-
         var task = req.Task;
-        req.Task.getParent(function (err, papa) {
+        req.Task.getParent(function (err, parent) {
             task.parentTaskId = req.params.parentTaskId;
             task.save(function (err, task) {
+
                 if (err) return next(err);
+
                 task.updateParent(function (err) {
                     if (err) return next(err);
+                    if (parent) parent.save(new Function());
                     res.json(task);
-                    if (papa) {
-                        papa.save(function () {
-
-                        })
-                    }
                 });
+
             });
         });
-
-
-        //res.sendStatus(400);
 
     });
 
