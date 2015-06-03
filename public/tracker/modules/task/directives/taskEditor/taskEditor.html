@@ -2,8 +2,6 @@
 
     <div class="row">
 
-        <pre>{{task | json}}</pre>
-
         <!--left-side-->
         <div ng-class="task.title ? 'col-md-6' : 'col-md-12'">
 
@@ -89,29 +87,34 @@
                         class="form-control input-sm w-sm pull-left"></select>
             </div>
 
-            <div class="form-group clearfix" ng-if="task.parentTaskId == null" ng-show="task.title">
+            <div class="form-group clearfix icon-fix" ng-if="task.parentTaskId == null" ng-show="task.title">
 
-                <i class="fa fa-user-plus fa-md vcenter pull-left" tooltip="Shared for..."></i>
-
-                <ui-select multiple ng-model="task.team" class="pull-left input-sm w-sm">
+                <i class="fa fa-user-plus fa-md vcenter" tooltip="Shared for..."></i>
+                <div class="field-fix">
+                <ui-select multiple ng-model="task.team" class="input-sm field-full">
                     <ui-select-match placeholder="Share...">{{$item.local.username}}</ui-select-match>
                     <ui-select-choices repeat="user._id as user in users | filter:$select.search">
                         {{user.local.username}}
                     </ui-select-choices>
                 </ui-select>
+                </div>
             </div>
 
             <hr class="mg"/>
 
-            <div class="form-group clearfix">
-                <ui-select tagging tagging-label="+" tagging-tokens="," multiple ng-model="task.tags" class="pull-left input-sm w-sm">
+            <div class="form-group clearfix icon-fix">
+
+                <i class="fa fa-tags fa-md vcenter" tooltip="Tags"></i>
+
+                <div class="field-fix">
+                <ui-select tagging tagging-label="+" tagging-tokens="," multiple ng-model="task.tags" class="input-sm field-full">
                     <ui-select-match placeholder="Add Tags...">{{$item}}</ui-select-match>
 
                     <ui-select-choices repeat="tag in tagsList | filter:$select.search">
                         {{tag}}
                     </ui-select-choices>
                 </ui-select>
-
+                </div>
             </div>
         </div>
 

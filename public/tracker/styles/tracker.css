@@ -230,6 +230,35 @@ hr {
     background-color: #3DA1BE;
 }
 
+.tags.tags-task .label,
+.tags.tags-panel .label {
+    margin-right: 5px;
+    background: #e3e3e3;
+    color: #111;
+    padding: .2em .8em .3em;
+    border-radius: 10px;
+    font-weight: normal;
+}
+.tags.tags-task {
+    margin: 0 0 20px;
+}
+.icon-fix {
+    position: relative;
+}
+.icon-fix .field-fix {
+    margin-left: 37px;
+}
+.icon-fix .fa {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+.icon-fix .field-fix .field-full {
+    width: 100%;
+    max-width: 326px;
+    min-height: 30px;
+}
+
 /*bootstrap fixes*/
 .ui-select-multiple.ui-select-bootstrap {
     padding: 3px 10px 0;
@@ -249,6 +278,12 @@ hr {
 .btn-group-sm>.btn,
 .btn-sm {
     padding: 5px 9px;
+}
+.ui-select-multiple.ui-select-bootstrap input.ui-select-search {
+    margin-top: 1px;
+}
+.ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
+    line-height: .95;
 }
 
 
