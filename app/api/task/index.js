@@ -137,6 +137,7 @@ module.exports = function (app) {
     });
 
     app.get('/api/tasks/:taskId/tagsList', function (req, res, next) {
+        //sorting
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);
             res.json(root.tagsList);
