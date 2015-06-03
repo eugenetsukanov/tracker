@@ -7,7 +7,7 @@ angular
             templateUrl: 'tracker/directives/uploader/filesView.html',
             controller: function ($scope) {
                 $scope.isImage = function (file) {
-                    return /\.(jpg|png|gif|jpeg|bmp)$/.test(file);
+                    return /\.(jpg|jpeg|png|gif|bmp)$/i.test(file);
                 };
             },
             scope: {
