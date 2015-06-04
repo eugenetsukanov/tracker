@@ -57,15 +57,15 @@ hr {
 }
 
 
-.tech-info .btn-group.complexity label:nth-child(-n+5) {
+.tech-info .btn-group.complexity label:nth-child(-n+4) {
     border-bottom: 2px solid green;
 }
 
-.tech-info .btn-group.complexity label:nth-child(n+5):nth-child(-n+8) {
+.tech-info .btn-group.complexity label:nth-child(n+4):nth-child(-n+8) {
     border-bottom: 2px solid orange;
 }
 
-.tech-info .btn-group.complexity label:nth-child(n+9):nth-child(-n+13) {
+.tech-info .btn-group.complexity label:nth-child(n+9):nth-child(-n+12) {
     border-bottom: 2px solid red;
 }
 

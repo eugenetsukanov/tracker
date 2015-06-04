@@ -53,6 +53,11 @@ angular
                 controller: "ReportCtrl",
                 templateUrl: "tracker/modules/report/report.html"
             })
+            .state('app.assigned-tasks', {
+                url: "/users/:userId/tasks",
+                controller: "AssignedTasksCtrl",
+                templateUrl: "tracker/modules/task/views/view/task-view-assigned.html"
+            })
         ;
 
     })

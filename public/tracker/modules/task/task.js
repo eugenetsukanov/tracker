@@ -1,14 +1,13 @@
 angular
     .module('Tracker')
 
-    .controller('TaskCtrl', function (
-        $sce,
-        $modal,
-        $scope,
-        $state,
-        $stateParams,
-        Task,
-        UserService) {
+    .controller('TaskCtrl', function ($sce,
+                                      $modal,
+                                      $scope,
+                                      $state,
+                                      $stateParams,
+                                      Task,
+                                      UserService) {
 
 
         $scope.views = [
@@ -82,7 +81,7 @@ angular
                 templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
                 controller: function ($scope) {
                     $scope.task = task;
-                    
+
                     $scope.done = function () {
                         init();
                         modal.close();
@@ -92,6 +91,19 @@ angular
 
             modal.result.then(init, init);
         };
+
+    })
+
+    .controller('AssignedTasksCtrl', function ($scope,
+                                               Task,
+                                               UserService,
+                                               AssignedTasks)
+    {
+
+
+        if (UserService.getUser()._id) {
+            $scope.assignedTasks = AssignedTasks.query({userId: UserService.getUser()._id});
+        }
 
     })
 
