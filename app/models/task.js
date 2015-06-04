@@ -85,6 +85,7 @@ TaskSchema.methods = {
     },
     updateParent: function (next) {
         next = next || new Function;
+        if (!this.parentTaskId) return next();
 
         this.getParent(function (err, parent) {
             if (err) return next(err);
@@ -333,7 +334,7 @@ TaskSchema.methods = {
                 return userId.toString() == user._id.toString();
             });
 
-            if ( imOwner || sharedToMe ) {
+            if (imOwner || sharedToMe) {
                 next(null, true);
             } else {
                 next(null, false);
@@ -368,6 +369,7 @@ TaskSchema.methods = {
 
         this.getRoot(function (err, root) {
             if (err) return next(err);
+
             root.tagsList = _.uniq(root.tagsList.concat(self.tags));
 
             root.save(function (err) {
