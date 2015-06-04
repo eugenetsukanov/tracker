@@ -108,7 +108,7 @@
 
                 <div class="field-fix">
                 <ui-select tagging tagging-label="(add)"
-                           tagging-tokens="," multiple
+                           tagging-tokens=",|;" multiple
                            ng-model="task.tags"
                            class="input-sm field-full">
                     <ui-select-match placeholder="Add Tags...">{{$item}}</ui-select-match>
