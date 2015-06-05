@@ -1,0 +1,6 @@
+<div ng-if="tasksByTags.length"
+     ng-repeat="task in tasksByTags"
+     task-panel task="task" task-on-edit="edit">
+
+</div>
+<div ng-if="tasksByTags.length == 0">There are no tasks matched such request.</div>

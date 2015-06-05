@@ -95,7 +95,6 @@ angular
     })
 
     .controller('AssignedTasksCtrl', function ($scope,
-                                               Task,
                                                UserService,
                                                AssignedTasks)
     {
@@ -103,6 +102,17 @@ angular
 
         if (UserService.getUser()._id) {
             $scope.assignedTasks = AssignedTasks.query({userId: UserService.getUser()._id});
+        }
+
+    })
+
+    .controller('tagsFindCtrl', function ($scope,
+                                          $stateParams,
+                                          UserService,
+                                          TagsFind) {
+
+        if (UserService.getUser()._id) {
+            $scope.tasksByTags = TagsFind.query({taskId: $stateParams.taskId, tags: $stateParams.tags});
         }
 
     })

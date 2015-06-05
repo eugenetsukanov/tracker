@@ -143,6 +143,17 @@ module.exports = function (app) {
             res.json(root.tagsList);
         });
     });
+
+    //app.get('/api/tasks/:taskId/:tags', function (req, res, next) {
+    //    //sorting
+    //    req.Task.getRoot(function (err, root) {
+    //        if (err) return next(err);
+    //
+    //        root.getChildren()
+    //        res.json();
+    //    });
+    //});
+
     //________________________________________________________
 
 

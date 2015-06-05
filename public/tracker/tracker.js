@@ -58,6 +58,11 @@ angular
                 controller: "AssignedTasksCtrl",
                 templateUrl: "tracker/modules/task/views/view/task-view-assigned.html"
             })
+            .state('app.tags-find', {
+                url: "/tasks/:taskId/:tags",
+                controller: "tagsFindCtrl",
+                templateUrl: "tracker/modules/task/views/view/task-view-tags.html"
+            })
         ;
 
     })
