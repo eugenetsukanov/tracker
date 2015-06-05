@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
+var async = require('async');
 
 var application = require('../config/application');
 var GridFS = application.get('GridFS');
@@ -275,6 +276,33 @@ TaskSchema.methods = {
         })
     },
 
+    deepFind: function (finder, next) {
+        this.getChildren(function (err, children) {
+            if (err) return next(err);
+            var tasks = [];
+
+            async.each(children, function (task, callback) {
+
+                if (finder(task)) {
+                    tasks.push(task);
+                }
+
+                task.deepFind(finder, function (err, aTasks) {
+                    if (err) return next(err);
+                    tasks = tasks.concat(aTasks);
+                    callback();
+                });
+
+
+            }, function (err) {
+                if (err) return next(err);
+                next(null, tasks);
+            });
+
+
+        })
+    },
+
     getChildrenChanged: function (query, next) {
         var query = _.extend({parentTaskId: this}, query);
 
@@ -365,7 +393,7 @@ TaskSchema.methods = {
             (self.tags.length || originTags.length)
             && (self.tags.join(glue) != originTags.join(glue));
 
-        if(!tagsModified) return next();
+        if (!tagsModified) return next();
 
         this.getRoot(function (err, root) {
             if (err) return next(err);

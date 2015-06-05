@@ -144,15 +144,22 @@ module.exports = function (app) {
         });
     });
 
-    //app.get('/api/tasks/:taskId/:tags', function (req, res, next) {
-    //    //sorting
-    //    req.Task.getRoot(function (err, root) {
-    //        if (err) return next(err);
-    //
-    //        root.getChildren()
-    //        res.json();
-    //    });
-    //});
+    app.get('/api/tasks/:taskId/:tags', function (req, res, next) {
+
+        req.Task.getRoot(function (err, root) {
+            if (err) return next(err);
+
+            root.deepFind(function (task) {
+
+                console.log(task.title);
+                return task.tags.indexOf(req.params.tags) >= 0
+
+            }, function (err, tasks) {
+                if (err) return next(err);
+                res.json(tasks);
+            });
+        });
+    });
 
     //________________________________________________________
 
