@@ -123,23 +123,23 @@ angular
                                                     $location,
                                                     $rootScope) {
 
-        var getRoot = function () {
-            if (UserService.getUser()._id && $stateParams.taskId) {
-                CurrentProject.get({taskId: $stateParams.taskId}, function (root) {
-                    $scope.root = root;
-                });
-            } else {
-                $scope.root = null;
-            }
-        };
-
-        getRoot();
-
         $rootScope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
             if (newUrl != oldUrl) {
-                getRoot();
+                if($stateParams.taskId && UserService.getUser()._id) {
+                    getRoot()
+                } else {
+                    $scope.root = null;
+                }
             }
         });
+
+        var getRoot = function () {
+            CurrentProject.get({taskId: $stateParams.taskId}, function (root) {
+                $scope.root = root;
+            });
+        };
+
+        if ($stateParams.taskId && UserService.getUser()._id) getRoot();
 
         $scope.searchRoot = function () {
             $location.path('/app/tasks/' + $scope.root._id);

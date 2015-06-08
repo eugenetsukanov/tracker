@@ -277,7 +277,6 @@ module.exports = function (app) {
 
     });
 
-
     //_________________________go to current project
 
     app.get('/api/tasks/:taskId/current-project', function (req, res, next) {
@@ -289,7 +288,7 @@ module.exports = function (app) {
 
     //___________________________________tags
 
-    app.get('/api/tasks/:taskId/tagsList', function (req, res, next) {
+    app.get('/api/tasks/:taskId/tags/tagsList', function (req, res, next) {
         //sorting
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);
@@ -297,7 +296,7 @@ module.exports = function (app) {
         });
     });
 
-    app.get('/api/tasks/:taskId/:tags', function (req, res, next) {
+    app.get('/api/tasks/:taskId/tags/:tags', function (req, res, next) {
 
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);

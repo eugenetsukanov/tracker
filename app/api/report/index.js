@@ -38,8 +38,6 @@ module.exports = function (app) {
 
     app.get('/api/tasks/:taskId/report/:date', function (req, res) {
 
-        //var date = new Date();
-
         var date = Date.parse(req.params.date) || Date.now();
 
         var getAtDate = {

@@ -6,11 +6,11 @@ angular
     })
 
     .factory('TagsList', function ($resource) {
-        return $resource('/api/tasks/:taskId/tagsList', {taskId: '@_id'}, {update: {method: 'PUT'}});
+        return $resource('/api/tasks/:taskId/tags/tagsList', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
 
     .factory('TagsFind', function ($resource) {
-        return $resource('/api/tasks/:taskId/:tags', {taskId: '@_id'}, {update: {method: 'PUT'}});
+        return $resource('/api/tasks/:taskId/tags/:tags', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
 
     .factory('Team', function ($resource) {
