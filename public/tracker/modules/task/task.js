@@ -2,13 +2,12 @@ angular
     .module('Tracker')
 
     .controller('TaskCtrl', function ($sce,
-                                      $modal,
+                                      ModalBox,
                                       $scope,
                                       $state,
                                       $stateParams,
                                       Task,
                                       UserService) {
-
 
         $scope.views = [
             {title: 'Board', name: 'board'},
@@ -69,39 +68,37 @@ angular
         };
 
         var init = $scope.init;
-        $scope.init();
 
+        init();
 
         $scope.edit = function (task) {
+
             $scope.newTask = task;
 
+            ModalBox.show(task, init);
 
-            var modal = $modal.open({
-                size: 'lg',
-                templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
-                controller: function ($scope) {
-                    $scope.task = task;
-
-                    $scope.done = function () {
-                        init();
-                        modal.close();
-                    }
-                }
-            });
-
-            modal.result.then(init, init);
         };
 
     })
 
     .controller('AssignedTasksCtrl', function ($scope,
+                                               $modal,
+                                               Task,
                                                UserService,
                                                AssignedTasks) {
 
+        var init = function () {
+            $scope.assignedTasks = AssignedTasks.query({userId: UserService.getUser()._id});
+        };
 
         if (UserService.getUser()._id) {
-            $scope.assignedTasks = AssignedTasks.query({userId: UserService.getUser()._id});
+            init();
         }
+
+        $scope.edit = function (task) {
+
+        }
+
 
     })
 
@@ -134,12 +131,12 @@ angular
         });
 
         var getRoot = function () {
-            CurrentProject.get({taskId: $stateParams.taskId}, function (root) {
-                $scope.root = root;
-            });
+                CurrentProject.get({taskId: $stateParams.taskId}, function (root) {
+                    $scope.root = root;
+                });
         };
 
-        if ($stateParams.taskId && UserService.getUser()._id) getRoot();
+        if($stateParams.taskId && UserService.getUser()._id) getRoot();
 
         $scope.searchRoot = function () {
             $location.path('/app/tasks/' + $scope.root._id);

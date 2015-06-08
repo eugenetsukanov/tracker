@@ -29,6 +29,34 @@ angular
         return $resource('/api/users/:userId/tasks', {userId: '@_id'});
     })
 
+    .factory('ModalBox', function ($modal) {
+
+        var box = {
+            modal: null,
+            show: function (task, init) {
+                this.modal = $modal.open({
+                    size: 'lg',
+                    templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
+                    controller: function ($scope) {
+                        $scope.task = task;
+
+                        $scope.done = function () {
+                            init();
+                            box.close();
+                        }
+                    }
+                });
+
+                this.modal.result.then(init, init);
+            },
+            close: function () {
+                this.modal.close();
+            }
+        };
+
+        return box;
+    })
+
 
     .factory('TaskComplexity', function () {
         return complexities = [

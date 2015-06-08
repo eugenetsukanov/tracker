@@ -1,6 +1,8 @@
-<div ng-if="assignedTasks.length"
-     ng-repeat="task in assignedTasks"
-     task-panel task="task" task-on-edit="edit">
+<!--<div ng-init="taskOptions = {hideStatus: true}">-->
+    <div ng-if="assignedTasks.length"
+         ng-repeat="task in assignedTasks"
+         task-panel task="task" task-on-edit="edit">
 
-</div>
-<div ng-if="assignedTasks.length == 0">There are no tasks assigned to you.</div>
+    </div>
+    <div ng-if="assignedTasks.length == 0">There are no tasks assigned to you.</div>
+<!--</div>-->
