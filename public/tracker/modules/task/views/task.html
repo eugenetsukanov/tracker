@@ -14,9 +14,8 @@
 
     <div ng-hide="task._id == newTask._id" ng-if="task.tags.length" class="tags tags-panel tags-task">
         <i class="fa fa-tags"></i>&nbsp;
-        <a ui-sref="app.tags-find({taskId: task._id, userId: user._id})" class="label" ng-repeat="tag in task.tags">{{tag}}</a>
+        <a ui-sref="app.tags-find({taskId: task._id, tags: tag})" class="label" ng-repeat="tag in task.tags">{{tag}}</a>
     </div>
-    <a ui-sref="app.tags-find({taskId: task._id, tags: tag})" class="label" ng-repeat="tag in task.tags">{{tag}}</a>
 </div>
 
 <div ng-if="!newTask._id" task-editor task="newTask" task-on-complete="init" class="edit-form"></div>

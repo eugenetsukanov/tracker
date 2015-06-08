@@ -151,7 +151,6 @@ module.exports = function (app) {
 
             root.deepFind(function (task) {
 
-                console.log(task.title);
                 return task.tags.indexOf(req.params.tags) >= 0
 
             }, function (err, tasks) {
