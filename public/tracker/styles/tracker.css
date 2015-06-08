@@ -61,7 +61,7 @@ hr {
     border-bottom: 2px solid green;
 }
 
-.tech-info .btn-group.complexity label:nth-child(n+4):nth-child(-n+8) {
+.tech-info .btn-group.complexity label:nth-child(n+5):nth-child(-n+8) {
     border-bottom: 2px solid orange;
 }
 
