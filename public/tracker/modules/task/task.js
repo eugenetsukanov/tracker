@@ -82,7 +82,7 @@ angular
     })
 
     .controller('AssignedTasksCtrl', function ($scope,
-                                               $modal,
+                                               ModalBox,
                                                Task,
                                                UserService,
                                                AssignedTasks) {
@@ -95,9 +95,15 @@ angular
             init();
         }
 
+
+
         $scope.edit = function (task) {
 
-        }
+            var task = Task.get({taskId: task._id});
+
+            ModalBox.show(task, init);
+
+        };
 
 
     })
