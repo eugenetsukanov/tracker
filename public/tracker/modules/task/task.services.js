@@ -17,6 +17,10 @@ angular
         return $resource('/api/tasks/:taskId/team', {taskId: '@_id'});
     })
 
+    .factory('CurrentProject', function ($resource) {
+        return $resource('/api/tasks/:taskId/current-project', {taskId: '@_id'});
+    })
+
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })

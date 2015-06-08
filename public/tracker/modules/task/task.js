@@ -96,8 +96,7 @@ angular
 
     .controller('AssignedTasksCtrl', function ($scope,
                                                UserService,
-                                               AssignedTasks)
-    {
+                                               AssignedTasks) {
 
 
         if (UserService.getUser()._id) {
@@ -113,6 +112,50 @@ angular
 
         if (UserService.getUser()._id) {
             $scope.tasksByTags = TagsFind.query({taskId: $stateParams.taskId, tags: $stateParams.tags});
+        }
+
+    })
+
+    .controller('gotoCurrentProjectCtrl', function ($scope,
+                                                    $stateParams,
+                                                    UserService,
+                                                    CurrentProject,
+                                                    $location,
+                                                    $rootScope) {
+
+        //$scope.$on('$routeChangeStart', function (next, current) {
+        //    console.log(current);
+        //    if (UserService.getUser()._id) {
+        //        CurrentProject.get({taskId: $stateParams.taskId}, function (root) {
+        //            $scope.root = root;
+        //        });
+        //    } else {
+        //        $scope.root = null;
+        //    }
+        //});
+
+        var getRoot = function () {
+            if (UserService.getUser()._id && $stateParams.taskId) {
+                CurrentProject.get({taskId: $stateParams.taskId}, function (root) {
+                    $scope.root = root;
+                });
+            } else {
+                $scope.root = null;
+            }
+        };
+
+        getRoot();
+
+        $rootScope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
+            if (newUrl != oldUrl) {
+                getRoot();
+                event.preventDefault();
+            }
+        });
+
+
+        $scope.searchRoot = function () {
+            $location.path('/app/tasks/' + $scope.root._id);
         }
 
     })
