@@ -96,7 +96,7 @@ angular
 
     .controller('AssignedTasksCtrl', function ($scope,
                                                UserService,
-                                               AssignedTasks)
+                                               AssignedTasks, $timeout)
     {
 
 
