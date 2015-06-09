@@ -20,12 +20,6 @@
             <li><a ui-sref="app.tasks">Projects</a></li>
             <li><a ui-sref="app.report">Report</a></li>
             <li><a ui-sref="app.assigned-tasks({userId: user._id})">My tasks</a></li>
-            <li ng-controller="gotoCurrentProjectCtrl" ng-show="root">
-                <a class="pointer" ng-click="searchRoot()">Current: {{root.title | limitTo: 10}}
-                    <span ng-if="root.title.length > 10">...</span>
-                </a>
-            </li>
-
         </ul>
 
 

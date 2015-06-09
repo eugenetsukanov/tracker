@@ -1,6 +1,13 @@
 <div ng-if="task">
 
-    <h2 ng-hide="task._id == newTask._id">{{task.title}}</h2>
+    <h2 ng-hide="task._id == newTask._id" class="clearfix">
+        {{task.title}}
+        <div class="pull-right" ng-controller="gotoCurrentProjectCtrl" ng-show="root" ng-if="parentTask">
+            <a class="btn btn-sm btn-default" ng-click="searchRoot()"><i class="fa fa-long-arrow-left"></i> Project: {{root.title | limitTo: 10}}
+                <span ng-if="root.title.length > 10">...</span>
+            </a>
+        </div>
+    </h2>
 
     <h5 ng-if="parentTask">
         <a ui-sref="app.task({taskId: parentTask._id})"><i class="fa fa-long-arrow-left"></i> {{parentTask.title}}</a>
