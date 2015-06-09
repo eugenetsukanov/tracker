@@ -14,6 +14,8 @@ module.exports = function (app) {
         };
         Task.find(q)
             .sort('-updatedAt')
+            .populate('owner', '-local.passwordHashed -local.passwordSalt')
+            .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .exec(function (err, tasks) {
                 if (err) return next(err);
                 res.json(tasks);

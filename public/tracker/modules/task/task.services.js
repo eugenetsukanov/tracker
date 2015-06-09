@@ -46,7 +46,6 @@ angular
                         }
                     }
                 });
-
                 this.modal.result.then(init, init);
             },
             close: function () {

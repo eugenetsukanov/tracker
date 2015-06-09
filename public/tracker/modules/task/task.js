@@ -91,20 +91,19 @@ angular
             $scope.assignedTasks = AssignedTasks.query({userId: UserService.getUser()._id});
         };
 
-        if (UserService.getUser()._id) {
-            init();
-        }
-
-
+        $scope.$watch('UserService.getUser()._id', function (id) {
+            if (id) {
+                init();
+            }
+        });
 
         $scope.edit = function (task) {
 
-            var task = Task.get({taskId: task._id});
-
-            ModalBox.show(task, init);
+            Task.get({taskId: task._id}, function (task) {
+                ModalBox.show(task, init);
+            });
 
         };
-
 
     })
 
@@ -128,7 +127,7 @@ angular
 
         $rootScope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
             if (newUrl != oldUrl) {
-                if($stateParams.taskId && UserService.getUser()._id) {
+                if ($stateParams.taskId && UserService.getUser()._id) {
                     getRoot()
                 } else {
                     $scope.root = null;
@@ -137,12 +136,12 @@ angular
         });
 
         var getRoot = function () {
-                CurrentProject.get({taskId: $stateParams.taskId}, function (root) {
-                    $scope.root = root;
-                });
+            CurrentProject.get({taskId: $stateParams.taskId}, function (root) {
+                $scope.root = root;
+            });
         };
 
-        if($stateParams.taskId && UserService.getUser()._id) getRoot();
+        if ($stateParams.taskId && UserService.getUser()._id) getRoot();
 
         $scope.searchRoot = function () {
             $location.path('/app/tasks/' + $scope.root._id);

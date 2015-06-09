@@ -55,8 +55,8 @@ angular
                 var init = function () {
 
                     $scope.tagsList = [];
-
                     if ($scope.task._id || $scope.task.parentTaskId) {
+
 
                         var id = $scope.task._id || $scope.task.parentTaskId;
 
@@ -65,8 +65,8 @@ angular
                         });
 
                         $scope.tagsList = TagsList.query({taskId: id});
-
                     }
+
 
                     if ($scope.task.developer && $scope.task.developer._id) {
                         $scope.task.developer = $scope.task.developer._id;
