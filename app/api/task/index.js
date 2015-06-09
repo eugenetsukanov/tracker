@@ -268,9 +268,26 @@ module.exports = function (app) {
 
                 task.updateParent(function (err) {
                     if (err) return next(err);
-                    if (parent) parent.save(new Function());
+
+
+                    if (parent) {
+
+                        parent.updateEstimateTime(function (err) {
+                            if (err) return next(err);
+                            parent.save(function (err) {
+                                if (err) return next(err);
+
+                                parent.updateParentStatus(function (err) {
+                                    if (err) return next(err);
+                                    parent.save(new Function());
+                                });
+                            });
+                        });
+
+                    }
                     res.json(task);
                 });
+
 
             });
         });
