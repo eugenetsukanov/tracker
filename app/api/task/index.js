@@ -298,8 +298,6 @@ module.exports = function (app) {
 
     app.get('/api/tasks/:taskId/tags/:tags', function (req, res, next) {
 
-        console.log(req.body);
-
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);
 
