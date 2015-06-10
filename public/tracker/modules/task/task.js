@@ -135,21 +135,9 @@ angular
     })
 
     .controller('gotoRootTaskCtrl', function ($scope,
-                                                    $stateParams,
-                                                    UserService,
-                                                    RootTask,
-                                                    $location,
-                                                    $rootScope) {
+                                              $stateParams,
+                                              RootTask) {
 
-        $rootScope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
-            if (newUrl != oldUrl) {
-                if ($stateParams.taskId && UserService.getUser()._id) {
-                    getRoot()
-                } else {
-                    $scope.root = null;
-                }
-            }
-        });
 
         var getRoot = function () {
             RootTask.get({taskId: $stateParams.taskId}, function (root) {
@@ -157,11 +145,10 @@ angular
             });
         };
 
-        if ($stateParams.taskId && UserService.getUser()._id) getRoot();
-
-        $scope.searchRoot = function () {
-            $location.path('/app/tasks/' + $scope.root._id);
+        if ($stateParams.taskId) {
+            getRoot();
         }
+
 
     })
 
