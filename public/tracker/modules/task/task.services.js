@@ -29,7 +29,7 @@ angular
         return $resource('/api/users/:userId/tasks', {userId: '@_id'});
     })
 
-    .factory('ModalBox', function ($modal) {
+    .factory('TaskEditorModal', function ($modal) {
 
         var box = {
             modal: null,

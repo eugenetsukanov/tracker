@@ -2,7 +2,7 @@ angular
     .module('Tracker')
 
     .controller('TaskCtrl', function ($sce,
-                                      ModalBox,
+                                      TaskEditorModal,
                                       $scope,
                                       $state,
                                       $stateParams,
@@ -75,14 +75,14 @@ angular
 
             $scope.newTask = task;
 
-            ModalBox.show(task, init);
+            TaskEditorModal.show(task, init);
 
         };
 
     })
 
     .controller('AssignedTasksCtrl', function ($scope,
-                                               ModalBox,
+                                               TaskEditorModal,
                                                Task,
                                                UserService,
                                                AssignedTasks) {
@@ -100,7 +100,7 @@ angular
         $scope.edit = function (task) {
 
             Task.get({taskId: task._id}, function (task) {
-                ModalBox.show(task, init);
+                TaskEditorModal.show(task, init);
             });
 
         };
