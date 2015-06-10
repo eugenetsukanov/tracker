@@ -18,9 +18,7 @@ angular
                     if (q.length > 0) {
                         Search.query({taskId: $scope.task._id, query: q}, function (tasks) {
                             $scope.foundTasks = tasks;
-
                             angular.copy(tasks, foundTasks.items);
-                            console.log('searchQuery', foundTasks.items);
                         });
                     }
                 }

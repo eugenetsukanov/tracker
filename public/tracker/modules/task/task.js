@@ -12,7 +12,6 @@ angular
 
         $scope.foundTasks = foundTasks.items;
         $scope.$watch('foundTasks.items.length', function () {
-            console.log(foundTasks);
             $scope.foundTasks = foundTasks.items;
         });
 
