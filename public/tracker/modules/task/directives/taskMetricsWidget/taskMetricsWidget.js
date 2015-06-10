@@ -13,6 +13,7 @@ angular
 
                     $scope.estimatedTime = 0;
                     $scope.points = 0;
+                    $scope.timeToDo = 0;
 
                     tasks.forEach(function (task) {
                         if (task.simple == true) {
@@ -21,6 +22,9 @@ angular
                             }
                             if (task.complexity) {
                                 $scope.points += task.points;
+                            }
+                            if (task.timeToDo) {
+                                $scope.timeToDo += task.timeToDo;
                             }
                         }
                     })
