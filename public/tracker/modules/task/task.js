@@ -109,7 +109,7 @@ angular
 
     .controller('tagsFindCtrl', function ($scope,
                                           $stateParams,
-                                          ModalBox,
+                                          TaskEditorModal,
                                           Task,
                                           UserService,
                                           TagsFind) {
@@ -127,7 +127,7 @@ angular
         $scope.edit = function (task) {
 
             Task.get({taskId: task._id}, function (task) {
-                ModalBox.show(task, init);
+                TaskEditorModal.show(task, init);
             });
 
         };
