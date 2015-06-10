@@ -109,12 +109,28 @@ angular
 
     .controller('tagsFindCtrl', function ($scope,
                                           $stateParams,
+                                          ModalBox,
+                                          Task,
                                           UserService,
                                           TagsFind) {
 
-        if (UserService.getUser()._id) {
+        var init = function () {
             $scope.tasksByTags = TagsFind.query({taskId: $stateParams.taskId, tags: $stateParams.tags});
-        }
+        };
+
+        $scope.$watch('UserService.getUser()._id', function (id) {
+            if (id) {
+                init();
+            }
+        });
+
+        $scope.edit = function (task) {
+
+            Task.get({taskId: task._id}, function (task) {
+                ModalBox.show(task, init);
+            });
+
+        };
 
     })
 
