@@ -88,7 +88,9 @@ angular
                                                AssignedTasks) {
 
         var init = function () {
-            $scope.assignedTasks = AssignedTasks.query({userId: UserService.getUser()._id});
+            AssignedTasks.query({userId: UserService.getUser()._id}, function (tasks) {
+                $scope.assignedTasks = tasks;
+            });
         };
 
         $scope.$watch('UserService.getUser()._id', function (id) {

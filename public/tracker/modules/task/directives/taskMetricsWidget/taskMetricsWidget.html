@@ -1,9 +1,6 @@
-<ul class="detail-line task-metrics-widget">
-    <li ng-if="counter"><i class="fa fa-tasks"></i>&nbsp;{{counter}} tasks assigned to you.</li>
-    <li ng-if="estimatedTime">Overall estimated:&nbsp;<i class="fa fa-clock-o" tooltip="Estimated Time"></i>&nbsp;{{estimatedTime}}&nbsp;hours.
+<ul class="detail-line task-metrics-widget" ng-if="counter > 0">
+    <li><i class="fa fa-tasks"></i>&nbsp;{{counter}} tasks</li>
+    <li><i class="fa fa-clock-o"></i>&nbsp;<span tooltip="Estimated time">{{estimatedTime | round}}</span>&nbsp;/&nbsp;<span tooltip="Spent time">{{(estimatedTime - timeToDo) | round}}</span>&nbsp;/&nbsp;<span tooltip="TODO">{{timeToDo | round}}</span>&nbsp;hours
     </li>
-    <li ng-if="points"><i class="fa fa-puzzle-piece" tooltip="Complexity"></i>&nbsp;{{points}}&nbsp;points.</li>
-    <li ng-if="timeToDo">Time left:&nbsp;<i class="fa fa-clock-o" tooltip="Time left"></i>&nbsp;{{timeToDo}}&nbsp;hours.
-    </li>
+    <li><span tooltip="Complexity"><i class="fa fa-puzzle-piece"></i>&nbsp;{{points}}</span>&nbsp;points</li>
 </ul>
-

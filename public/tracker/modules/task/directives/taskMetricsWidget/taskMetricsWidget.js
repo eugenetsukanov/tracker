@@ -16,7 +16,7 @@ angular
                     $scope.timeToDo = 0;
 
                     tasks.forEach(function (task) {
-                        if (task.simple) {
+                        if ($scope.simpleOnly && task.simple || !$scope.simpleOnly) {
                             if (task.estimatedTime) {
                                 $scope.estimatedTime += task.estimatedTime;
                             }
@@ -30,14 +30,17 @@ angular
                     })
                 };
 
-                $scope.$watchCollection('tasks', function () {
-                    getMetrics($scope.tasks);
+                $scope.$watchCollection('tasks', function (tasks) {
+                    if (tasks) {
+                        getMetrics($scope.tasks);
+                    }
                 });
 
 
             },
             scope: {
-                tasks: "=tasks"
+                tasks: "=tasks",
+                simpleOnly: "=simpleOnly"
             }
         }
     });
