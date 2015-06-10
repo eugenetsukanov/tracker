@@ -10,8 +10,8 @@
     <li ng-if="task.priority" tooltip="Priority"><i class="fa fa-bolt"></i>&nbsp;{{task.priority}}</li>
 
     <li>
-        <i class="fa fa-clock-o" tooltip="Time"></i>&nbsp;<span tooltip="Spent">{{task.spenttime| round}}</span>
-        / <span tooltip="Estimated">{{task.estimatedTime| round}}</span>
+        <i class="fa fa-clock-o" tooltip="Time"></i>&nbsp;<span tooltip="Estimated">{{task.estimatedTime| round}}</span>
+        / <span tooltip="Spent">{{task.spenttime| round}}</span>
         / <span tooltip="TODO">{{task.timeToDo| round}}</span>
     </li>
 
