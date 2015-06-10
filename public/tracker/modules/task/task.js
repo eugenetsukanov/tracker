@@ -7,7 +7,14 @@ angular
                                       $state,
                                       $stateParams,
                                       Task,
-                                      UserService) {
+                                      UserService,
+                                      foundTasks) {
+
+        $scope.foundTasks = foundTasks.items;
+        $scope.$watch('foundTasks.items.length', function () {
+            console.log(foundTasks);
+            $scope.foundTasks = foundTasks.items;
+        });
 
         $scope.views = [
             {title: 'Board', name: 'board'},

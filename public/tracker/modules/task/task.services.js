@@ -21,6 +21,10 @@ angular
         return $resource('/api/tasks/:taskId/root', {taskId: '@_id'});
     })
 
+    .factory('Search', function ($resource) {
+        return $resource('/api/tasks/:taskId/search/:query', {taskId: '@_id'});
+    })
+
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
@@ -56,6 +60,9 @@ angular
         return box;
     })
 
+    .factory('foundTasks', [function(){
+        return { items: [] };
+    }])
 
     .factory('TaskComplexity', function () {
         return complexities = [

@@ -3,20 +3,29 @@
     <div class="col-md-4">
         <h3>New</h3>
 
-        <div ng-repeat="task in tasks | byStatus : ''" task-panel task="task" task-on-edit="edit" task-options="taskOptions"></div>
+        <div ng-repeat="task in tasks | byStatus : ''"
+             task-panel task="task"
+             task-on-edit="edit"
+             task-options="taskOptions"></div>
 
     </div>
 
     <div class="col-md-4">
         <h3>In progress</h3>
 
-        <div ng-repeat="task in tasks | byStatus: 'in progress'" task-panel task="task" task-on-edit="edit" task-options="taskOptions"></div>
+        <div ng-repeat="task in tasks | byStatus: 'in progress'"
+             task-panel task="task"
+             task-on-edit="edit"
+             task-options="taskOptions"></div>
     </div>
 
     <div class="col-md-4">
         <h3>Accepted</h3>
 
-        <div ng-repeat="task in tasks | byStatus: 'accepted'" task-panel task="task" task-on-edit="edit" task-options="taskOptions"></div>
+        <div ng-repeat="task in tasks | byStatus: 'accepted'"
+             task-panel task="task"
+             task-on-edit="edit"
+             task-options="taskOptions"></div>
     </div>
 
 </div>
