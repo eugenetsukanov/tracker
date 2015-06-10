@@ -118,10 +118,10 @@ angular
 
     })
 
-    .controller('gotoCurrentProjectCtrl', function ($scope,
+    .controller('gotoRootTaskCtrl', function ($scope,
                                                     $stateParams,
                                                     UserService,
-                                                    CurrentProject,
+                                                    RootTask,
                                                     $location,
                                                     $rootScope) {
 
@@ -136,7 +136,7 @@ angular
         });
 
         var getRoot = function () {
-            CurrentProject.get({taskId: $stateParams.taskId}, function (root) {
+            RootTask.get({taskId: $stateParams.taskId}, function (root) {
                 $scope.root = root;
             });
         };

@@ -296,7 +296,7 @@ module.exports = function (app) {
 
     //_________________________go to current project
 
-    app.get('/api/tasks/:taskId/current-project', function (req, res, next) {
+    app.get('/api/tasks/:taskId/root', function (req, res, next) {
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);
             res.json(root);
