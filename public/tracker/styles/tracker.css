@@ -102,6 +102,9 @@ hr {
 .task-metrics {
     cursor: pointer;
 }
+.task-metrics-widget {
+    margin: 0 0 10px 10px;
+}
 
 .pointer {
     cursor: pointer;
