@@ -305,6 +305,7 @@ module.exports = function (app) {
 
     //________________________search
     app.get('/api/tasks/:taskId/search/:query', function (req, res, next) {
+
         var query = req.params.query.toLowerCase();
 
         req.Task.getRoot(function (err, root) {
@@ -312,8 +313,11 @@ module.exports = function (app) {
 
             root.deepFind(function (task) {
                 var title = task.title.trim().toLowerCase();
-                
-                return title.indexOf(query) >= 0
+                var description = task.description.trim().toLowerCase();
+
+                var textQuery = title + ' ' + description;
+
+                return textQuery.indexOf(query) >= 0
 
             }, function (err, tasks) {
                 if (err) return next(err);
