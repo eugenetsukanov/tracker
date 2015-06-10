@@ -16,7 +16,7 @@ angular
                     $scope.timeToDo = 0;
 
                     tasks.forEach(function (task) {
-                        if (task.simple == true) {
+                        if (task.simple) {
                             if (task.estimatedTime) {
                                 $scope.estimatedTime += task.estimatedTime;
                             }
