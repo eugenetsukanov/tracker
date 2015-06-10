@@ -49,8 +49,8 @@ module.exports = function (app) {
     app.get('/api/tasks/:taskId', function (req, res) {
         res.json(req.Task);
     });
-    //________________________________________________________
 
+    //________________________________________________________
 
     app.get('/api/tasks/:taskId/move', function (req, res, next) {
 
@@ -134,30 +134,6 @@ module.exports = function (app) {
                 }
 
             })
-    });
-
-    app.get('/api/tasks/:taskId/tagsList', function (req, res, next) {
-        //sorting
-        req.Task.getRoot(function (err, root) {
-            if (err) return next(err);
-            res.json(root.tagsList);
-        });
-    });
-
-    app.get('/api/tasks/:taskId/:tags', function (req, res, next) {
-
-        req.Task.getRoot(function (err, root) {
-            if (err) return next(err);
-
-            root.deepFind(function (task) {
-
-                return task.tags.indexOf(req.params.tags) >= 0
-
-            }, function (err, tasks) {
-                if (err) return next(err);
-                res.json(tasks);
-            });
-        });
     });
 
     //________________________________________________________
@@ -282,7 +258,6 @@ module.exports = function (app) {
 
     });
 
-
     app.put('/api/tasks/:taskId/move/:parentTaskId', TaskForm, function (req, res) {
         var task = req.Task;
         req.Task.getParent(function (err, parent) {
@@ -293,15 +268,68 @@ module.exports = function (app) {
 
                 task.updateParent(function (err) {
                     if (err) return next(err);
-                    if (parent) parent.save(new Function());
+
+
+                    if (parent) {
+
+                        parent.updateEstimateTime(function (err) {
+                            if (err) return next(err);
+                            parent.save(function (err) {
+                                if (err) return next(err);
+
+                                parent.updateParentStatus(function (err) {
+                                    if (err) return next(err);
+                                    parent.save(new Function());
+                                });
+                            });
+                        });
+
+                    }
                     res.json(task);
                 });
+
 
             });
         });
 
     });
 
+    //_________________________go to current project
+
+    app.get('/api/tasks/:taskId/root', function (req, res, next) {
+        req.Task.getRoot(function (err, root) {
+            if (err) return next(err);
+            res.json(root);
+        });
+    });
+
+    //___________________________________tags
+
+    app.get('/api/tasks/:taskId/tags/tagsList', function (req, res, next) {
+        //sorting
+        req.Task.getRoot(function (err, root) {
+            if (err) return next(err);
+            res.json(root.tagsList);
+        });
+    });
+
+    app.get('/api/tasks/:taskId/tags/:tags', function (req, res, next) {
+
+        req.Task.getRoot(function (err, root) {
+            if (err) return next(err);
+
+            root.deepFind(function (task) {
+
+                return task.tags.indexOf(req.params.tags) >= 0
+
+            }, function (err, tasks) {
+                if (err) return next(err);
+                res.json(tasks);
+            });
+        });
+    });
+
+    //__________________________error log
 
     app.use(function (err, req, res, next) {
         if (err) {

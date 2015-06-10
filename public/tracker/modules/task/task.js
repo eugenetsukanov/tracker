@@ -2,13 +2,12 @@ angular
     .module('Tracker')
 
     .controller('TaskCtrl', function ($sce,
-                                      $modal,
+                                      TaskEditorModal,
                                       $scope,
                                       $state,
                                       $stateParams,
                                       Task,
                                       UserService) {
-
 
         $scope.views = [
             {title: 'Board', name: 'board'},
@@ -69,40 +68,42 @@ angular
         };
 
         var init = $scope.init;
-        $scope.init();
 
+        init();
 
         $scope.edit = function (task) {
+
             $scope.newTask = task;
 
+            TaskEditorModal.show(task, init);
 
-            var modal = $modal.open({
-                size: 'lg',
-                templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
-                controller: function ($scope) {
-                    $scope.task = task;
-
-                    $scope.done = function () {
-                        init();
-                        modal.close();
-                    }
-                }
-            });
-
-            modal.result.then(init, init);
         };
 
     })
 
     .controller('AssignedTasksCtrl', function ($scope,
+                                               TaskEditorModal,
+                                               Task,
                                                UserService,
-                                               AssignedTasks)
-    {
+                                               AssignedTasks) {
 
-
-        if (UserService.getUser()._id) {
+        var init = function () {
             $scope.assignedTasks = AssignedTasks.query({userId: UserService.getUser()._id});
-        }
+        };
+
+        $scope.$watch('UserService.getUser()._id', function (id) {
+            if (id) {
+                init();
+            }
+        });
+
+        $scope.edit = function (task) {
+
+            Task.get({taskId: task._id}, function (task) {
+                TaskEditorModal.show(task, init);
+            });
+
+        };
 
     })
 
@@ -113,6 +114,37 @@ angular
 
         if (UserService.getUser()._id) {
             $scope.tasksByTags = TagsFind.query({taskId: $stateParams.taskId, tags: $stateParams.tags});
+        }
+
+    })
+
+    .controller('gotoRootTaskCtrl', function ($scope,
+                                                    $stateParams,
+                                                    UserService,
+                                                    RootTask,
+                                                    $location,
+                                                    $rootScope) {
+
+        $rootScope.$on('$locationChangeStart', function (event, newUrl, oldUrl) {
+            if (newUrl != oldUrl) {
+                if ($stateParams.taskId && UserService.getUser()._id) {
+                    getRoot()
+                } else {
+                    $scope.root = null;
+                }
+            }
+        });
+
+        var getRoot = function () {
+            RootTask.get({taskId: $stateParams.taskId}, function (root) {
+                $scope.root = root;
+            });
+        };
+
+        if ($stateParams.taskId && UserService.getUser()._id) getRoot();
+
+        $scope.searchRoot = function () {
+            $location.path('/app/tasks/' + $scope.root._id);
         }
 
     })

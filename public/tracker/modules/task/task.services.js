@@ -6,15 +6,19 @@ angular
     })
 
     .factory('TagsList', function ($resource) {
-        return $resource('/api/tasks/:taskId/tagsList', {taskId: '@_id'}, {update: {method: 'PUT'}});
+        return $resource('/api/tasks/:taskId/tags/tagsList', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
 
     .factory('TagsFind', function ($resource) {
-        return $resource('/api/tasks/:taskId/:tags', {taskId: '@_id'}, {update: {method: 'PUT'}});
+        return $resource('/api/tasks/:taskId/tags/:tags', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
 
     .factory('Team', function ($resource) {
         return $resource('/api/tasks/:taskId/team', {taskId: '@_id'});
+    })
+
+    .factory('RootTask', function ($resource) {
+        return $resource('/api/tasks/:taskId/root', {taskId: '@_id'});
     })
 
     .factory('TaskMove', function ($resource) {
@@ -23,6 +27,33 @@ angular
 
     .factory('AssignedTasks', function ($resource) {
         return $resource('/api/users/:userId/tasks', {userId: '@_id'});
+    })
+
+    .factory('TaskEditorModal', function ($modal) {
+
+        var box = {
+            modal: null,
+            show: function (task, init) {
+                this.modal = $modal.open({
+                    size: 'lg',
+                    templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
+                    controller: function ($scope) {
+                        $scope.task = task;
+
+                        $scope.done = function () {
+                            init();
+                            box.close();
+                        }
+                    }
+                });
+                this.modal.result.then(init, init);
+            },
+            close: function () {
+                this.modal.close();
+            }
+        };
+
+        return box;
     })
 
 

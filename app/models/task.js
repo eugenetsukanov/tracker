@@ -293,12 +293,10 @@ TaskSchema.methods = {
                     callback();
                 });
 
-
             }, function (err) {
                 if (err) return next(err);
                 next(null, tasks);
             });
-
 
         })
     },
