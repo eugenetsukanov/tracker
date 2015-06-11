@@ -6,7 +6,15 @@ module.exports = function () {
 
     this.World = function (callback) {
 
-        var seleniumUrl = 'http://localhost:4444/wd/hub';
+        var seleniumUrl = 'http://192.168.10.1:4444/wd/hub';
+        var baseUrl = 'http://192.168.10.20:3000/';
+        var mongoUrl = 'mongodb://localhost/tracker_dev';
+
+        this.waitTimeout = 3000;
+        this.baseUrl = baseUrl;
+
+        require('cucumber.usesteps').setRootDir(__dirname + '/../')
+
 
         this.chai = require('chai');
         this.chai.should();
@@ -14,11 +22,6 @@ module.exports = function () {
 
         this.webdriver = require('selenium-webdriver');
 
-        this.waitTimeout = 3000;
-
-        this.host = 'localhost';
-        this.port = 9000;
-        this.baseUrl = 'http://' + this.host + ':' + this.port;
 
 
         this.initDriver = function () {
@@ -180,10 +183,14 @@ module.exports = function () {
         }
 
         this.prepareFixtures = function (next) {
-            require('../../server/config/container').get('FixtureLoader').reload(next);
+
+            var fixtures = require('pow-mongodb-fixtures').connect(mongoUrl);
+            fixtures.clearAndLoad(__dirname + '/../../app/config/fixtures', function (err) {
+                if (err) console.error(err);
+                next();
+            });
         }
 
-        require('cucumber.usesteps').setRootDir(__dirname + '/../')
 
 
         var chainit = require('chainit3');
