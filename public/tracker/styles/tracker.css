@@ -240,6 +240,19 @@ hr {
     background-color: #3DA1BE;
 }
 
+.nav-bar-search {
+    margin-top: 8px;
+}
+.nav-bar-search input {
+    background: #4BADCA;
+    border: 0;
+    color: #fff !important;
+}
+.nav-bar-search input::-webkit-input-placeholder {color:#C6EDF9;}
+.nav-bar-search input::-moz-placeholder          {color:#C6EDF9;}/* Firefox 19+ */
+.nav-bar-search input:-moz-placeholder           {color:#C6EDF9;}/* Firefox 18- */
+.nav-bar-search input:-ms-input-placeholder      {color:#C6EDF9;}
+
 .panel {
     margin-bottom: 15px;
     box-shadow: 0 1px 0 0 transparent;

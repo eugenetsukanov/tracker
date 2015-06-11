@@ -8,11 +8,13 @@ angular
                                       $stateParams,
                                       Task,
                                       UserService,
+                                      currentTask,
                                       foundTasks) {
 
-        $scope.foundTasks = foundTasks.items;
-        $scope.$watch('foundTasks.items.length', function () {
-            $scope.foundTasks = foundTasks.items;
+        $scope.foundTasks = foundTasks;
+
+        $scope.$watchCollection('foundTasks.items', function () {
+            $scope.tasks = $scope.foundTasks.items;
         });
 
         $scope.views = [
@@ -33,6 +35,10 @@ angular
         };
 
         $scope.taskId = $stateParams.taskId;
+
+        $scope.$watch('taskId', function () {
+            currentTask.task = $scope.taskId;
+        });
 
         $scope.init = function () {
 

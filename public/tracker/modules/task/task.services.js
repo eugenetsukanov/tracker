@@ -21,10 +21,6 @@ angular
         return $resource('/api/tasks/:taskId/root', {taskId: '@_id'});
     })
 
-    .factory('Search', function ($resource) {
-        return $resource('/api/tasks/:taskId/search/:query', {taskId: '@_id'});
-    })
-
     .factory('TaskMove', function ($resource) {
         return $resource('/api/tasks/:taskId/move/:parentTaskId', {}, {update: {method: 'PUT'}});
     })
@@ -42,6 +38,7 @@ angular
                     size: 'lg',
                     templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
                     controller: function ($scope) {
+                        console.log(task);
                         $scope.task = task;
 
                         $scope.done = function () {
@@ -60,9 +57,13 @@ angular
         return box;
     })
 
-    .factory('foundTasks', [function(){
+    .factory('foundTasks', function(){
         return { items: [] };
-    }])
+    })
+
+    .factory('currentTask', function () {
+        return {task: ''};
+    })
 
     .factory('TaskComplexity', function () {
         return complexities = [

@@ -5,28 +5,35 @@ angular
         return {
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskSearch/taskSearch.html',
-            controller: function ($scope, Search, foundTasks) {
+            controller: function ($scope, Task, foundTasks, currentTask) {
+
+                $scope.$watch('currentTask.task', function () {
+                    $scope.currentTask = currentTask;
+                });
 
                 var clearFoundTasks = function () {
                     angular.copy([], foundTasks.items)
                 };
                 $scope.$watch('search', function () {
-                   clearFoundTasks();
+                    if ($scope.search && $scope.search.length == 0) {
+                        clearFoundTasks();
+                    }
+                    else {
+                        $scope.searchQuery($scope.search);
+                    }
                 });
 
                 $scope.searchQuery = function (query) {
 
-                    var q = query ? query.trim() : '';
+                    var q = query ? query : '';
 
                     if (q.length == 0) {
                         clearFoundTasks();
                     }
 
                     if (q.length > 0) {
-                        Search.query({taskId: $scope.task._id, query: q}, function (tasks) {
-                            $scope.foundTasks = tasks;
-                            angular.copy(tasks, foundTasks.items);
-
+                        Task.query({taskId: $scope.currentTask.task, nested:'search', query: q}, function (tasks) {
+                            foundTasks.items =tasks
                         });
                     }
                 }

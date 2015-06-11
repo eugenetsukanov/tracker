@@ -304,20 +304,28 @@ module.exports = function (app) {
     });
 
     //________________________search
-    app.get('/api/tasks/:taskId/search/:query', function (req, res, next) {
 
-        var query = req.params.query.toLowerCase();
+    app.get('/api/tasks/:taskId/search', function (req, res, next) {
+
+        var query = req.query.query.toLowerCase().trim();
+
 
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);
 
             root.deepFind(function (task) {
-                var title = task.title.trim().toLowerCase();
-                var description = task.description.trim().toLowerCase();
 
-                var textQuery = title + ' ' + description;
+                var textQuery = (task.title.trim() + ' ' + task.description.trim()).toLowerCase();
+                var queryArr = query.split(' ');
+                var result = 0;
 
-                return textQuery.indexOf(query) >= 0
+                queryArr.forEach(function (q) {
+                    if (textQuery.indexOf(q) >= 0) {
+                        result += 1;
+                    }
+                });
+
+                return (queryArr.length == result) ? true : false;
 
             }, function (err, tasks) {
                 if (err) return next(err);
