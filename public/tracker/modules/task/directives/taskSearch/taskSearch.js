@@ -5,11 +5,12 @@ angular
         return {
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskSearch/taskSearch.html',
-            controller: function ($scope, Task, foundTasks, currentTask) {
+            controller: function ($scope, Task, foundTasks, currentTask, $state) {
 
                 $scope.$watch('currentTask.task', function () {
                     $scope.currentTask = currentTask;
                 });
+
 
                 var clearFoundTasks = function () {
                     angular.copy([], foundTasks.items)
@@ -33,7 +34,16 @@ angular
 
                     if (q.length > 0) {
                         Task.query({taskId: $scope.currentTask.task, nested:'search', query: q}, function (tasks) {
-                            foundTasks.items =tasks
+
+                            foundTasks.items =tasks;
+
+                            if (tasks.length) {
+                                $state.go('app.task-search')
+                            }
+                            if (tasks.length == 0) {
+                                $state.go('app.task', {taskId: $scope.currentTask.task})
+                            }
+
                         });
                     }
                 }

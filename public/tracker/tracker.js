@@ -34,6 +34,11 @@ angular
                 templateUrl: "tracker/modules/task/views/task.html",
                 controller: 'TaskCtrl'
             })
+            .state('app.task-search', {
+                url: "/tasks/:taskId/search/:query",
+                templateUrl: "tracker/modules/task/views/task-search.html",
+                controller: 'SearchCtrl'
+            })
             .state('app.login', {
                 url: "/login",
                 controller: "LoginCtrl",
@@ -59,7 +64,7 @@ angular
                 templateUrl: "tracker/modules/task/views/view/task-view-assigned.html"
             })
             .state('app.tags-find', {
-                url: "/tasks/:taskId/:tags",
+                url: "/tasks/:taskId/tags/:tags",
                 controller: "tagsFindCtrl",
                 templateUrl: "tracker/modules/task/views/view/task-view-tags.html"
             })

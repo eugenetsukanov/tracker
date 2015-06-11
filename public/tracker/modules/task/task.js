@@ -166,5 +166,9 @@ angular
 
     })
 
+    .controller('SearchCtrl', function ($scope) {
+
+    })
+
 ;
 
