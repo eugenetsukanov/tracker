@@ -9,7 +9,7 @@ angular
                                       Task,
                                       UserService,
                                       currentTask,
-                                      foundTasks) {
+                                      foundTasks){
 
         $scope.foundTasks = foundTasks;
 
@@ -35,6 +35,8 @@ angular
         };
 
         $scope.taskId = $stateParams.taskId;
+
+
 
         $scope.$watch('taskId', function () {
             currentTask.task = $scope.taskId;
@@ -166,7 +168,7 @@ angular
 
     })
 
-    .controller('SearchCtrl', function ($scope) {
+    .controller('SearchCtrl', function ($scope, SearchService) {
 
     })
 

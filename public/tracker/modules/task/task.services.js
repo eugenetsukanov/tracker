@@ -29,6 +29,30 @@ angular
         return $resource('/api/users/:userId/tasks', {userId: '@_id'});
     })
 
+    .factory('SearchService', function ($q, Task, $stateParams) {
+        var self = {
+
+            taskId: '',
+            query: '',
+
+            getTaskId: function () {
+                console.log($stateParams.taskId);
+                return self.taskId = $stateParams.taskId;
+            },
+            search: function (query, next) {
+                Task.query({
+                    taskId: self.getTaskId(),
+                    nested: 'search',
+                    query: query
+                }, function (tasks) {
+                    next(tasks);
+                })
+            }
+        };
+        return self;
+    })
+
+
     .factory('TaskEditorModal', function ($modal) {
 
         var box = {
@@ -57,8 +81,8 @@ angular
         return box;
     })
 
-    .factory('foundTasks', function(){
-        return { items: [] };
+    .factory('foundTasks', function () {
+        return {items: []};
     })
 
     .factory('currentTask', function () {
