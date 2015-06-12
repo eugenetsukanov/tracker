@@ -1,13 +1,14 @@
+<div class="task-views-block">
+    <div class="btn-group board-buttons" role="group">
+        <button class="btn btn-default btn-sm"
+                ng-click="loadView(aView)"
+                ng-repeat="aView in views"
+                ng-class="{'active': aView == view }">
+            {{aView.title}}
+        </button>
+    </div>
 
-<div class="btn-group board-buttons" role="group">
-    <button class="btn btn-default btn-sm"
-            ng-click="loadView(aView)"
-            ng-repeat="aView in views"
-            ng-class="{'active': aView == view }">
-        {{aView.title}}
-    </button>
-</div>
-
-<div class="clearfix"
+    <div class="clearfix"
      ng-include="'tracker/modules/task/directives/taskViews/views/view-'+view.name+'.html'"></div>
+</div>
 

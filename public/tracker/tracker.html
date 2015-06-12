@@ -31,7 +31,7 @@
                     <li><a ui-sref="app.register" ng-if="!user">Register</a></li>
                     <li><a ui-sref="app.logout" ng-if="user">Logout</a></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+                <ul class="nav navbar-nav navbar-right" ng-if="SearchService.getTaskId()">
                     <li>
                         <div task-search></div>
                     </li>

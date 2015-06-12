@@ -9,18 +9,6 @@ angular
                                       Task,
                                       UserService){
 
-        $scope.views = [
-            {title: 'Board', name: 'board'},
-            {title: 'List', name: 'list'},
-            {title: 'Tree', name: 'tree'}
-        ];
-
-        $scope.view = $scope.views[0];
-
-        $scope.loadView = function (view) {
-            $scope.view = view;
-        };
-
         $scope.report = {
             title: 'Report',
             name: "report"
@@ -156,10 +144,17 @@ angular
 
     .controller('SearchCtrl', function ($scope, $stateParams, SearchService) {
 
-        SearchService.search($stateParams.query).then(function (tasks) {
-            $scope.query = $stateParams.query;
-            $scope.tasks = tasks;
-        });
+        $scope.init = function () {
+            SearchService.search($stateParams.query).then(function (tasks) {
+                $scope.taskId = SearchService.getTaskId();
+                $scope.query = $stateParams.query;
+                $scope.tasks = tasks;
+            });
+        };
+
+        var init = $scope.init;
+
+        init();
 
     })
 

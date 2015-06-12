@@ -54,7 +54,6 @@ angular
         return self;
     })
 
-
     .factory('TaskEditorModal', function ($modal) {
 
         var box = {
@@ -80,14 +79,6 @@ angular
         };
 
         return box;
-    })
-
-    .factory('foundTasks', function () {
-        return {items: []};
-    })
-
-    .factory('currentTask', function () {
-        return {task: ''};
     })
 
     .factory('TaskComplexity', function () {

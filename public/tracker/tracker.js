@@ -11,7 +11,9 @@ angular
             .state('app', {
                 url: "/app",
                 templateUrl: "tracker/tracker.html",
-                controller: function ($scope, UserService) {
+                controller: function ($scope, UserService, SearchService) {
+
+                    $scope.SearchService = SearchService;
 
                     $scope.UserService = UserService;
 
@@ -52,6 +54,11 @@ angular
             .state('app.logout', {
                 url: "/logout",
                 controller: "LogoutCtrl"
+            })
+            .state('app.report', {
+                url: "/report",
+                controller: "ReportCtrl",
+                templateUrl: "tracker/modules/report/report.html"
             })
             .state('app.report', {
                 url: "/report",

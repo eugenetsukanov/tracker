@@ -94,13 +94,18 @@ hr {
 }
 
 .task-tree {
-    margin: 2em 0;
+    margin: 0 0;
 }
-
 .task-tree task-tree {
-    margin: 1em 0 0 3em;
+    margin: 0 0 1em 3em;
     border-left: solid 1px #f4faf4;
     display: block;
+}
+.task-tree > task-tree {
+    margin: 0 0 1em 0;
+}
+.task-tree task-tree .panel.panel-default {
+    margin-left: -1px;
 }
 
 .task-metrics {
@@ -186,7 +191,7 @@ hr {
 .board-buttons {
     margin-top: 0;
     position: relative;
-    top: -25px;
+    top: -15px;
     z-index: 1;
 }
 
@@ -252,6 +257,9 @@ hr {
 .nav-bar-search input::-moz-placeholder          {color:#C6EDF9;}/* Firefox 19+ */
 .nav-bar-search input:-moz-placeholder           {color:#C6EDF9;}/* Firefox 18- */
 .nav-bar-search input:-ms-input-placeholder      {color:#C6EDF9;}
+.nav-bar-search input.active {
+    box-shadow: 0 0 5px -1px #fff;
+}
 
 .panel {
     margin-bottom: 15px;
@@ -299,6 +307,15 @@ hr {
     width: 100%;
     max-width: 326px;
     min-height: 30px;
+}
+.task-views-block {
+    border-top: 1px solid #ccc;
+    margin-top: 30px;
+    position: relative;
+}
+.task-search h4 i {
+    color: #337ab7;
+    font-style: normal;
 }
 
 /*bootstrap fixes*/

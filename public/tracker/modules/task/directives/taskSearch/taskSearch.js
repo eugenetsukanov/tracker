@@ -5,7 +5,14 @@ angular
         return {
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskSearch/taskSearch.html',
-            controller: function ($scope, $state, SearchService) {
+            controller: function ($scope, $state, $stateParams, SearchService) {
+                $scope.stateParams = $stateParams;
+
+                $scope.$watch('stateParams.query', function (q) {
+                    if (!q) {
+                        $scope.search = '';
+                    }
+                });
 
                 $scope.searchQuery = function (query) {
 

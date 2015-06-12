@@ -18,13 +18,6 @@ angular
                     $scope.view = view;
                 };
 
-                if ($scope.taskOnEdit) {
-                    $scope.edit = function (task) {
-                        $scope.taskOnEdit(task);
-                    }
-                }
-
-
                 $scope.edit = function (task) {
                     TaskEditorModal.show(task, function () {
                         if ($scope.taskOnComplete) {
