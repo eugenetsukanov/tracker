@@ -7,15 +7,7 @@ angular
                                       $state,
                                       $stateParams,
                                       Task,
-                                      UserService,
-                                      currentTask,
-                                      foundTasks){
-
-        $scope.foundTasks = foundTasks;
-
-        $scope.$watchCollection('foundTasks.items', function () {
-            $scope.tasks = $scope.foundTasks.items;
-        });
+                                      UserService){
 
         $scope.views = [
             {title: 'Board', name: 'board'},
@@ -35,12 +27,6 @@ angular
         };
 
         $scope.taskId = $stateParams.taskId;
-
-
-
-        $scope.$watch('taskId', function () {
-            currentTask.task = $scope.taskId;
-        });
 
         $scope.init = function () {
 
@@ -171,6 +157,8 @@ angular
     .controller('SearchCtrl', function ($scope, $stateParams, SearchService) {
 
         SearchService.search($stateParams.query).then(function (tasks) {
+
+            $scope.query = $stateParams.query;
             $scope.tasks = tasks;
         });
 
