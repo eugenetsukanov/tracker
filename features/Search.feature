@@ -34,7 +34,6 @@ Feature: Search
       And I see task "task 1.1"
       And I see task "task 1.2"
 
-    @wip
 
     Scenario: Search form visibility
       When I don't see search form
