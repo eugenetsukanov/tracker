@@ -39,6 +39,7 @@
     "cucumber": "^0.5.0",
     "cucumber.usesteps": "0.0.9",
     "lodash": "^3.9.3",
+    "plus.application": "^1.1.0",
     "pow-mongodb-fixtures": "^0.10.0",
     "selenium-webdriver": "^2.46.0",
     "supertest": "^1.0.1",

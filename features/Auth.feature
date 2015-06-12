@@ -2,6 +2,7 @@ Feature: Auth
 
   Scenario: Sign In
     Given Home page
+#    Then stop
     Then I see sign in form
     When I type username "test"
     When I type password "test"

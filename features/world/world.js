@@ -1,17 +1,23 @@
 var async = require('async');
 var _ = require('lodash');
+var Application = require('plus.application');
 
 module.exports = function () {
 
 
     this.World = function (callback) {
 
-        var seleniumUrl = 'http://192.168.10.1:4444/wd/hub';
-        var baseUrl = 'http://192.168.10.20:3000/';
-        var mongoUrl = 'mongodb://localhost/tracker_dev';
 
-        this.waitTimeout = 3000;
-        this.baseUrl = baseUrl;
+        var iTester = new Application({
+            dir: __dirname,
+            env: process.env.NODE_ENV || 'dev'
+        });
+
+        this.seleniumUrl = iTester.get('config/selenium/url');
+        this.mongoUrl = iTester.get('config/mongo/url');
+
+        this.waitTimeout = iTester.get('config/selenium/waitTimeout');
+        this.baseUrl = iTester.get('config/project/url');
 
         require('cucumber.usesteps').setRootDir(__dirname + '/../')
 
@@ -22,13 +28,11 @@ module.exports = function () {
 
         this.webdriver = require('selenium-webdriver');
 
-
-
         this.initDriver = function () {
-            this.driver = new this.webdriver.Builder().
-                withCapabilities(this.webdriver.Capabilities.chrome()).
-                usingServer(seleniumUrl).
-                build();
+            this.driver = new this.webdriver.Builder()
+                .withCapabilities(this.webdriver.Capabilities.chrome())
+                .usingServer(this.seleniumUrl)
+                .build();
 
             this.browser = this.driver;
             this.$ = require('webdriver-sizzle')(this.browser);
@@ -184,10 +188,10 @@ module.exports = function () {
 
         this.prepareFixtures = function (next) {
 
-            var fixtures = require('pow-mongodb-fixtures').connect(mongoUrl);
+            var fixtures = require('pow-mongodb-fixtures').connect(this.mongoUrl);
             fixtures.clearAndLoad(__dirname + '/../../app/config/fixtures', function (err) {
                 if (err) console.error(err);
-                next();
+                fixtures.close(next);
             });
         }
 
