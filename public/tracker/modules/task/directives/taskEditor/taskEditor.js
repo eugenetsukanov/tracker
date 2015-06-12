@@ -85,8 +85,6 @@ angular
 
                 $scope.save = function () {
 
-                    console.log($scope.task);
-
                     if (!$scope.task._id) {
 
                         // new task

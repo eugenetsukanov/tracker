@@ -27,7 +27,6 @@ angular
 
                 $scope.edit = function (task) {
                     TaskEditorModal.show(task, function () {
-                        console.log('done');
                         if ($scope.taskOnComplete) {
                             $scope.taskOnComplete();
                         }
