@@ -34,7 +34,7 @@
      class="edit-form"></div>
 
 <div class="pull-right board-buttons" ng-if="taskId">
-    <button class="btn btn-sm btn-default" ng-click="loadView(report)">Report</button>
+    <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: task._id})">Report</a>
 </div>
 
 <div task-views tasks="tasks" task-on-complete="init"></div>

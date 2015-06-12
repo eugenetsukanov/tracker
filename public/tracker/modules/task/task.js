@@ -157,6 +157,5 @@ angular
         init();
 
     })
-
 ;
 

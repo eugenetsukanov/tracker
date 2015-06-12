@@ -17,7 +17,6 @@ angular
             $event.stopPropagation();
             $scope.opened = true;
         };
-
     })
 ;
 

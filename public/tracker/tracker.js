@@ -60,10 +60,10 @@ angular
                 controller: "ReportCtrl",
                 templateUrl: "tracker/modules/report/report.html"
             })
-            .state('app.report', {
-                url: "/report",
+            .state('app.task-report', {
+                url: "/tasks/:taskId/report",
                 controller: "ReportCtrl",
-                templateUrl: "tracker/modules/report/report.html"
+                templateUrl: "tracker/modules/task/views/view/task-view-report.html"
             })
             .state('app.assigned-tasks', {
                 url: "/users/:userId/tasks",

@@ -1,18 +1,25 @@
-
 <h5>
-            <span class="pointer" datepicker-popup max-date="'{{date | toDate:'YYYY-MM-DD'}}'" is-open="opened"
-                  ng-model="date" show-button-bar="false" show-weeks="false" ng-click="openDatePicker($event)">
-                {{ date | toDate }} <i class="fa fa-calendar"></i>
-            </span>
+    <span class="pointer"
+          datepicker-popup
+          max-date="'{{date | toDate:'YYYY-MM-DD'}}'"
+          is-open="opened"
+          ng-model="date"
+          show-button-bar="false"
+          show-weeks="false"
+          ng-click="openDatePicker($event)">
+
+        {{ date | toDate }} <i class="fa fa-calendar"></i>
+
+    </span>
 </h5>
 
 <ul ng-show="tasks.length">
     <li ng-repeat="task in tasks">
         {{task.title}}
 
-                <span ng-show="status" class="label task-status-label">
-                    {{task.status || 'new'}}
-                </span>
+            <span ng-show="status" class="label task-status-label">
+                {{task.status || 'new'}}
+            </span>
 
         <div ng-show="metrics" task-metrics task="task"></div>
     </li>

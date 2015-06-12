@@ -12,7 +12,7 @@ angular
                 metrics: '=',
                 status: '='
             },
-            controller: function ($scope) {
+            controller: function ($scope, $stateParams) {
 
                 $scope.date = $scope.date || new Date();
 
@@ -23,6 +23,8 @@ angular
                 };
 
                 var getTasks = function (date) {
+
+                    $scope.taskId = $stateParams.taskId;
 
                     if ($scope.taskId) {
 
