@@ -168,7 +168,11 @@ angular
 
     })
 
-    .controller('SearchCtrl', function ($scope, SearchService) {
+    .controller('SearchCtrl', function ($scope, $stateParams, SearchService) {
+
+        SearchService.search($stateParams.query).then(function (tasks) {
+            $scope.tasks = tasks;
+        });
 
     })
 

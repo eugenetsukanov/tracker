@@ -30,25 +30,27 @@ angular
     })
 
     .factory('SearchService', function ($q, Task, $stateParams) {
+
         var self = {
 
             taskId: '',
-            query: '',
 
             getTaskId: function () {
-                console.log($stateParams.taskId);
-                return self.taskId = $stateParams.taskId;
+                self.taskId = $stateParams.taskId;
+                return self.taskId;
             },
-            search: function (query, next) {
-                Task.query({
-                    taskId: self.getTaskId(),
-                    nested: 'search',
-                    query: query
-                }, function (tasks) {
-                    next(tasks);
-                })
+
+            search: function (query) {
+                return $q(function (resolve, reject) {
+                    Task.query({
+                        taskId: self.getTaskId(),
+                        nested: 'search',
+                        query: query
+                    }, resolve, reject);
+                });
             }
         };
+
         return self;
     })
 
@@ -62,7 +64,9 @@ angular
                     size: 'lg',
                     templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
                     controller: function ($scope) {
+
                         console.log(task);
+
                         $scope.task = task;
 
                         $scope.done = function () {
