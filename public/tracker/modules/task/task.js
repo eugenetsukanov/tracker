@@ -108,6 +108,8 @@ angular
             $scope.tasksByTags = TagsFind.query({taskId: $stateParams.taskId, tags: $stateParams.tags});
         };
 
+        $scope.queryTags = $stateParams.tags;
+
         $scope.$watch('UserService.getUser()._id', function (id) {
             if (id) {
                 init();

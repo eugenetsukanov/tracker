@@ -1,8 +1,17 @@
+<h4 ng-if="tasksByTags.length">Tasks found for: <i>'{{queryTags}}'</i></h4>
+
 <div task-metrics-widget tasks="tasksByTags"></div>
+
+<h5>
+     <a href history-back><i class="fa fa-long-arrow-left"></i>
+          Back</a>
+</h5>
 
 <div ng-if="tasksByTags.length"
      ng-repeat="task in tasksByTags"
      task-panel task="task" task-on-edit="edit">
-
 </div>
+
+
+
 <div ng-if="tasksByTags.length == 0">There are no tasks matched such request.</div>
