@@ -11,8 +11,6 @@ angular
 
                     var q = query ? query : '';
 
-                    console.log('directive query:', q);
-
                     if (q.length) {
                         $state.go('app.task-search', {taskId: SearchService.getTaskId(), query: q});
                     } else {

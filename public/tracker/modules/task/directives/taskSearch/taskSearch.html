@@ -1,8 +1,10 @@
+{{taskId}}
 <form class="form-inline nav-bar-search" ng-submit="searchQuery(search);">
     <div class="form-group">
         <input type="text"
                ng-model="search"
                ng-change="searchQuery(search)"
+               ng-blur="searchQuery()"
                ng-model-options="{ updateOn: 'default blur', debounce: { 'default': 400, 'blur': 0 } }"
                type="text"
                class="form-control"
