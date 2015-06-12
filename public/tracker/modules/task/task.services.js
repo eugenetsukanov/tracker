@@ -65,12 +65,9 @@ angular
                     templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
                     controller: function ($scope) {
 
-                        console.log(task);
-
                         $scope.task = task;
 
                         $scope.done = function () {
-                            init();
                             box.close();
                         }
                     }

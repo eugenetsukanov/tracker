@@ -1,5 +1,9 @@
-<h2>search</h2>
+<h4 ng-if="tasks.length">Tasks found for: '{{query}}'</h4>
+<h4 ng-if="!tasks.length">Nothing found for: '{{query}}'</h4>
 
-<ul>
-    <li ng-repeat="task in tasks"><h5>{{task.title}}</h5><div>{{task.description}}</div></li>
-</ul>
+<h5>
+    <a ui-sref="app.task({taskId: taskId})"><i class="fa fa-long-arrow-left"></i>
+        Back to Task</a>
+</h5>
+
+<div ng-if="tasks.length" task-views tasks="tasks"></div>

@@ -39,15 +39,6 @@
     <button class="btn btn-sm btn-default" ng-click="loadView(report)">Report</button>
 </div>
 
-<div class="btn-group board-buttons" role="group">
-    <button class="btn btn-default btn-sm"
-            ng-click="loadView(aView)"
-            ng-repeat="aView in views"
-            ng-class="{'active': aView == view }">
-        {{aView.title}}
-    </button>
-</div>
+<div task-views tasks="tasks" task-on-complete="init"></div>
 
-<div class="clearfix"
-     ng-include="'tracker/modules/task/views/view/task-view-'+view.name+'.html'"></div>
 
