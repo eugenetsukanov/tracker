@@ -10,11 +10,11 @@ module.exports = function () {
     });
 
     this.Then(/^I see search form$/, function (callback) {
-        this.iSee(".nav input[ng-model='search'", callback);
+        this.iSee(".nav input[ng-model='search']", callback);
     });
 
     this.When(/^I type query "([^"]*)"$/, function (arg1, callback) {
-        this.iType(".nav input[ng-model='search'", arg1, callback);
+        this.iType(".nav input[ng-model='search']", arg1, callback);
     });
 
     this.Then(/^I don't see task "([^"]*)"$/, function (arg1, callback) {
@@ -24,6 +24,15 @@ module.exports = function () {
 
     this.Then(/^I am on "([^"]*)" page$/, function (arg1, callback) {
         this.iSee("h2:contains('" + arg1 + "')", callback)
+    });
+
+    this.When(/^I don't see search form$/, function (callback) {
+        this.iDontSee(".nav input[ng-model='search']", callback);
+    });
+
+    this.Then(/^I click projects$/, function (callback) {
+        this.iClick(".nav a:contains(Projects)", callback)
+
     });
 
 };

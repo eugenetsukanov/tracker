@@ -34,6 +34,14 @@ Feature: Search
       And I see task "task 1.1"
       And I see task "task 1.2"
 
+    @wip
 
+    Scenario: Search form visibility
+      When I don't see search form
+      Then I click on task link "task 1"
+      Then I am on "task 1" page
+      Then I see search form
+      Then I click projects
+      And I don't see search form
 
 
