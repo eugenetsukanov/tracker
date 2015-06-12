@@ -1,0 +1,16 @@
+{
+
+  "selenium": {
+    "url": "http://192.168.10.1:4444/wd/hub",
+    "waitTimeout": 5000
+  },
+
+  "project": {
+    "url": "http://192.168.10.20:3000"
+  },
+
+  "mongo": {
+    "url": "mongodb://localhost/tracker_dev"
+  }
+
+}

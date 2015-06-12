@@ -7,3 +7,5 @@
 .nodemon*
 *.log
 /app/config/parameters.json
+/chromedriver
+/selenium-server-standalone-*
