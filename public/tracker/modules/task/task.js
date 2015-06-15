@@ -70,25 +70,21 @@ angular
     })
 
     .controller('AssignedTasksCtrl', function ($scope,
+                                               $stateParams,
                                                TaskEditorModal,
                                                Task,
                                                UserService,
                                                AssignedTasks) {
 
         $scope.init = function () {
-            console.log('init');
-            AssignedTasks.query({userId: UserService.getUser()._id}, function (tasks) {
-                $scope.assignedTasks = _.map(tasks, function (task) {
+            AssignedTasks.query({userId: $stateParams.userId}, function (tasks) {
+                $scope.tasks = _.map(tasks, function (task) {
                     return new Task(task);
                 });
             });
         };
 
-        $scope.$watch('UserService.getUser()._id', function (id) {
-            if (id) {
-                $scope.init();
-            }
-        });
+        $scope.init();
     })
 
     .controller('tagsFindCtrl', function ($scope,
@@ -98,26 +94,17 @@ angular
                                           UserService,
                                           TagsFind) {
 
-        var init = function () {
-            $scope.tasksByTags = TagsFind.query({taskId: $stateParams.taskId, tags: $stateParams.tags});
+        $scope.init = function () {
+            TagsFind.query({taskId: $stateParams.taskId, tags: $stateParams.tags}, function (tasks) {
+                $scope.tasks = _.map(tasks, function (task) {
+                    return new Task(task);
+                });
+            });
         };
+
+        $scope.init();
 
         $scope.queryTags = $stateParams.tags;
-
-        $scope.$watch('UserService.getUser()._id', function (id) {
-            if (id) {
-                init();
-            }
-        });
-
-        $scope.edit = function (task) {
-
-            Task.get({taskId: task._id}, function (task) {
-                TaskEditorModal.show(task, init);
-            });
-
-        };
-
     })
 
     .controller('gotoRootTaskCtrl', function ($scope,

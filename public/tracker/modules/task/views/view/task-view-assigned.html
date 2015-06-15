@@ -1,4 +1,4 @@
-<div task-metrics-widget simple-only="true" tasks="assignedTasks"></div>
+<div task-metrics-widget simple-only="true" tasks="tasks"></div>
 
 <h5>
      <a href history-back>
@@ -7,7 +7,7 @@
      </a>
 </h5>
 
-<div ng-if="assignedTasks.length" task-views tasks="assignedTasks" task-on-complete="init"></div>
+<div ng-if="tasks.length" task-views tasks="tasks" task-on-complete="init"></div>
 
-<div ng-if="assignedTasks.length == 0">There are no tasks assigned to you.</div>
+<div ng-if="tasks.length == 0">There are no tasks assigned to you.</div>
 

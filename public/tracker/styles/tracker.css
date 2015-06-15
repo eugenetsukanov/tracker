@@ -313,24 +313,18 @@ hr {
     margin-top: 30px;
     position: relative;
 }
+.tag-search h4 i,
 .task-search h4 i {
     color: #337ab7;
     font-style: normal;
 }
 
 /*report page*/
-/*.report-page ul li {*/
-    /*list-style-type: none;*/
-    /*padding: 3px 10px;*/
-/*}*/
 .report-page ul {
     padding: 10px 0 0 20px;
     margin: 0;
     border-top: 1px solid #eee;
 }
-/*.report-page ul li:nth-child(odd) {*/
-    /*background: #F8F8FC;*/
-/*}*/
 
 /*bootstrap fixes*/
 .ui-select-multiple.ui-select-bootstrap {
