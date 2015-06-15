@@ -5,6 +5,10 @@ angular
         return $resource('/api/tasks/:taskId/:nested', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
 
+    .factory('ArchivedProjects', function ($resource) {
+        return $resource('/api/tasks/archived');
+    })
+
     .factory('TagsList', function ($resource) {
         return $resource('/api/tasks/:taskId/tags/tagsList', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })

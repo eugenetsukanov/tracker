@@ -6,6 +6,12 @@
         </span>
     </li>
 
+    <li ng-if="task.archived">
+        <span class="label label-default">
+            Archived
+        </span>
+    </li>
+
     <li ng-if="task.priority" tooltip="Priority"><i class="fa fa-bolt"></i>&nbsp;{{task.priority}}</li>
 
     <li>

@@ -35,14 +35,26 @@
 
             <hr class="mg hidden-lg hidden-md"/>
 
-            <div ng-if="task.simple" class="form-group"> <!-- Status-->
-                <i class="fa fa-check-square-o fa-md vcenter" tooltip="Status"></i>
+            <div class="form-group"> <!-- Status-->
 
-                <div class="btn-group">
-                    <label ng-repeat="status in statuses" class="btn btn-default btn-sm" ng-model="task.status"
-                           btn-radio="status.value">{{status.name}}</label>
+                <div ng-if="task.simple" class="clearfix">
+
+                    <i class="fa fa-check-square-o fa-md vcenter" tooltip="Status"></i>
+
+                    <div class="btn-group">
+                        <label ng-repeat="status in statuses" class="btn btn-default btn-sm" ng-model="task.status"
+                               btn-radio="status.value">{{status.name}}</label>
+                    </div>
                 </div>
+
+                <div class="checkbox" ng-class="{'pull-right': task.simple}">
+                    <label>
+                        <input type="checkbox" ng-model="task.archived">Archive
+                    </label>
+                </div>
+
             </div>
+
 
             <hr ng-if="task.simple" class="mg"/>
 

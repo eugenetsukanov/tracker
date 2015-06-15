@@ -111,7 +111,6 @@ angular
                                               $stateParams,
                                               RootTask) {
 
-
         var getRoot = function () {
             RootTask.get({taskId: $stateParams.taskId}, function (root) {
                 $scope.root = root;
@@ -121,7 +120,6 @@ angular
         if ($stateParams.taskId) {
             getRoot();
         }
-
 
     })
 
@@ -133,6 +131,33 @@ angular
                 $scope.query = $stateParams.query;
                 $scope.tasks = tasks;
             });
+        };
+
+        var init = $scope.init;
+
+        init();
+
+    })
+
+    .controller('TaskArchiveCtrl', function ($scope, $stateParams, Task, ArchivedProjects) {
+
+        $scope.init = function () {
+
+            if ($stateParams.taskId) {
+
+                Task.query({taskId: $stateParams.taskId, nested: 'archive'}, function (tasks) {
+                    $scope.tasks = tasks;
+                });
+            }
+            else {
+
+                ArchivedProjects.query({},function (tasks) {
+                    $scope.tasks = _.map(tasks, function (task) {
+                        return new Task(task);
+                    });
+                });
+            }
+
         };
 
         var init = $scope.init;

@@ -8,8 +8,16 @@ module.exports = function (app) {
             $and: [
                 {developer: req.user},
                 {
-                    status: {$ne: 'accepted'}
+                    $and: [
+                        {
+                            status: {$ne: 'accepted'},
+                        },
+                        {
+                            archived: {$ne: true}
+                        }
+                    ]
                 }
+
             ]
         };
         Task.find(q)

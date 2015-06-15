@@ -34,7 +34,12 @@
      class="edit-form"></div>
 
 <div class="pull-right board-buttons" ng-if="taskId">
+    <a class="btn btn-sm btn-default" ui-sref="app.tasks-archive({taskId: task._id})">Archive</a>
     <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: task._id})">Report</a>
+</div>
+
+<div class="pull-right board-buttons" ng-if="!taskId">
+    <a class="btn btn-sm btn-default" ui-sref="app.projects-archive">Archive</a>
 </div>
 
 <div task-views tasks="tasks" task-on-complete="init"></div>

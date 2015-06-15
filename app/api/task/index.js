@@ -16,7 +16,8 @@ module.exports = function (app) {
         field("team").array(),
         field("files").array(),
         field("tags").array(),
-        field("tagsList").array()
+        field("tagsList").array(),
+        field("archived").trim()
     );
 
     var Task = require('../../models/task');
@@ -31,7 +32,8 @@ module.exports = function (app) {
             $or: [
                 {owner: req.user},
                 {team: req.user}
-            ]
+            ],
+            archived: {$ne: true}
         };
 
         Task
@@ -44,6 +46,26 @@ module.exports = function (app) {
                 res.json(tasks);
             });
 
+    });
+
+    app.get('/api/tasks/archived', function (req, res) {
+
+        Task.find({archived: true})
+            .sort('-priority date')
+            .populate('owner', '-local.passwordHashed -local.passwordSalt')
+            .populate('developer', '-local.passwordHashed -local.passwordSalt')
+            .exec(function (err, tasks) {
+                console.log(tasks);
+                if (err) return next(err);
+
+                if (!tasks) {
+                    res.json({});
+                }
+                else {
+                    res.json(tasks);
+                }
+
+            })
     });
 
     app.get('/api/tasks/:taskId', function (req, res) {
@@ -118,7 +140,30 @@ module.exports = function (app) {
 
     app.get('/api/tasks/:taskId/tasks', function (req, res) {
 
-        Task.find({parentTaskId: req.Task._id})
+        Task.find({parentTaskId: req.Task._id, archived: {$ne: true}})
+            .sort('-priority date')
+            .populate('owner', '-local.passwordHashed -local.passwordSalt')
+            .populate('developer', '-local.passwordHashed -local.passwordSalt')
+            .exec(function (err, tasks) {
+
+                if (err) return next(err);
+
+                if (!tasks) {
+                    res.json({});
+                }
+                else {
+                    res.json(tasks);
+                }
+
+            })
+    });
+
+
+
+
+    app.get('/api/tasks/:taskId/archive', function (req, res) {
+
+        Task.find({parentTaskId: req.Task._id, archived: true})
             .sort('-priority date')
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
@@ -243,6 +288,7 @@ module.exports = function (app) {
             task.description = req.form.description;
             task.files = req.form.files;
             task.tags = req.form.tags;
+            task.archived = req.form.archived;
 
             task.save(function (err, task) {
                 if (err) return next(err);

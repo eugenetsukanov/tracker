@@ -31,6 +31,11 @@ angular
                 templateUrl: "tracker/modules/task/views/task.html",
                 controller: 'TaskCtrl'
             })
+            .state('app.projects-archive', {
+                url: "/tasks/archived",
+                controller: "TaskArchiveCtrl",
+                templateUrl: "tracker/modules/task/views/view/task-view-archive.html"
+            })
             .state('app.task', {
                 url: "/tasks/:taskId",
                 templateUrl: "tracker/modules/task/views/task.html",
@@ -75,6 +80,12 @@ angular
                 controller: "tagsFindCtrl",
                 templateUrl: "tracker/modules/task/views/view/task-view-tags.html"
             })
+            .state('app.tasks-archive', {
+                url: "/tasks/:taskId/archive",
+                controller: "TaskArchiveCtrl",
+                templateUrl: "tracker/modules/task/views/view/task-view-archive.html"
+            })
+
         ;
 
     })
