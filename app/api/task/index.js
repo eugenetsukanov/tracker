@@ -316,7 +316,10 @@ module.exports = function (app) {
 
             root.deepFind(function (task) {
 
-                var textQuery = ('' + task.title + ' ' + task.description).toLowerCase();
+                var tags = task.tags || [];
+                tags = tags.join(' ');
+
+                var textQuery = ('' + task.title + ' ' + task.description + tags).toLowerCase();
                 var queryArr = query.split(' ');
                 var result = 0;
 
