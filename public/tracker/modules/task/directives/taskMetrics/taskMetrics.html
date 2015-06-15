@@ -11,7 +11,7 @@
     <li>
         <i class="fa fa-clock-o" tooltip="Time"></i>&nbsp;<span tooltip="Estimated">{{task.estimatedTime| round}}</span>
         / <span tooltip="Spent">{{task.spenttime| round}}</span>
-        / <span tooltip="TODO" ng-class="{'warning-text' : task.timeToDo < 0}">{{task.timeToDo| round}}</span>
+        / <span tooltip="TODO" ng-class="{'warning-text' : (task.timeToDo|round) < 0}">{{task.timeToDo| round}}</span>
     </li>
 
     <li tooltip="Complexity / Points">
