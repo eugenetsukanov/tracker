@@ -2,7 +2,7 @@
      ng-class="{
      'panel-success': task.status == 'accepted',
      'panel-warning': task.status == 'in progress',
-     'task-todo-low-time' : task.timeToDo < 0,
+     'task-todo-low-time' : (task.timeToDo|round) < 0,
      'task-not-estimated' : !task.points
      }">
 
