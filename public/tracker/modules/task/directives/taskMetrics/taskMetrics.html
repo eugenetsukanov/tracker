@@ -1,8 +1,7 @@
-
 <ul class="detail-line task-metrics">
 
     <li tooltip="Status" ng-hide="options.hideStatus">
-        <span class="label task-status-label">
+        <span class="label" task-status="task.status">
             {{task.status || 'new'}}
         </span>
     </li>

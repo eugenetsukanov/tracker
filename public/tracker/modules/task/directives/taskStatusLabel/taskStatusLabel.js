@@ -1,18 +1,27 @@
 angular
     .module('Tracker')
 
-    .directive('taskStatusLabel', function () {
+    .directive('taskStatus', function () {
         return {
-            restrict: 'C',
+            restrict: 'A',
             link: function (scope, element, attrs) {
-                var getClass = function () {
+
+                scope.$watch('taskStatus', function (statusNew, statusOld) {
+                    attrs.$removeClass(getClass(statusOld));
+                    attrs.$addClass(getClass(statusNew));
+                });
+
+                var getClass = function (status) {
+
+                    scope.taskStatus = status;
+
                     var cl = 'label-info';
 
-                    if (scope.task.status == 'accepted') {
+                    if (scope.taskStatus == 'accepted') {
                         cl = 'label-success';
                     }
 
-                    if (scope.task.status == 'in progress') {
+                    if (scope.taskStatus == 'in progress') {
                         cl = 'label-warning'
                     }
 
@@ -20,8 +29,9 @@ angular
 
                 };
 
-                attrs.$addClass(getClass());
-
+            },
+            scope: {
+                taskStatus:'=taskStatus'
             }
         }
     });
