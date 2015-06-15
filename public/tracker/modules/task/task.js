@@ -75,26 +75,20 @@ angular
                                                UserService,
                                                AssignedTasks) {
 
-        var init = function () {
+        $scope.init = function () {
+            console.log('init');
             AssignedTasks.query({userId: UserService.getUser()._id}, function (tasks) {
-                $scope.assignedTasks = tasks;
+                $scope.assignedTasks = _.map(tasks, function (task) {
+                    return new Task(task);
+                });
             });
         };
 
         $scope.$watch('UserService.getUser()._id', function (id) {
             if (id) {
-                init();
+                $scope.init();
             }
         });
-
-        $scope.edit = function (task) {
-
-            Task.get({taskId: task._id}, function (task) {
-                TaskEditorModal.show(task, init);
-            });
-
-        };
-
     })
 
     .controller('tagsFindCtrl', function ($scope,

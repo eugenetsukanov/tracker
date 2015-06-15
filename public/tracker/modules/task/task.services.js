@@ -26,7 +26,7 @@ angular
     })
 
     .factory('AssignedTasks', function ($resource) {
-        return $resource('/api/users/:userId/tasks', {userId: '@_id'});
+        return $resource('/api/users/:userId/tasks', {userId: '@_id'}, {update: {method: 'PUT'}});
     })
 
     .factory('SearchService', function ($q, Task, $stateParams) {

@@ -1,8 +1,4 @@
 <div task-metrics-widget simple-only="true" tasks="assignedTasks"></div>
-<!--<h5>-->
-     <!--<a href ng-click="historyBack()"><i class="fa fa-long-arrow-left"></i>-->
-          <!--Back</a>-->
-<!--</h5>-->
 
 <h5>
      <a href history-back>
@@ -11,9 +7,7 @@
      </a>
 </h5>
 
-<div ng-if="assignedTasks.length"
-     ng-repeat="task in assignedTasks"
-     task-panel task="task" task-on-edit="edit">
+<div ng-if="assignedTasks.length" task-views tasks="assignedTasks" task-on-complete="init"></div>
 
-</div>
 <div ng-if="assignedTasks.length == 0">There are no tasks assigned to you.</div>
+
