@@ -1,5 +1,10 @@
 <div class="panel panel-default"
-     ng-class="{'panel-success': task.status == 'accepted', 'panel-warning': task.status == 'in progress'}">
+     ng-class="{
+     'panel-success': task.status == 'accepted',
+     'panel-warning': task.status == 'in progress',
+     'task-todo-low-time' : task.timeToDo < 0,
+     'task-not-estimated' : !task.complexity
+     }">
 
     <div class="panel-heading overflow-hidden">
         <h4 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a>

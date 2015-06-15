@@ -318,6 +318,15 @@ hr {
     color: #337ab7;
     font-style: normal;
 }
+.warning-text {
+    color: #ff5d4b;
+}
+.task-todo-low-time {
+    border-left-color: #ff5d4b !important;
+}
+.task-not-estimated {
+    border-left-color: orange !important;
+}
 
 /*report page*/
 .report-page ul {
