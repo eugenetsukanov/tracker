@@ -50,6 +50,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   ##nodemon
   config.vm.provision "shell", inline: "which nodemon || sudo npm install -g nodemon"
 
+  ##node-inspector
+  config.vm.provision "shell", inline: "which  node-inspector || sudo npm install -g  node-inspector"
+
   ##bower
   config.vm.provision "shell", inline: "which bower || sudo npm install -g bower"
 
