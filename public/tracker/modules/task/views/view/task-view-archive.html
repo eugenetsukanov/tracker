@@ -6,3 +6,6 @@
 </h5>
 
 <div ng-if="tasks.length" task-views tasks="tasks" task-on-complete="init"></div>
+<div ng-if="tasks.length == 0">
+    There are no archived tasks yet.
+</div>
