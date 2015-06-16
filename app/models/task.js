@@ -211,7 +211,7 @@ TaskSchema.methods = {
     },
 
     calculateSimple: function (next) {
-        if (this.complexity) {
+        if (this.complexity >= 0) {
             var row = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
             var points = row[this.complexity];
             this.points = points;
