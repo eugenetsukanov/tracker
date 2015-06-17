@@ -7,7 +7,7 @@ angular
                                       $state,
                                       $stateParams,
                                       Task,
-                                      UserService){
+                                      UserService) {
 
         $scope.report = {
             title: 'Report',
@@ -88,62 +88,52 @@ angular
     })
 
     .controller('tagsFindCtrl', function ($scope,
+                                          $state,
                                           $stateParams,
                                           TaskEditorModal,
                                           Task,
                                           UserService,
+                                          TagsList,
                                           TagsFind) {
 
-        $scope.init = function () {
-            TagsFind.query({taskId: $stateParams.taskId, tags: $stateParams.tags}, function (tasks) {
+        $scope.searchQuery = function () {
+            TagsFind.query({taskId: $stateParams.taskId, 'query[]': $scope.search}, function (tasks) {
                 $scope.tasks = _.map(tasks, function (task) {
                     return new Task(task);
                 });
             });
         };
 
-        $scope.init();
-
-        $scope.queryTags = $stateParams.tags;
-    })
-
-    .controller('tagsPageCtrl', function ($scope, $state, $stateParams, TagsList) {
-
         $scope.init = function () {
+
+            $scope.search = $scope.search ? $scope.search : ($stateParams.tags ? [$stateParams.tags] : []);
+
             TagsList.query({taskId: $stateParams.taskId}, function (tags) {
                 $scope.tags = tags;
-            })
+            });
+
+            if ($scope.tags || $scope.search.length){
+                $scope.searchQuery();
+            }
         };
 
         $scope.init();
 
-        $scope.searchQuery = function (search) {
-
-            var query = search.join(' ');
-
-            var q = query ? query : '';
-
-            if (q.length) {
-                $state.go('app.task-search', {taskId: $stateParams.taskId, query: q});
-            } else {
-                $state.go('app.task', {taskId: $stateParams.taskId});
-            }
-
-        };
-
-        $scope.search = [];
-
         $scope.toggleTag = function (tag) {
-            if($scope.search.indexOf(tag) >= 0){
+
+            if ($scope.search.indexOf(tag) >= 0) {
                 $scope.search.splice($scope.search.indexOf(tag), 1);
             } else {
                 $scope.search.push(tag);
             }
 
-            if($scope.search.length) {
-                $scope.searchQuery($scope.search);
+            if ($scope.search.length) {
+                $scope.searchQuery();
             }
-        }
+            else {
+                $scope.tasks = [];
+            }
+        };
 
     })
 
@@ -191,7 +181,7 @@ angular
             }
             else {
 
-                ArchivedProjects.query({},function (tasks) {
+                ArchivedProjects.query({}, function (tasks) {
                     $scope.tasks = _.map(tasks, function (task) {
                         return new Task(task);
                     });

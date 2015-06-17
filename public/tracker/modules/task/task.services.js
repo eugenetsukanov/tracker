@@ -14,7 +14,7 @@ angular
     })
 
     .factory('TagsFind', function ($resource) {
-        return $resource('/api/tasks/:taskId/tags/:tags', {taskId: '@_id'}, {update: {method: 'PUT'}});
+        return $resource('/api/tasks/:taskId/tags', {taskId: '@_id'}, {update: {method: 'PUT'}});
     })
 
     .factory('Team', function ($resource) {

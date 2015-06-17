@@ -159,8 +159,6 @@ module.exports = function (app) {
     });
 
 
-
-
     app.get('/api/tasks/:taskId/archive', function (req, res) {
 
         Task.find({parentTaskId: req.Task._id, archived: true})
@@ -395,14 +393,22 @@ module.exports = function (app) {
         });
     });
 
-    app.get('/api/tasks/:taskId/tags/:tags', function (req, res, next) {
+    app.get('/api/tasks/:taskId/tags', function (req, res, next) {
+
+        var q = req.query.query;
 
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);
 
             root.deepFind(function (task) {
 
-                return task.tags.indexOf(req.params.tags) >= 0
+                var res = 0;
+
+                q.forEach(function (tag, i) {
+                    res += (task.tags.indexOf(tag) >= 0) ? 1 : 0;
+                });
+
+                return (res == q.length) ? true : false;
 
             }, function (err, tasks) {
                 if (err) return next(err);

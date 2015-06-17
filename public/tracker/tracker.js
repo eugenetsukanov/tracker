@@ -82,8 +82,8 @@ angular
             })
             .state('app.tags-page', {
                 url: "/tasks/:taskId/tags",
-                controller: "tagsPageCtrl",
-                templateUrl: "tracker/modules/task/views/view/tags-page.html"
+                controller: "tagsFindCtrl",
+                templateUrl: "tracker/modules/task/views/view/task-view-tags.html"
             })
             .state('app.tasks-archive', {
                 url: "/tasks/:taskId/archive",

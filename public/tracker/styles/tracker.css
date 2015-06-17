@@ -328,12 +328,12 @@ hr {
     border-left-color: orange !important;
 }
 
-.tags-page a.tag {
+.tag-search a.tag {
     padding: 1px 10px;
     border-radius:10px;
     margin-right: 7px;
 }
-.tags-page hr {
+.tag-search hr {
     margin: 15px 0;
 }
 

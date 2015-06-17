@@ -33,7 +33,8 @@
 <div ng-if="!newTask._id" task-editor task="newTask" task-on-complete="init"
      class="edit-form"></div>
 
-<div class="pull-right board-buttons" ng-if="taskId">
+
+<div class="pull-right board-buttons btn-group" role="group" ng-if="taskId">
     <a class="btn btn-sm btn-default" ui-sref="app.tags-page({taskId: task._id})">Tags</a>
     <a class="btn btn-sm btn-default" ui-sref="app.tasks-archive({taskId: task._id})">Archive</a>
     <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: task._id})">Report</a>

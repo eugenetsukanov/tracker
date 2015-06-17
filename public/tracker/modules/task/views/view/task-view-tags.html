@@ -1,5 +1,6 @@
 <div class="tag-search">
-    <h4 ng-if="tasks.length">Tasks found for: <i>'{{queryTags}}'</i></h4>
+    <h4 ng-if="tasks.length">Tasks found for: <i>'{{search.join(', ')}}'</i> tag<span ng-if="search.length > 1">s</span></h4>
+    <h4 ng-if="!tasks || tasks.length == 0">Search by tags</i></h4>
 
     <div task-metrics-widget tasks="tasks"></div>
 
@@ -7,6 +8,14 @@
         <a href history-back><i class="fa fa-long-arrow-left"></i>
             Back</a>
     </h5>
+
+    <a class="tag btn btn-xs "
+       ng-repeat="tag in tags"
+       ng-class="{'btn-info': search.indexOf(tag) >= 0, 'btn-default': search.indexOf(tag) == -1 }"
+       ng-click="toggleTag(tag)"
+            >{{tag}}</a>
+
+    <div class="mg"></div>
 
     <div ng-if="tasks.length" task-views tasks="tasks" task-on-complete="init"></div>
 
