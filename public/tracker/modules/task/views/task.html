@@ -4,8 +4,8 @@
     <h2 ng-hide="task._id == newTask._id" class="clearfix">
         {{task.title}}
         <div class="pull-right" ng-controller="gotoRootTaskCtrl" ng-if="parentTask">
-            <a ng-if="root" class="btn btn-sm btn-default" ui-sref="app.task({taskId: root._id})"><i
-                    class="fa fa-long-arrow-up"></i>&nbsp; Project: {{root.title | limitTo: 10}}
+            <a tooltip="Project: {{root.title | limitTo: 15}}" ng-if="root" class="btn btn-sm btn-default" ui-sref="app.task({taskId: root._id})"><i
+                    class="fa fa-long-arrow-up"></i>&nbsp;{{root.title | limitTo: 15}}
                 <span ng-if="root.title.length > 10">...</span>
             </a>
         </div>
