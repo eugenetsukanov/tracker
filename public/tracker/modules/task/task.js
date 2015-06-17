@@ -96,6 +96,9 @@ angular
                                           TagsList,
                                           TagsFind) {
 
+
+        $scope.search = $stateParams.tags ? [$stateParams.tags] : [];
+
         $scope.searchQuery = function () {
             TagsFind.query({taskId: $stateParams.taskId, 'query[]': $scope.search}, function (tasks) {
                 $scope.tasks = _.map(tasks, function (task) {
@@ -106,16 +109,15 @@ angular
 
         $scope.init = function () {
 
-            $scope.search = $scope.search ? $scope.search : ($stateParams.tags ? [$stateParams.tags] : []);
-
             TagsList.query({taskId: $stateParams.taskId}, function (tags) {
                 $scope.tags = tags;
             });
 
-            if ($scope.tags || $scope.search.length){
+            if ($scope.search.length){
                 $scope.searchQuery();
             }
         };
+
 
         $scope.init();
 
@@ -134,6 +136,10 @@ angular
                 $scope.tasks = [];
             }
         };
+
+        $scope.isActiveTag = function (tag) {
+            return $scope.search.indexOf(tag) >= 0;
+        }
 
     })
 

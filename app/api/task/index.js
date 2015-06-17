@@ -395,20 +395,20 @@ module.exports = function (app) {
 
     app.get('/api/tasks/:taskId/tags', function (req, res, next) {
 
-        var q = req.query.query;
+        var q = req.query.query || [];
 
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);
 
             root.deepFind(function (task) {
 
-                var res = 0;
+                var counter = 0;
 
                 q.forEach(function (tag, i) {
-                    res += (task.tags.indexOf(tag) >= 0) ? 1 : 0;
+                    counter += (task.tags.indexOf(tag) >= 0) ? 1 : 0;
                 });
 
-                return (res == q.length) ? true : false;
+                return (counter == q.length) ? true : false;
 
             }, function (err, tasks) {
                 if (err) return next(err);
