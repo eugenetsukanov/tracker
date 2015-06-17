@@ -26,7 +26,7 @@ Feature: TaskEstimation
     Then I don't see task "task 1"
     And I see task complexity "8p"
 
-    @wip
+
   Scenario: ProjectsEstimation
 
     Then I see task "task 1"
