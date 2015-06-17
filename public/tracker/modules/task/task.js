@@ -107,6 +107,46 @@ angular
         $scope.queryTags = $stateParams.tags;
     })
 
+    .controller('tagsPageCtrl', function ($scope, $state, $stateParams, TagsList) {
+
+        $scope.init = function () {
+            TagsList.query({taskId: $stateParams.taskId}, function (tags) {
+                $scope.tags = tags;
+            })
+        };
+
+        $scope.init();
+
+        $scope.searchQuery = function (search) {
+
+            var query = search.join(' ');
+
+            var q = query ? query : '';
+
+            if (q.length) {
+                $state.go('app.task-search', {taskId: $stateParams.taskId, query: q});
+            } else {
+                $state.go('app.task', {taskId: $stateParams.taskId});
+            }
+
+        };
+
+        $scope.search = [];
+
+        $scope.toggleTag = function (tag) {
+            if($scope.search.indexOf(tag) >= 0){
+                $scope.search.splice($scope.search.indexOf(tag), 1);
+            } else {
+                $scope.search.push(tag);
+            }
+
+            if($scope.search.length) {
+                $scope.searchQuery($scope.search);
+            }
+        }
+
+    })
+
     .controller('gotoRootTaskCtrl', function ($scope,
                                               $stateParams,
                                               RootTask) {

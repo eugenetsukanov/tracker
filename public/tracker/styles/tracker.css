@@ -328,6 +328,15 @@ hr {
     border-left-color: orange !important;
 }
 
+.tags-page a.tag {
+    padding: 1px 10px;
+    border-radius:10px;
+    margin-right: 7px;
+}
+.tags-page hr {
+    margin: 15px 0;
+}
+
 /*report page*/
 .report-page ul {
     padding: 10px 0 0 20px;
