@@ -2,7 +2,10 @@ module.exports = function (app) {
 
     var GridFS = app.container.get('GridFS');
     var multer = require('multer');
-    app.use('/api/files', multer({dest: './public/uploads/'}));
+
+    app.use('/api/files', multer({dest: './public/uploads/', limits: {
+        fieldSize: 1024*1024*1024
+    }}));
 
     app.post('/api/files', function (req, res, next) {
 
