@@ -70,7 +70,8 @@ TaskSchema.methods = {
     updateEstimateTime: function (next) {
         if (this.simple) return next();
 
-        this.getChildren(function (err, tasks) {
+        this.getAllChildren(function (err, tasks) {
+            console.log(tasks)
             if (err) return next(err);
 
             var estimatedTime = 0;
@@ -85,6 +86,30 @@ TaskSchema.methods = {
             next();
         }.bind(this));
     },
+
+    getAllChildren: function (next) {
+        this.getChildren(function (err, children) {
+            if (err) return next(err);
+            var allChilren = [];
+
+            async.each(children, function (child, callback) {
+
+                allChilren.push(child);
+
+                child.getAllChildren(function (err, theChildren) {
+                    if (err) return next(err);
+                    allChilren = allChilren.concat(theChildren);
+                    callback();
+                });
+
+            }, function (err) {
+                if (err) return next(err);
+                next(null, allChilren);
+            });
+
+        })
+    },
+
     updateParent: function (next) {
         next = next || new Function;
         if (!this.parentTaskId) return next();
