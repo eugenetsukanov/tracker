@@ -1,6 +1,8 @@
 Feature: TaskEstimation
 
   ProjectEstimation1 - when in simple estimated task we create new simple estimated task
+  ProjectEstimation2 - when in project we create 2 complex tasks (2 estimated tasks into the project),
+                            then create simple tasks and finished it and don't see correct estimation.
 
   Background:
     Given Home page
@@ -103,7 +105,7 @@ Feature: TaskEstimation
     Then I see parent "p1" estimated time "1.00"
     And I see task "p1.1" estimated time "0"
 
-@wip
+
   Scenario: ProjectEstimation2
 
     When I see task "task 1"
