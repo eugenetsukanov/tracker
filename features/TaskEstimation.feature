@@ -233,14 +233,3 @@ Feature: TaskEstimation
     And I see task "p1.2" estimated time "0"
     And I see parent "p1" estimated time "1.00"
     And I see parent "p1" complexity "40p"
-
-
-
-
-
-
-
-
-
-
-
