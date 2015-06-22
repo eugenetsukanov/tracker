@@ -336,6 +336,30 @@ hr {
 .tag-search hr {
     margin: 15px 0;
 }
+.archive-button {
+    margin: 0;
+}
+.archive-button input {
+    position: absolute;
+    left: -99999px !important;
+}
+.archive-button label {
+    padding: 5px 9px;
+    vertical-align: top;
+    line-height: 18px;
+}
+.archive-button label.btn-warning {
+    background: #777;
+    border-color: #777;
+    color: #fff;
+}
+.archive-button label i {
+    width: 13px;
+    font-size: 14px;
+    vertical-align: top;
+    line-height: 18px;
+    margin-right: 3px;
+}
 
 /*report page*/
 .report-page ul {

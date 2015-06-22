@@ -67,6 +67,9 @@ angular
                         $scope.tagsList = TagsList.query({taskId: id});
                     }
 
+                    if ($scope.task.status != 'accepted'){
+                        $scope.task.archived = false;
+                    }
 
                     if ($scope.task.developer && $scope.task.developer._id) {
                         $scope.task.developer = $scope.task.developer._id;

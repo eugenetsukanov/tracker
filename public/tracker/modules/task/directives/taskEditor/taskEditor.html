@@ -35,9 +35,9 @@
 
             <hr class="mg hidden-lg hidden-md"/>
 
-            <div class="form-group"> <!-- Status-->
+            <div class="form-group clearfix"> <!-- Status-->
 
-                <div ng-if="task.simple" class="clearfix">
+                <div ng-if="task.simple" class="pull-left">
 
                     <i class="fa fa-check-square-o fa-md vcenter" tooltip="Status"></i>
 
@@ -46,11 +46,18 @@
                                btn-radio="status.value">{{status.name}}</label>
                     </div>
                 </div>
+                <div ng-show="task.status == 'accepted'" class="checkbox archive-button" ng-class="{'pull-right': task.simple}">
 
-                <div class="checkbox" ng-class="{'pull-right': task.simple}">
-                    <label>
-                        <input type="checkbox" ng-model="task.archived">Archive
-                    </label>
+                    <input type="checkbox"
+                           ng-model="task.archived = (task.status == 'accepted') ? task.archived : false "
+                           id="archived" />
+
+                    <label for="archived"
+                           ng-click="task.archived = !task.archived"
+                           class="btn btn-sm"
+                           ng-class="task.archived == true ? 'btn-warning' : 'btn-default' "
+                            ><i class="fa"
+                                ng-class="task.archived == true ? 'fa-check-square-o' : 'fa-square-o' "></i>&nbsp;Archived</label>
                 </div>
 
             </div>
