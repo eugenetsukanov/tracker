@@ -1,8 +1,5 @@
 <div ng-if="task" class="task-info">
 
-    {{task.archived}}
-
-
     <h2 ng-hide="task._id == newTask._id" class="clearfix">
         {{task.title}}
         <div class="pull-right" ng-controller="gotoRootTaskCtrl" ng-if="parentTask">
