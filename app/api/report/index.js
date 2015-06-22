@@ -16,7 +16,10 @@ module.exports = function (app) {
     app.get('/api/tasks/report/:date', function (req, res) {
 
         var date = Date.parse(req.params.date);
-        Task.find({updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)}})
+        Task.find({
+                updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
+                status: {$ne: ''}
+            })
             .sort('-updatedAt')
             .exec(function (err, tasks) {
                 var tasksReport = [];
@@ -41,7 +44,8 @@ module.exports = function (app) {
         var date = Date.parse(req.params.date) || Date.now();
 
         var getAtDate = {
-            updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)}
+            updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
+            status: {$ne: ''}
         };
 
         var query = {
