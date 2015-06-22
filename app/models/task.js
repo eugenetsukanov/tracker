@@ -253,11 +253,38 @@ TaskSchema.methods = {
             next();
         }
     },
+
+    calculateComplexTaskEstimatedTime: function (task, next) {
+
+        if (task.points && !task.velocity && task.parentTaskId) {
+
+            Task.findById(task.parentTaskId, function (err, parent) {
+
+                if (err) return next(err);
+
+                parent.findVelocity(function (err, velocity) {
+                    if (err) return next(err);
+
+                    if (velocity) {
+                        task.estimatedTime = task.points / velocity;
+                    }
+
+                    task.timeToDo = task.estimatedTime - task.spenttime;
+
+                    next();
+                });
+            });
+        } else {
+            next();
+        }
+    },
+
     calculateEstimatedTime: function (task, next) {
         if (task._id && task.simple) {
             this.calculateSimpleTaskEstimatedTime(task, next);
-        } else {
-            next()
+        }
+        if (task._id && !task.simple) {
+            this.calculateComplexTaskEstimatedTime(task, next);
         }
     },
 
