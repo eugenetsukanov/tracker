@@ -41,16 +41,16 @@
 
                     <i class="fa fa-check-square-o fa-md vcenter" tooltip="Status"></i>
 
-                    <div class="btn-group">
+                    <div class="btn-group task-statuses">
                         <label ng-repeat="status in statuses" class="btn btn-default btn-sm" ng-model="task.status"
-                               btn-radio="status.value">{{status.name}}</label>
+                               btn-radio="status.value" ng-class="{'disabled' : task.archived == true}">{{status.name}}</label>
                     </div>
                 </div>
 
                 <div ng-show="task.status == 'accepted'" class="checkbox archive-button" ng-class="{'pull-right': task.simple}">
 
                     <input type="checkbox"
-                           ng-model="task.archived = (task.status == 'accepted') ? task.archived : false "
+                           ng-model="task.archived"
                            id="archived" />
 
                     <label for="archived"

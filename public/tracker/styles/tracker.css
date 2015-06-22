@@ -360,6 +360,10 @@ hr {
     line-height: 18px;
     margin-right: 3px;
 }
+.task-statuses label.btn-default.disabled.active {
+    background: #e6e6e6;
+}
+
 
 /*report page*/
 .report-page ul {
