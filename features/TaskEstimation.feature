@@ -94,7 +94,7 @@ Feature: TaskEstimation
     Then I don't see task "task 1"
     And I don't see task "p1.2"
     And I see task "p1.1.1" estimated time "1.00"
-    And I see parent "p1.1" estimated time "0"
+    And I see parent "p1.1" estimated time "1.00"
 
     Then I see parent "p1" estimated time "0"
 
@@ -102,9 +102,8 @@ Feature: TaskEstimation
     And I see task "p1.1"
     And I see task "p1.2"
 
-    Then I see parent "p1" estimated time "1.00"
-    And I see task "p1.1" estimated time "0"
-
+    Then I see parent "p1" estimated time "2.00"
+    And I see task "p1.1" estimated time "1.00"
 
   Scenario: ProjectEstimation2
 
@@ -229,7 +228,7 @@ Feature: TaskEstimation
     And I don't see task "task 1"
 
     Then I see task "p1.3" velocity "8.00"
-    And I see task "p1.1" estimated time "0"
-    And I see task "p1.2" estimated time "0"
-    And I see parent "p1" estimated time "1.00"
+    And I see task "p1.1" estimated time "2.00"
+    And I see task "p1.2" estimated time "2.00"
+    And I see parent "p1" estimated time "5.00"
     And I see parent "p1" complexity "40p"
