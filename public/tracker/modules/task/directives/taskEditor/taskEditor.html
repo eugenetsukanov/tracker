@@ -35,7 +35,7 @@
 
             <hr class="mg hidden-lg hidden-md"/>
 
-            <div class="form-group clearfix"> <!-- Status-->
+            <div ng-if="task.simple || task.status == 'accepted'" class="form-group clearfix"> <!-- Status-->
 
                 <div ng-if="task.simple" class="pull-left">
 
@@ -46,6 +46,7 @@
                                btn-radio="status.value">{{status.name}}</label>
                     </div>
                 </div>
+
                 <div ng-show="task.status == 'accepted'" class="checkbox archive-button" ng-class="{'pull-right': task.simple}">
 
                     <input type="checkbox"
@@ -63,7 +64,7 @@
             </div>
 
 
-            <hr ng-if="task.simple" class="mg"/>
+            <hr ng-if="task.simple || task.status == 'accepted'" class="mg"/>
 
             <div ng-if="task.simple" class="form-group" ng-show="task.title"> <!--Complexity-->
                 <i class="fa fa-puzzle-piece fa-md vcenter" tooltip="Complexity"></i>
