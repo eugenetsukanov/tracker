@@ -12,7 +12,16 @@ angular
                 metrics: '=',
                 status: '='
             },
-            controller: function ($scope, $stateParams) {
+            controller: function ($scope, $stateParams, Team) {
+
+                $scope.userId = $stateParams.userId;
+                $scope.taskId = $stateParams.taskId;
+
+                Team.query({taskId: $stateParams.taskId}, function (team) {
+                    $scope.team = team;
+                });
+
+
 
                 $scope.date = $scope.date || new Date();
 
@@ -24,13 +33,19 @@ angular
 
                 var getTasks = function (date) {
 
-                    $scope.taskId = $stateParams.taskId;
-
                     if ($scope.taskId) {
 
-                        ReportByTaskId.query({taskId: $scope.taskId, date: date}, function (tasks) {
-                            $scope.tasks = tasks;
-                        });
+                        if ($stateParams.userId) {
+
+                            ReportByTaskId.query({taskId: $scope.taskId, date: date, userId: $stateParams.userId}, function (tasks) {
+                                $scope.tasks = tasks;
+                            });
+
+                        } else {
+                            ReportByTaskId.query({taskId: $scope.taskId, date: date}, function (tasks) {
+                                $scope.tasks = tasks;
+                            });
+                        }
 
                     } else {
 
@@ -46,7 +61,9 @@ angular
                     $scope.date = date || new Date();
                     getTasks($scope.date);
                 });
-
+                $scope.$watch('taskId', function (taskId) {
+                    $scope.taskId = taskId;
+                });
 
             }
         }

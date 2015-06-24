@@ -9,11 +9,13 @@ angular
                                       Task,
                                       UserService) {
 
+
         $scope.report = {
             title: 'Report',
             name: "report"
         };
 
+        $scope.userId = UserService.getUser()._id;
         $scope.taskId = $stateParams.taskId;
 
         $scope.init = function () {
@@ -66,6 +68,7 @@ angular
             TaskEditorModal.show(task, init);
 
         };
+
 
     })
 

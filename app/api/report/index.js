@@ -39,11 +39,11 @@ module.exports = function (app) {
             });
     });
 
-    app.get('/api/tasks/:taskId/report/:date', function (req, res) {
+    app.get('/api/tasks/:taskId/report/:date/users', function (req, res) {
 
         var date = Date.parse(req.params.date) || Date.now();
 
-        var getAtDate = {
+        var match = {
             updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
             status: {$ne: ''}
         };
@@ -54,7 +54,7 @@ module.exports = function (app) {
 
         var updatedTasks = [];
 
-        Task.findOne(_.extend(query, getAtDate), function (err, task) {
+        Task.findOne(_.extend(query, match), function (err, task) {
             if (err) return next(err);
 
             if (!task) {
@@ -64,7 +64,7 @@ module.exports = function (app) {
             }
             var getChangedTasks = function (task, callback) {
 
-                task.getChildrenChanged(getAtDate, function (err, tasks) {
+                task.getChildrenChanged(match, function (err, tasks) {
                     if (err) return next(err);
 
                     async.each(tasks, function (task, callback) {
@@ -86,4 +86,51 @@ module.exports = function (app) {
         });
     });
 
+    app.get('/api/tasks/:taskId/report/:date/users/:userId', function (req, res) {
+
+        var date = Date.parse(req.params.date) || Date.now();
+
+        var match = {
+            updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
+            status: {$ne: ''},
+            developer: req.params.userId
+        };
+
+        var query = {
+            _id: req.params.taskId
+        };
+
+        var updatedTasks = [];
+
+        Task.findOne(_.extend(query, match), function (err, task) {
+            if (err) return next(err);
+
+            if (!task) {
+                return res.json(updatedTasks)
+            } else {
+                updatedTasks.push(task);
+            }
+            var getChangedTasks = function (task, callback) {
+
+                task.getChildrenChanged(match, function (err, tasks) {
+                    if (err) return next(err);
+
+                    async.each(tasks, function (task, callback) {
+                        updatedTasks.push(task);
+                        getChangedTasks(task, callback);
+                    }, function (err) {
+                        if (err) return next(err);
+                        callback();
+                    })
+
+                });
+
+            };
+
+            getChangedTasks(task, function () {
+                res.json(updatedTasks);
+            });
+
+        });
+    });
 };

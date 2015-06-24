@@ -5,7 +5,7 @@ angular
         return $resource('/api/tasks/report/:date');
     })
     .factory('ReportByTaskId', function ($resource) {
-        return $resource('/api/tasks/:taskId/report/:date', {taskId: '@_id'});
+        return $resource('/api/tasks/:taskId/report/:date/users/:userId', {taskId: '@_id'});
     })
 
     .controller('ReportCtrl', function ($scope) {
@@ -17,6 +17,7 @@ angular
             $event.stopPropagation();
             $scope.opened = true;
         };
+
     })
 ;
 
