@@ -6,6 +6,8 @@ angular
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskEditor/taskEditor.html',
             controller: function ($scope,
+                                  $state,
+                                  $stateParams,
                                   Task,
                                   TaskMove,
                                   TaskComplexity,
@@ -113,7 +115,20 @@ angular
                 };
 
                 $scope.delete = function (task) {
-                    task.$delete().then($scope.onComplete);
+                    //delete itself
+                    if ($stateParams.taskId == task._id){
+                            var parentTaskId = task.parentTaskId || null;
+                            task.$delete().then(function () {
+                                if (parentTaskId) {
+                                    $state.go('app.task', {taskId: parentTaskId});
+                                } else {
+                                    $state.go('app.tasks');
+                                }
+                            }).then($scope.onComplete);
+
+                    } else {
+                        task.$delete().then($scope.onComplete);
+                    }
                 };
 
                 $scope.close = function () {
