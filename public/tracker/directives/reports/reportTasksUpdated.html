@@ -14,10 +14,10 @@
 
     </span>
 </h5>
-    <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: taskId, userId: ''})">Report for all</a>
+    <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: taskId, userId: 'all'})">Report for all</a>
     <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: taskId, userId: developer})">Report by developer</a>
 
-    <select ng-model="developer" ng-options="member._id as member.local.username for member in team"
+    <select required ng-model="developer" ng-options="member._id as member.local.username for member in team"
             class="form-control input-sm w-sm"></select>
 
 <ul ng-show="tasks.length">
