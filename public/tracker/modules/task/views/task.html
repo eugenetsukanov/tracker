@@ -22,11 +22,7 @@
 
     <div ng-hide="task._id == newTask._id" files-view ng-if="task.files.length" files="task.files"></div>
 
-    <div ng-hide="task._id == newTask._id" ng-if="task.tags.length" class="tags tags-panel tags-task">
-        <i class="fa fa-tags"></i>&nbsp;
-        <a ui-sref="app.tags-find({taskId: task._id, tags: tag})" class="label"
-           ng-repeat="tag in task.tags">{{tag}}</a>
-    </div>
+    <div task-tags task="task" ng-hide="task._id == newTask._id"></div>
 </div>
 
 <div ng-if="!newTask._id" task-editor task="newTask" task-on-complete="init"

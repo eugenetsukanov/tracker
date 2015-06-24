@@ -276,6 +276,7 @@ hr {
 .panel-heading {
     padding: 6px 9px;
 }
+.tag-search .panel-body hr,
 .panel-body hr {
     margin: 5px 0;
 }
@@ -289,6 +290,7 @@ hr {
     font-weight: normal;
     display: inline-block;
 }
+.task-info .tags,
 .tags.tags-task {
     margin: 0 0 20px;
 }

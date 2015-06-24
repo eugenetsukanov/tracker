@@ -24,11 +24,7 @@
 
         <hr ng-if="task.tags.length"/>
 
-        <!-- extract to directive -->
-        <div ng-if="task.tags.length" class="tags tags-panel">
-            <i class="fa fa-tags"></i>&nbsp;
-            <a ui-sref="app.tags-find({taskId: task._id, tags: tag})" class="label" ng-repeat="tag in task.tags">{{tag}}</a>
-        </div>
+        <div task-tags task="task"></div>
 
     </div>
 
