@@ -18,7 +18,9 @@
     <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: taskId, userId: developer})">Report by developer</a>
 
     <select required ng-model="developer" ng-options="member._id as member.local.username for member in team"
-            class="form-control input-sm w-sm"></select>
+            class="form-control input-sm w-sm">
+        <option value="" selected hidden />
+    </select>
 
 <ul ng-show="tasks.length">
     <li ng-repeat="task in tasks">
