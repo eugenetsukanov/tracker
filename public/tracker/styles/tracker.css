@@ -412,11 +412,21 @@ hr {
 
 
 /*report page*/
-.report-page ul {
+.report-page .p10,
+.report-page .result {
     padding: 10px 0 0 20px;
     margin: 0;
     border-top: 1px solid #eee;
 }
+.report-page .p10 {
+    padding: 10px 0 0;
+}
+.report-page .date-selector {
+    height: 30px;
+    line-height: 30px;
+    margin-right: 20px;
+}
+
 .profile h4 {
     margin-bottom: 30px;
 }
@@ -453,6 +463,7 @@ hr {
 }
 .dropdown-menu {
     font-size: 12px;
+    padding: 5px;
 }
 .modal-open .modal {
     -webkit-transition: all 200ms ease 200ms;

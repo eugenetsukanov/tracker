@@ -1,28 +1,29 @@
 <div class="report-page">
-<h5>
-    <span class="pointer"
-          datepicker-popup
-          max-date="'{{date | toDate:'YYYY-MM-DD'}}'"
-          is-open="opened"
-          ng-model="date"
-          show-button-bar="false"
-          show-weeks="false"
-          ng-click="openDatePicker($event)">
+<h5 class="clearfix">
+    <div class="date-selector pull-left">
+        <span class="pointer"
+              datepicker-popup
+              max-date="'{{date | toDate:'YYYY-MM-DD'}}'"
+              is-open="opened"
+              ng-model="date"
+              show-button-bar="false"
+              show-weeks="false"
+              ng-click="openDatePicker($event)">
 
         {{ date | toDate }} <i class="fa fa-calendar"></i>
 
 
-    </span>
-</h5>
-    <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: taskId, userId: 'all'})">Report for all</a>
-    <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: taskId, userId: developer})">Report by developer</a>
+        </span>
+    </div>
 
-    <select required ng-model="developer" ng-options="member._id as member.local.username for member in team"
-            class="form-control input-sm w-sm">
-        <option value="" selected hidden />
+    <select ng-if="taskId" ng-model="developer" class="form-control input-sm w-sm pull-left" ng-change="update(developer)"
+            >
+        <option value="" selected>All</option>
+        <option value="{{member.id}}" ng-repeat="member in team">{{member.username}}</option>
     </select>
+</h5>
 
-<ul ng-show="tasks.length">
+<ul ng-show="tasks.length" class="result">
     <li ng-repeat="task in tasks">
         {{task.title}}
 
@@ -34,5 +35,5 @@
     </li>
 </ul>
 
-<p ng-show="!tasks.length">No changes for today</p>
+<p  class="p10" ng-show="!tasks.length">No changes for today</p>
 </div>

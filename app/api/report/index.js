@@ -13,7 +13,7 @@ module.exports = function (app) {
         return moment(date).startOf('day').add(1, 'd').toDate();
     };
 
-    app.get('/api/tasks/report/:date', function (req, res) {
+    app.get('/api/tasks/report/:date', function (req, res, next) {
 
         var date = Date.parse(req.params.date);
         Task.find({
@@ -39,17 +39,13 @@ module.exports = function (app) {
             });
     });
 
-    app.get('/api/tasks/:taskId/report/:date/users/:userId', function (req, res) {
+    app.get('/api/tasks/:taskId/report/:date', function (req, res, next) {
 
         var date = Date.parse(req.params.date) || Date.now();
         var match = {
             updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
             status: {$ne: ''}
         };
-
-        if (req.params.userId !== 'all') {
-            match.developer = req.params.userId;
-        }
 
         var query = {
             _id: req.params.taskId
@@ -59,6 +55,10 @@ module.exports = function (app) {
 
         Task.findOne(_.extend(query, match), function (err, task) {
             if (err) return next(err);
+
+            if (req.query.userId !== '') {
+                match.developer = req.query.userId;
+            }
 
             if (!task) {
                 return res.json(updatedTasks)

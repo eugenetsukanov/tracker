@@ -68,7 +68,7 @@ angular
                 templateUrl: "tracker/modules/report/report.html"
             })
             .state('app.task-report', {
-                url: "/tasks/:taskId/report/users/:userId",
+                url: "/tasks/:taskId/report",
                 controller: "ReportCtrl",
                 templateUrl: "tracker/modules/task/views/view/task-view-report.html"
             })
