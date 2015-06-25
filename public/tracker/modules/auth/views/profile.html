@@ -1,0 +1,17 @@
+{{user.local.firstName}} {{user.local.lastName}}
+<form ng-submit="save()">
+    <input ng-model="user.local.username" type="text" value="{{user.local.username}}"/>
+    <input ng-model="user.local.firstName" type="text" value="{{user.local.firstName}}"/>
+    <input ng-model="user.local.lastName" type="text" value="{{user.local.lastName}}"/>
+    <input ng-model="user.local.email" type="text" value="{{user.local.email}}"/>
+</form>
+
+<button ng-click="changePass = !changePassword">Reset Password</button>
+
+<form ng-if="changePass" ng-submit="passwordChange()">
+    <input ng-model="oldPassword" type="text"/>
+    <input ng-model="newPassword" type="text"/>
+    <input ng-model="newPasswordConfirmation" type="text"/>
+<button type="submit">Change password</button>
+</form>
+

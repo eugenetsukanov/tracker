@@ -90,4 +90,19 @@ angular
             });
         }
 
+    })
+
+    .controller('ProfileCtrl', function ($scope, $state, UserService) {
+
+        $scope.user = UserService.getUser();
+
+        $scope.save = function () {
+
+        };
+
+        $scope.passwordChange = function () {
+
+        };
+
+
     });

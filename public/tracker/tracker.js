@@ -90,6 +90,11 @@ angular
                 controller: "TaskArchiveCtrl",
                 templateUrl: "tracker/modules/task/views/view/task-view-archive.html"
             })
+            .state('app.profile', {
+                url: "/users/me",
+                controller: "ProfileCtrl",
+                templateUrl: "tracker/modules/auth/views/profile.html"
+            })
 
         ;
 

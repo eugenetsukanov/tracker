@@ -26,7 +26,7 @@
 
                 <ul class="nav navbar-nav navbar-right">
 
-                    <li ng-if="user"><span><i class="fa fa-user"></i> {{user.local.username}}</span></li>
+                    <li ng-if="user"><a ui-sref="app.profile"><i class="fa fa-user"></i> {{user.local.username}}</a></li>
                     <li><a ui-sref="app.login" ng-if="!user">Login</a></li>
                     <li><a ui-sref="app.register" ng-if="!user">Register</a></li>
                     <li><a ui-sref="app.logout" ng-if="user">Logout</a></li>

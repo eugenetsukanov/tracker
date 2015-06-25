@@ -49,14 +49,20 @@ module.exports = function (app, passport) {
     });
 
     app.get('/api/users/me', function (req, res) {
-        res.json(req.user);
+        User.findOne({_id: req.user._id}, '-local.passwordHashed -local.passwordSalt', function (err, user) {
+            res.json(user);
+        });
     });
 
     app.get('/api/users', function (req, res) {
-        User.find({}, '-local.passwordHashed, -local.passwordSalt', function (err, users) {
+        User.find({}, '-local.passwordHashed -local.passwordSalt', function (err, users) {
             res.json(users);
         });
 
     });
+
+    app.post('/api/users/me', function (req, res) {
+        User.hash(req.body.)
+    })
 
 };
