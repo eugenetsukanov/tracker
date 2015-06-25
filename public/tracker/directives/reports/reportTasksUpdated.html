@@ -1,6 +1,6 @@
 <div class="report-page">
-<h5 class="clearfix">
-    <div class="date-selector pull-left">
+    <h5 class="clearfix">
+        <div class="date-selector pull-left">
         <span class="pointer"
               datepicker-popup
               max-date="'{{date | toDate:'YYYY-MM-DD'}}'"
@@ -14,26 +14,42 @@
 
 
         </span>
+        </div>
+
+        <select ng-if="taskId" ng-model="developer" class="form-control input-sm w-sm pull-left"
+                ng-change="update(developer)"
+                >
+            <option value="" selected>All</option>
+            <option value="{{member.id}}" ng-repeat="member in team">{{member.username}}</option>
+        </select>
+    </h5>
+
+    <div class="result">
+
+        <h4 ng-if="(tasks | byStatus: 'accepted').length">Done:</h4>
+        <ul ng-if="(tasks | byStatus: 'accepted').length" ng-show="tasks.length">
+            <li ng-repeat="task in tasks | byStatus: 'accepted' ">
+                <span class="status">+</span> {{task.title}}
+                <div ng-show="metrics" task-metrics task="task"></div>
+            </li>
+        </ul>
+
+        <h4 ng-if="(tasks | byStatus: 'in progress').length">In Progress:</h4>
+        <ul ng-if="(tasks | byStatus: 'in progress').length" ng-show="tasks.length">
+            <li ng-repeat="task in tasks | byStatus: 'in progress'">
+                <span class="status">></span> {{task.title}}
+                <div ng-show="metrics" task-metrics task="task"></div>
+            </li>
+        </ul>
+
+        <h4 ng-if="(tasks | byStatus: '').length">Plans:</h4>
+        <ul ng-if="(tasks | byStatus: '').length" ng-show="tasks.length">
+            <li ng-repeat="task in tasks | byStatus: ''">
+                <span class="status">-</span> {{task.title}}
+                <div ng-show="metrics" task-metrics task="task"></div>
+            </li>
+        </ul>
     </div>
 
-    <select ng-if="taskId" ng-model="developer" class="form-control input-sm w-sm pull-left" ng-change="update(developer)"
-            >
-        <option value="" selected>All</option>
-        <option value="{{member.id}}" ng-repeat="member in team">{{member.username}}</option>
-    </select>
-</h5>
-
-<ul ng-show="tasks.length" class="result">
-    <li ng-repeat="task in tasks">
-        {{task.title}}
-
-            <span ng-show="status" class="label" task-status="task.status">
-                {{task.status || 'new'}}
-            </span>
-
-        <div ng-show="metrics" task-metrics task="task"></div>
-    </li>
-</ul>
-
-<p  class="p10" ng-show="!tasks.length">No changes for today</p>
+    <p class="p10" ng-show="!tasks.length">No changes for this day</p>
 </div>

@@ -18,7 +18,7 @@ module.exports = function (app) {
         var date = Date.parse(req.params.date);
         Task.find({
                 updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
-                status: {$ne: ''}
+                //status: {$ne: ''}
             })
             .sort('-updatedAt')
             .exec(function (err, tasks) {
@@ -44,7 +44,7 @@ module.exports = function (app) {
         var date = Date.parse(req.params.date) || Date.now();
         var match = {
             updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
-            status: {$ne: ''}
+            //status: {$ne: ''}
         };
 
         var query = {
@@ -56,14 +56,16 @@ module.exports = function (app) {
         Task.findOne(_.extend(query, match), function (err, task) {
             if (err) return next(err);
 
-            if (req.query.userId !== '') {
-                match.developer = req.query.userId;
-            }
-
             if (!task) {
                 return res.json(updatedTasks)
             } else {
-                updatedTasks.push(task);
+                if (req.query.userId !== '') {
+                    if (task.developer.toString() == req.query.userId.toString()) {
+                        updatedTasks.push(task);
+                    }
+                } else {
+                    updatedTasks.push(task);
+                }
             }
             var getChangedTasks = function (task, callback) {
 
@@ -71,7 +73,13 @@ module.exports = function (app) {
                     if (err) return next(err);
 
                     async.each(tasks, function (task, callback) {
-                        updatedTasks.push(task);
+                        if (req.query.userId !== '') {
+                            if (task.developer.toString() == req.query.userId.toString()) {
+                                updatedTasks.push(task);
+                            }
+                        } else {
+                            updatedTasks.push(task);
+                        }
                         getChangedTasks(task, callback);
                     }, function (err) {
                         if (err) return next(err);
