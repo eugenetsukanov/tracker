@@ -161,6 +161,7 @@ angular
                         $scope.task.spenttime = spenttime;
                     }
                 };
+
             },
             scope: {
                 task: "=task",

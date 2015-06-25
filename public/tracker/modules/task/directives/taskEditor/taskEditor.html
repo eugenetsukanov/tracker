@@ -49,7 +49,7 @@
 
                 <div ng-show="task.status == 'accepted'" class="checkbox archive-button" ng-class="{'pull-right': task.simple}">
 
-                    <input type="checkbox"
+                    <input type="button"
                            ng-model="task.archived"
                            id="archived" />
 
@@ -61,7 +61,11 @@
                                 ng-class="task.archived == true ? 'fa-check-square-o' : 'fa-square-o' "></i>&nbsp;Archived</label>
                 </div>
 
+
             </div>
+            <pre>{{task.archived}}</pre>
+            <pre>{{task.status}}</pre>
+                <pre>{{task | json}}</pre>
 
 
             <hr ng-if="task.simple || task.status == 'accepted'" class="mg"/>
