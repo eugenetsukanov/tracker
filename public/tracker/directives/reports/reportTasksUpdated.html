@@ -26,7 +26,7 @@
 
     <div class="result">
 
-        <h4 ng-if="(tasks | byStatus: 'accepted').length">Done:</h4>
+        <h5 ng-if="(tasks | byStatus: 'accepted').length">Done:</h5>
         <ul ng-if="(tasks | byStatus: 'accepted').length" ng-show="tasks.length">
             <li ng-repeat="task in tasks | byStatus: 'accepted' ">
                 <span class="status">+</span> {{task.title}}
@@ -34,7 +34,7 @@
             </li>
         </ul>
 
-        <h4 ng-if="(tasks | byStatus: 'in progress').length">In Progress:</h4>
+        <h5 ng-if="(tasks | byStatus: 'in progress').length">In Progress:</h5>
         <ul ng-if="(tasks | byStatus: 'in progress').length" ng-show="tasks.length">
             <li ng-repeat="task in tasks | byStatus: 'in progress'">
                 <span class="status">></span> {{task.title}}
@@ -42,10 +42,10 @@
             </li>
         </ul>
 
-        <h4 ng-if="(tasks | byStatus: '').length">Plans:</h4>
+        <h5 ng-if="(tasks | byStatus: '').length">Plans:</h5>
         <ul ng-if="(tasks | byStatus: '').length" ng-show="tasks.length">
             <li ng-repeat="task in tasks | byStatus: ''">
-                <span class="status">-</span> {{task.title}}
+                <span class="status">&#8226;</span> {{task.title}}
                 <div ng-show="metrics" task-metrics task="task"></div>
             </li>
         </ul>

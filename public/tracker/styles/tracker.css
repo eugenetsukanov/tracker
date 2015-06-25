@@ -433,9 +433,27 @@ hr {
     list-style-type: none;
     padding: 0 0 20px;
 }
+.report-page .result ul li,
+.report-page .result ul li *{
+    vertical-align: middle;
+    line-height: 20px;
+}
 .report-page .result ul .status {
-    color: #999;
+    color: #ff9357;
     margin: 0 10px 0 0;
+    font-weight: bold;
+    font-size: 12px;
+}
+.report-page .result ul .status:after,
+.report-page .result ul .status:before {
+    content: '[';
+    display: inline-block;
+    padding: 0 1px;
+    color: #eee;
+    font-size: 14px;
+}
+.report-page .result ul .status:after {
+    content: ']';
 }
 
 .profile h4 {
