@@ -3,7 +3,7 @@ module.exports = function (app, passport) {
     var User = require('../../models/user');
 
     app.post('/api/login',
-        passport.authenticate('local', { successRedirect: '/api/users/me' })
+        passport.authenticate('local', {successRedirect: '/api/users/me'})
     );
 
     app.post('/api/logout', function (req, res) {
@@ -13,18 +13,33 @@ module.exports = function (app, passport) {
 
     app.post('/api/register', function (req, res, next) {
 
-        var user = new User({
-            local: {
-                username: req.body.username,
-                password: req.body.password
-            }
-        });
+        User.findOne({'local.username': req.body.username}, function (err, user) {
+            if (err) return next(err);
 
-        user.save(function (err) {
-            req.login(user, function (err) {
-                if (err) return next(err);
-                res.redirect('/api/users/me');
-            });
+            var o = false;
+
+            if (user) {
+                o = true;
+            }
+
+            if (!o) {
+                var user = new User({
+                    local: {
+                        username: req.body.username,
+                        password: req.body.password
+                    }
+                });
+
+                user.save(function (err) {
+                    req.login(user, function (err) {
+                        if (err) return next(err);
+                        res.redirect('/api/users/me');
+                    });
+                });
+            } else {
+                //res.redirect('/api/register');
+                res.sendStatus(403);
+            }
         });
     });
 
@@ -38,7 +53,7 @@ module.exports = function (app, passport) {
     });
 
     app.get('/api/users', function (req, res) {
-        User.find({},'-local.passwordHashed, -local.passwordSalt', function (err, users) {
+        User.find({}, '-local.passwordHashed, -local.passwordSalt', function (err, users) {
             res.json(users);
         });
 
