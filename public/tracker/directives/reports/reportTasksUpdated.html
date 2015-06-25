@@ -24,7 +24,7 @@
         </select>
     </h5>
 
-    <div class="result">
+    <div ng-if="tasks.length" class="result">
 
         <h5 ng-if="(tasks | byStatus: 'accepted').length">Done:</h5>
         <ul ng-if="(tasks | byStatus: 'accepted').length" ng-show="tasks.length">
