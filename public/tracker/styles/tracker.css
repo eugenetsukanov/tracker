@@ -19,6 +19,10 @@ hr {
     margin: 10px 0;
 }
 
+.bold {
+    font-weight: bold;
+}
+
 .overflow-hidden {
     overflow: hidden;
 }
@@ -33,6 +37,10 @@ hr {
     color: #999;
     width: 32px;
     margin-right: 5px;
+    text-align: center;
+}
+
+.align-center {
     text-align: center;
 }
 
@@ -371,6 +379,28 @@ hr {
 .report-page ul {
     padding: 10px 0 0 20px;
     margin: 0;
+    border-top: 1px solid #eee;
+}
+.profile h4 {
+    margin-bottom: 30px;
+}
+.profile ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 10px;
+}
+.profile ul li {
+    margin: 0 0 10px;
+}
+.profile ul li.mg {
+    margin-bottom: 20px;
+}
+.profile ul li label {
+    padding: 6px 0;
+}
+.profile .password {
+    margin-top: 20px;
+    padding-top: 20px;
     border-top: 1px solid #eee;
 }
 

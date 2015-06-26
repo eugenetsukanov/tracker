@@ -61,8 +61,8 @@ module.exports = function (app, passport) {
 
     });
 
-    app.post('/api/users/me', function (req, res) {
-        User.hash(req.body.)
-    })
+    //app.post('/api/users/me', function (req, res) {
+    //    User.hash(req.body.)
+    //})
 
 };
