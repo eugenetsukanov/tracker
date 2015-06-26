@@ -2,7 +2,7 @@ angular
     .module('Tracker')
 
     .factory('User', function ($resource) {
-        return $resource('/api/users/:nested');
+        return $resource('/api/users/:nested', {}, {update: {method: 'PUT'}});
     })
 
     .factory('UserService', function ($q, User, Logout) {
@@ -45,7 +45,7 @@ angular
     .factory('Login', function ($resource) {
         return $resource('/api/login');
     })
-    .controller('LoginCtrl', function ($scope, Login, $state, UserService) {
+    .controller('LoginCtrl', function ($scope, Login, $state, UserService, toaster) {
 
         $scope.login = function () {
 
@@ -55,6 +55,13 @@ angular
             }, function () {
                 UserService.load().then(function () {
                     $state.go('app.tasks');
+                });
+
+            }, function (err) {
+                toaster.pop({
+                    type: 'error',
+                    title: 'Please, check your credentials',
+                    timeout: 2000,
                 });
 
             })
@@ -92,12 +99,33 @@ angular
 
     })
 
-    .controller('ProfileCtrl', function ($scope, $state, UserService) {
+    .controller('ProfileCtrl', function ($scope, $state, User, UserService, toaster) {
 
         $scope.user = UserService.getUser();
 
         $scope.save = function () {
+            $scope.user.firstName = $scope.firstName;
+            $scope.user.lastName = $scope.lastName;
+            $scope.user.email = $scope.email;
 
+            $scope.user.$update({
+                nested: 'me'
+            }, function () {
+
+                toaster.pop({
+                    title: 'Saved',
+                    timeout: 2000,
+                });
+
+            }, function (err) {
+
+                toaster.pop({
+                    type: 'error',
+                    title: err.statusText,
+                    timeout: 2000,
+                });
+
+            });
         };
 
         $scope.passwordChange = function () {

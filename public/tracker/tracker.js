@@ -1,5 +1,5 @@
 angular
-    .module('Tracker', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize'])
+    .module('Tracker', ['ui.router', 'toaster', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize'])
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
@@ -11,7 +11,9 @@ angular
             .state('app', {
                 url: "/app",
                 templateUrl: "tracker/tracker.html",
-                controller: function ($scope, UserService, SearchService) {
+                controller: function ($scope, UserService, SearchService, toasterConfig) {
+
+                    toasterConfig['prevent-duplicates'] = true;
 
                     $scope.SearchService = SearchService;
 

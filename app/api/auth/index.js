@@ -1,6 +1,14 @@
 module.exports = function (app, passport) {
 
     var User = require('../../models/user');
+    var form = require("express-form"),
+        field = form.field;
+
+    var UserForm = form(
+        field("local.firstName").trim(),
+        field("local.lastName").trim(),
+        field("local.email").trim().required().isEmail()
+    );
 
     app.post('/api/login',
         passport.authenticate('local', {successRedirect: '/api/users/me'})
@@ -37,7 +45,6 @@ module.exports = function (app, passport) {
                     });
                 });
             } else {
-                //res.redirect('/api/register');
                 res.sendStatus(403);
             }
         });
@@ -61,8 +68,27 @@ module.exports = function (app, passport) {
 
     });
 
-    //app.post('/api/users/me', function (req, res) {
-    //    User.hash(req.body.)
-    //})
+    app.put('/api/users/me', UserForm, function (req, res, next) {
+
+        if (req.form.isValid) {
+
+            User.findById(req.body._id, function (err, user) {
+                if (err) return next(err);
+
+                user.local.firstName = req.form.local.firstName;
+                user.local.lastName = req.form.local.lastName;
+                user.local.email = req.form.local.email;
+
+                user.save(function (err, user) {
+                    if (err) return next(err);
+                    res.json(user);
+                });
+            });
+        }
+        else {
+            res.status(400).json(req.form.errors);
+        }
+
+    })
 
 };
