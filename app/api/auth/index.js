@@ -89,6 +89,36 @@ module.exports = function (app, passport) {
             res.status(400).json(req.form.errors);
         }
 
+    });
+
+    app.post('/api/users/changePassword', function (req, res, next) {
+
+        User.findById(req.body._id, function (err, user) {
+
+            if (err) return next(err);
+
+            var verify = function () {
+                if (user.validPassword(req.body.oldPassword)) {
+                    return true;
+                }
+            }();
+
+            if (verify){
+
+                user.setPassword(req.body.newPassword);
+
+                user.save(function (err, user) {
+                    if (err) return next(err);
+                    res.json(user);
+                });
+
+            } else {
+                res.sendStatus(403);
+            }
+
+        });
+
     })
+
 
 };

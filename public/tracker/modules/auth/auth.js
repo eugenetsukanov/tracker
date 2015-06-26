@@ -103,6 +103,10 @@ angular
 
         $scope.user = UserService.getUser();
 
+        $scope.oldPassword = '';
+        $scope.newPassword = '';
+        $scope.newPasswordConfirm = '';
+
         $scope.save = function () {
             $scope.user.firstName = $scope.firstName;
             $scope.user.lastName = $scope.lastName;
@@ -129,6 +133,40 @@ angular
         };
 
         $scope.passwordChange = function () {
+            //
+            if ($scope.newPassword == $scope.newPasswordConfirm && $scope.newPassword !== $scope.oldPassword) {
+                $scope.user.oldPassword = $scope.oldPassword;
+                $scope.user.newPassword = $scope.newPassword;
+
+                $scope.user.$save({
+                    nested: 'changePassword'
+                }, function () {
+
+                    toaster.pop({
+                        title: 'Saved',
+                        timeout: 2000,
+                    });
+
+                }, function () {
+
+                    toaster.pop({
+                        type: 'error',
+                        title: 'Wrong password',
+                        timeout: 2000,
+                    });
+
+                });
+
+            } else {
+                toaster.pop({
+                    type: 'error',
+                    title: 'Mismatch in new password',
+                    timeout: 2000,
+                });
+            }
+
+
+            //
 
         };
 

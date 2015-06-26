@@ -45,7 +45,7 @@
             </ul>
         </form>
 
-        <form ng-if="changePass" ng-submit="passwordChange()" class="form-horizontal password">
+        <form ng-show="changePass" ng-submit="passwordChange()" class="form-horizontal password">
             <ul>
                 <li class="form-group form-group-sm">
                     <label for="oldPassword" class="col-sm-3 control-label">Old&nbsp;Password</label>
@@ -79,7 +79,7 @@
                 </li>
                 <li class="form-group">
                     <div class="col-sm-7 col-sm-offset-3">
-                        <button type="submit" class="btn btn-primary btn-sm">Change</button>
+                        <button class="btn btn-primary btn-sm">Change</button>
                     </div>
                 </li>
             </ul>
