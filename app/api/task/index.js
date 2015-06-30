@@ -374,7 +374,6 @@ module.exports = function (app) {
                 return (queryArr.length == result) ? true : false;
 
             }, function (err, tasks) {
-                console.log(tasks);
                 if (err) return next(err);
                 res.json(tasks);
             });
