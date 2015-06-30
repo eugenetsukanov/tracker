@@ -118,7 +118,6 @@ angular
 
                 toaster.pop({
                     title: 'Saved',
-                    timeout: 2000,
                 });
 
             }, function (err) {
@@ -126,7 +125,6 @@ angular
                 toaster.pop({
                     type: 'error',
                     title: err.statusText,
-                    timeout: 2000,
                 });
 
             });
@@ -144,15 +142,14 @@ angular
 
                     toaster.pop({
                         title: 'Saved',
-                        timeout: 2000,
+                        animation: 'fade-in'
                     });
 
                 }, function () {
 
                     toaster.pop({
                         type: 'error',
-                        title: 'Wrong password',
-                        timeout: 2000,
+                        title: 'Wrong password'
                     });
 
                 });
@@ -160,8 +157,7 @@ angular
             } else {
                 toaster.pop({
                     type: 'error',
-                    title: 'Mismatch in new password',
-                    timeout: 2000,
+                    title: 'Mismatch in new password'
                 });
             }
 

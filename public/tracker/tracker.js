@@ -1,5 +1,5 @@
 angular
-    .module('Tracker', ['ui.router', 'toaster', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize'])
+    .module('Tracker', ['ui.router', 'toaster', 'ngResource', 'ui.bootstrap', 'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize'])
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 

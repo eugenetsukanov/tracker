@@ -159,19 +159,21 @@ angular
 
     })
 
-    .controller('SearchCtrl', function ($scope, $stateParams, SearchService) {
+    .controller('SearchCtrl', function ($scope, $stateParams, SearchService, Task) {
 
         $scope.init = function () {
             SearchService.search($stateParams.query).then(function (tasks) {
+
                 $scope.taskId = SearchService.getTaskId();
                 $scope.query = $stateParams.query;
-                $scope.tasks = tasks;
+
+                $scope.tasks = _.map(tasks, function (task) {
+                    return new Task(task);
+                });
             });
         };
 
-        var init = $scope.init;
-
-        init();
+        $scope.init();
 
     })
 

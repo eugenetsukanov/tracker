@@ -435,6 +435,10 @@ hr {
 /* #toast-container */
 .toaster-popup #toast-container > div {
     opacity: 0.9;
+    -webkit-animation:  fade-in-out 3s;
+    -moz-animation:     fade-in-out 3s;
+    -o-animation:       fade-in-out 3s;
+    animation:          fade-in-out 3s;
 }
 .toaster-popup #toast-container {
     box-shadow: none;
@@ -446,9 +450,9 @@ hr {
 }
 .toaster-popup #toast-container {
     -webkit-transition: all ease 200ms;
-    -moz-transition: all ease 200ms;
-    -o-transition: all ease 200ms;
-    transition: all ease 200ms;
+    -moz-transition:    all ease 200ms;
+    -o-transition:      all ease 200ms;
+    transition:         all ease 200ms;
 }
 
 /*responsive*/
@@ -495,4 +499,29 @@ hr {
         padding-top: 15px;
         padding-bottom: 12px;
     }
+}
+
+@-webkit-keyframes fade-in-out {
+    0%   { opacity: 0; }
+    20%   { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@-moz-keyframes fade-in-out {
+    0%   { opacity: 0; }
+    20%   { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@-o-keyframes fade-in-out {
+    0%   { opacity: 0; }
+    20%   { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
+}
+@keyframes fade-in-out {
+    0%   { opacity: 0; }
+    20%   { opacity: 1; }
+    80% { opacity: 1; }
+    100% { opacity: 0; }
 }
