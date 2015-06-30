@@ -270,11 +270,14 @@ TaskSchema.methods = {
     },
 
     getChildren: function (next) {
-        Task.find({parentTaskId: this}, function (err, tasks) {
-            if (err) return next(err);
-
-            next(null, tasks);
-        })
+        Task.find({parentTaskId: this})
+            .sort('-updatedAt')
+            .populate('owner', '-local.passwordHashed -local.passwordSalt')
+            .populate('developer', '-local.passwordHashed -local.passwordSalt')
+            .exec(function (err, tasks) {
+                if (err) return next(err);
+                next(null, tasks);
+            })
     },
 
     deepFind: function (finder, next) {
@@ -338,7 +341,11 @@ TaskSchema.methods = {
                 parent.getRoot(next);
             });
         } else {
-            Task.findById(this._id, next);
+            Task.findById(this._id)
+                .sort('-updatedAt')
+                .populate('owner', '-local.passwordHashed -local.passwordSalt')
+                .populate('developer', '-local.passwordHashed -local.passwordSalt')
+                .exec(next);
         }
     },
     getGrandParent: function (next) {
@@ -354,8 +361,7 @@ TaskSchema.methods = {
     hasAccess: function (user, next) {
         this.getRoot(function (err, root) {
             if (err) return next(err);
-
-            var imOwner = (root.owner.toString() == user._id.toString());
+            var imOwner = (root.owner._id.toString() == user._id.toString());
 
             var sharedToMe = _.find(root.team, function (userId) {
                 return userId.toString() == user._id.toString();

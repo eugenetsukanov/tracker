@@ -6,6 +6,8 @@
      'task-not-estimated' : !task.points
      }">
 
+    <pre>{{task | json}}</pre>
+
     <div class="panel-heading overflow-hidden">
         <h4 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a>
             <span ng-if="onEdit" class="fa fa-pencil-square-o vcenter pull-right pointer" ng-click="edit(task)"></span>

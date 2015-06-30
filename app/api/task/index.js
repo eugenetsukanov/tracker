@@ -55,7 +55,6 @@ module.exports = function (app) {
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .exec(function (err, tasks) {
-                console.log(tasks);
                 if (err) return next(err);
 
                 if (!tasks) {
@@ -357,7 +356,6 @@ module.exports = function (app) {
 
         req.Task.getRoot(function (err, root) {
             if (err) return next(err);
-
             root.deepFind(function (task) {
 
                 var tags = task.tags || [];
@@ -376,6 +374,7 @@ module.exports = function (app) {
                 return (queryArr.length == result) ? true : false;
 
             }, function (err, tasks) {
+                console.log(tasks);
                 if (err) return next(err);
                 res.json(tasks);
             });
