@@ -116,7 +116,20 @@ angular
                 controller: "ProfileCtrl",
                 templateUrl: "tracker/modules/auth/views/profile.html"
             })
-
+            .state('app.reset-password', {
+                url: "/reset-password",
+                controller: "resetPasswordCtrl",
+                templateUrl: "tracker/modules/auth/views/reset-password.html"
+            })
+            .state('public', {
+                url: "/public",
+                templateUrl: "tracker/tracker.html"
+            })
+            .state('public.change-password', {
+                url: "/change-password/:token",
+                controller: "resetPasswordCtrl",
+                templateUrl: "tracker/modules/auth/views/change-password.html"
+            })
         ;
 
     })

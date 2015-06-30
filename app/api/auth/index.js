@@ -1,4 +1,4 @@
-module.exports = function (app, passport) {
+module.exports = function (app, passport, nodemailer) {
 
     var User = require('../../models/user');
     var form = require("express-form"),
@@ -10,6 +10,47 @@ module.exports = function (app, passport) {
         field("local.email").trim().required().isEmail()
     );
 
+    var jwt = require('jsonwebtoken');
+
+    var issueToken = function (payload) {
+        var token = jwt.sign(payload, process.env.TOKEN_SECRET || "tracker");
+        return token;
+    };
+
+    var verifyToken = function (token, verified) {
+        return jwt.verify(token, process.env.TOKEN_SECRET || "tracker", {}, verified);
+    };
+
+    var emailSender = 'mailtotesthere@gmail.com';
+
+    var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: emailSender,
+            pass: 'xxx666up'
+        }
+    });
+
+    app.post('/api/users/resetPassword', function (req, res, next) {
+
+        verifyToken(req.query.token, function () {
+
+            var decoded = jwt.decode(req.query.token, {complete: true});
+            User.findById(decoded.payload, '-local.passwordHashed -local.passwordSalt', function (err, user) {
+                if (err) return next(err);
+
+                user.local.password = req.query.password;
+
+                user.save(function (err, user) {
+                    if (err) return next(err);
+                    res.json(user);
+                });
+            });
+
+        });
+
+    });
+
     app.post('/api/login',
         passport.authenticate('local', {successRedirect: '/api/users/me'})
     );
@@ -17,6 +58,37 @@ module.exports = function (app, passport) {
     app.post('/api/logout', function (req, res) {
         req.logout();
         res.sendStatus(200);
+    });
+
+    app.post('/api/resetPassword', function (req, res, next) {
+
+        User.findOne({'local.email': req.body.email}, function (err, user) {
+
+            if (err) return next(err);
+
+            if (!user) {
+                res.sendStatus(400);
+            }
+
+            if (user && user.local.username == req.body.username) {
+
+                var preToken = user._id;
+
+                var token = issueToken(preToken);
+
+                transporter.sendMail({
+                    from: emailSender,
+                    to: user.local.email,
+                    subject: 'Password reset',
+                    text: 'http://192.168.10.21:3000/#/public/change-password/' + token
+                });
+
+                res.sendStatus(200);
+            } else {
+                res.sendStatus(400);
+            }
+        });
+
     });
 
     app.post('/api/register', function (req, res, next) {
@@ -34,6 +106,7 @@ module.exports = function (app, passport) {
                 var user = new User({
                     local: {
                         username: req.body.username,
+                        email: req.body.email,
                         password: req.body.password
                     }
                 });
@@ -91,6 +164,7 @@ module.exports = function (app, passport) {
 
     });
 
+
     app.post('/api/users/changePassword', function (req, res, next) {
 
         User.findById(req.body._id, '-local.passwordHashed -local.passwordSalt', function (err, user) {
@@ -103,7 +177,7 @@ module.exports = function (app, passport) {
                 }
             }();
 
-            if (verify){
+            if (verify) {
 
                 user.setPassword(req.body.newPassword);
 
@@ -118,7 +192,7 @@ module.exports = function (app, passport) {
 
         });
 
-    })
+    });
 
 
 };
