@@ -195,7 +195,6 @@ angular
         $scope.resetAccept = function () {
 
             if ($scope.newPassword == $scope.newPasswordConfirm) {
-
                 var user = new User;
 
                 user.$save({

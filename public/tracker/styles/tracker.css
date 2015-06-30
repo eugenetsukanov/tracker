@@ -395,6 +395,7 @@ hr {
 .profile ul li.mg {
     margin-bottom: 20px;
 }
+.change-pass ul li label,
 .profile ul li label {
     padding: 6px 0;
 }
@@ -403,7 +404,10 @@ hr {
     padding-top: 20px;
     border-top: 1px solid #eee;
 }
-
+.change-pass h1 {
+    margin-left: 25%;
+    padding-left: 5px;
+}
 /*bootstrap fixes*/
 .ui-select-multiple.ui-select-bootstrap {
     padding: 3px 10px 0;
