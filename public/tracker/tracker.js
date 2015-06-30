@@ -26,6 +26,25 @@ angular
                             $scope.user = null;
                         }
                     });
+
+                    $scope.displayName = '';
+
+                    $scope.$watch('UserService.user.local', function (local) {
+                        if (local) {
+                            $scope.displayName = function () {
+                                if (local.firstName || local.lastName) {
+                                    var result = '';
+                                    result += local.firstName ? local.firstName : '';
+                                    result += local.lastName ? ' ' + local.lastName : '';
+                                } else {
+                                    result = local.username;
+                                }
+                                return result.trim();
+                            }();
+                        }
+                    });
+
+
                 }
             })
             .state('app.tasks', {

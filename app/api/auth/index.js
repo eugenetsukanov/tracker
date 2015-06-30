@@ -72,7 +72,7 @@ module.exports = function (app, passport) {
 
         if (req.form.isValid) {
 
-            User.findById(req.body._id, function (err, user) {
+            User.findById(req.body._id, '-local.passwordHashed -local.passwordSalt', function (err, user) {
                 if (err) return next(err);
 
                 user.local.firstName = req.form.local.firstName;
@@ -93,7 +93,7 @@ module.exports = function (app, passport) {
 
     app.post('/api/users/changePassword', function (req, res, next) {
 
-        User.findById(req.body._id, function (err, user) {
+        User.findById(req.body._id, '-local.passwordHashed -local.passwordSalt', function (err, user) {
 
             if (err) return next(err);
 
