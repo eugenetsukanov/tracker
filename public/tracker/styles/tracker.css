@@ -456,6 +456,15 @@ hr {
     content: ']';
 }
 
+.tag-search .task-metrics-widget,
+.report-page .task-metrics-widget {
+    margin: 0;
+}
+.report-page .detail-line,
+.tag-search .detail-line {
+    padding: 0;
+}
+
 .profile h4 {
     margin-bottom: 30px;
 }
