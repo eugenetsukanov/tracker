@@ -168,7 +168,6 @@ angular
                 $scope.tasks = _.map(tasks, function (task) {
                     return new Task(task);
                 });
-                console.log(tasks);
             });
         };
 
