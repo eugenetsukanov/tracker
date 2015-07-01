@@ -8,7 +8,6 @@ var GridFS = application.get('GridFS');
 
 var FileSchema = require('./file.schema');
 
-
 var TaskSchema = new Schema({
     title: String,
     description: String,
@@ -38,7 +37,7 @@ TaskSchema.set('toJSON', {getters: true, virtuals: true});
 
 TaskSchema.pre('init', function (next, task) {
     this._origin = _.merge({}, task);
-    this.calculateEstimatedTime(task, next);
+    this.preCalculateEstimatedTime(task, next);
 });
 
 TaskSchema.pre('save', function (next) {
@@ -224,7 +223,7 @@ TaskSchema.methods = {
         next();
     },
 
-    calculateEstimatedTime: function (task, next) {
+    preCalculateEstimatedTime: function (task, next) {
 
         if (task.points && task.parentTaskId) {
 
