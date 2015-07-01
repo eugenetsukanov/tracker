@@ -55,7 +55,6 @@ module.exports = function (app) {
             if (req.query.userId !== '') {
                 if (req.Task.developer._id.toString() == req.query.userId.toString()) {
                     updatedTasks.push(req.Task);
-                    console.log(req.Task);
                 }
             } else {
                 updatedTasks.push(req.Task);
