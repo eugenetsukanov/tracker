@@ -33,6 +33,25 @@ angular
         return $resource('/api/users/:userId/tasks', {userId: '@_id'}, {update: {method: 'PUT'}});
     })
 
+    .factory('SettingsService', function () {
+        var metricsToggle = 0;
+
+        return {
+            getMetrics: function () {
+                return metricsToggle;
+            },
+            toggleMetrics: function () {
+                if (metricsToggle < 2) {
+                    metricsToggle = metricsToggle += 1
+                    return metricsToggle;
+                } else {
+                    metricsToggle = 0;
+                }
+
+            }
+        }
+    })
+
     .factory('SearchService', function ($q, Task, $stateParams) {
 
         var self = {

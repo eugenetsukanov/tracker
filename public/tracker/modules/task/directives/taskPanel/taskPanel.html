@@ -13,12 +13,12 @@
         </h4>
     </div>
 
-    <div class="panel-body">
+    <div class="panel-body" ng-show="metricsToggle || task.description || task.tags.length">
 
-        <div ng-click="edit(task)" class="fs-sm" task-metrics task="task" task-options="options"></div>
+        <div ng-if="metricsToggle" ng-click="edit(task)" class="fs-sm" task-metrics task="task" task-options="options" metrics-toggle="metricsToggle"></div>
 
         <div ng-if="task.description">
-            <hr/>
+            <hr ng-if="metricsToggle"/>
             <div text-extend="task.description"></div>
         </div>
 

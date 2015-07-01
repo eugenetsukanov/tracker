@@ -12,11 +12,15 @@
 .detail-line li {
     list-style: none;
     display: inline;
-    padding-right: 10px;
+    padding-right: 8px;
 }
 
 hr {
     margin: 10px 0;
+}
+
+.btn {
+    outline: none !important;
 }
 
 .bold {
@@ -130,8 +134,25 @@ hr {
 .task-metrics-widget {
     margin: 0 0 10px;
 }
+.task-metrics li,
 .task-metrics-widget li {
     display: inline-block;
+    line-height: 14px;
+    padding: 2px 5px;
+    margin-right: 5px;
+    border-radius: 10px;
+}
+.task-metrics li:hover,
+.task-metrics-widget li:hover {
+    background: #faf2cc;
+}
+.task-metrics li.nobg,
+.task-metrics-widget li.nobg {
+    padding: 2px 0;
+}
+.task-metrics li.nobg:hover,
+.task-metrics-widget li.nobg:hover {
+    background: transparent;
 }
 
 .pointer {
@@ -204,11 +225,18 @@ hr {
     margin-bottom: 0;
 }
 
+.btn-metrics,
 .board-buttons {
     margin-top: 0;
     position: relative;
     top: -15px;
     z-index: 1;
+}
+.btn-metrics {
+    -webkit-transition: all 300ms ease;
+    -moz-transition:    all 300ms ease;
+    -o-transition:      all 300ms ease;
+    transition:         all 300ms ease;
 }
 
 .edit-form {
@@ -441,6 +469,9 @@ hr {
 }
 .ui-select-multiple.ui-select-bootstrap .ui-select-match .close {
     line-height: .95;
+}
+.panel-default>.panel-heading {
+    border-bottom: none;
 }
 
 

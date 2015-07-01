@@ -1,11 +1,16 @@
 <div class="task-views-block">
-    <div class="btn-group board-buttons" role="group">
-        <button class="btn btn-default btn-sm"
-                ng-click="loadView(aView)"
-                ng-repeat="aView in views"
-                ng-class="{'active': aView == view }">
-            {{aView.title}}
-        </button>
+    <div class="clearfix">
+        <div class="btn-group board-buttons" role="group">
+            <button class="btn btn-default btn-sm"
+                    ng-click="loadView(aView)"
+                    ng-repeat="aView in views"
+                    ng-class="{'active': aView == view }">
+                {{aView.title}}
+            </button>
+        </div>
+
+            <button class="btn btn-default btn-sm btn-metrics" tooltip="{{tooltip}}" ng-click="toggleMetrics()" ng-class="{'btn-warning' : metricsToggle == 1,'btn-info' : metricsToggle == 2}"><i class="fa" ng-class="{'fa-circle-o' : metricsToggle == 0, 'fa-dot-circle-o' : metricsToggle == 1,'fa-circle' : metricsToggle == 2}"></i></button>
+
     </div>
 
     <div class="clearfix"

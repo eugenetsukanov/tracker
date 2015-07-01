@@ -1,18 +1,18 @@
 <ul class="detail-line task-metrics">
 
-    <li tooltip="Status" ng-hide="options.hideStatus">
+    <li tooltip="Status" ng-hide="options.hideStatus" class="nobg">
         <span class="label" task-status="task.status">
             {{task.status || 'new'}}
         </span>
     </li>
 
-    <li ng-if="task.archived">
+    <li ng-if="task.archived" class="nobg">
         <span class="label label-default">
             Archived
         </span>
     </li>
 
-    <li ng-if="task.priority" tooltip="Priority"><i class="fa fa-bolt"></i>&nbsp;{{task.priority}}</li>
+    <li ng-if="metricsToggle == 2 && task.priority" tooltip="Priority"><i class="fa fa-bolt"></i>&nbsp;{{task.priority}}</li>
 
     <li>
         <i class="fa fa-clock-o" tooltip="Time"></i>&nbsp;<span tooltip="Estimated">{{task.estimatedTime| round}}</span>
@@ -21,13 +21,15 @@
     </li>
 
     <li tooltip="Complexity / Points">
-        <i class="fa fa-puzzle-piece"></i>&nbsp;<span ng-if="task.simple">{{task.complexity | humanComplexity}} / </span><span>{{task.points}}p</span>
+        <i class="fa fa-puzzle-piece"></i>&nbsp;<span ng-if="task.simple">{{(task.complexity | humanComplexity) || 0}} / </span><span>{{task.points}}p</span>
     </li>
-    <li ng-if="task.velocity" tooltip="Velocity"><i class="fa fa-line-chart"></i>&nbsp;{{task.velocity| round}}</li>
-    <li ng-if="task.updatedAt" tooltip="Updated {{task.updatedAt | date : 'yyyy/MM/dd HH:mm:ss'}}"><i class="fa fa-refresh"></i>&nbsp;{{task.updatedAt | fromNow}}</li>
-    <li ng-if="task.owner" tooltip="Owner">&nbsp;{{task.owner.local.username}}</li>
-    <li ng-if="task.developer" tooltip="Developer">&nbsp;{{task.developer.local.username}}</li>
+    <li ng-if="metricsToggle == 2 && task.velocity" tooltip="Velocity"><i class="fa fa-line-chart"></i>&nbsp;{{task.velocity| round}}</li>
 
-    <li ng-if="task.files.length > 0" tooltip="Attachments"><i class="fa fa-paperclip"></i>&nbsp;{{task.files.length}}</li>
+    <li ng-if="metricsToggle == 2 && task.owner" tooltip="Owner"><i class="fa fa-user-secret"></i>&nbsp;{{task.owner.local.username}}</li>
+    <li ng-if="task.developer" tooltip="Developer"><i class="fa fa-user"></i>&nbsp;{{task.developer.local.username}}</li>
+
+    <li ng-if="task.updatedAt" tooltip="Updated {{task.updatedAt | date : 'yyyy/MM/dd HH:mm:ss'}}"><i class="fa fa-refresh"></i>&nbsp;{{task.updatedAt | fromNow}}</li>
+
+    <li ng-if="metricsToggle == 2 && task.files.length > 0" tooltip="Attachments"><i class="fa fa-paperclip"></i>&nbsp;{{task.files.length}}</li>
 </ul>
 

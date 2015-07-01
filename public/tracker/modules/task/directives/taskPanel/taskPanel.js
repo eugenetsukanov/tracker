@@ -13,6 +13,7 @@ angular
             },
             scope: {
                 task: "=task",
+                metricsToggle: "=metricsToggle",
                 onEdit: "=taskOnEdit",
                 options: "=taskOptions"
             }

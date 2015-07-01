@@ -5,6 +5,7 @@
 
         <div ng-repeat="task in tasks | byStatus : ''"
              task-panel task="task"
+             metrics-toggle="metricsToggle"
              task-on-edit="edit"
              task-options="taskOptions"></div>
 
@@ -15,6 +16,7 @@
 
         <div ng-repeat="task in tasks | byStatus: 'in progress'"
              task-panel task="task"
+             metrics-toggle="metricsToggle"
              task-on-edit="edit"
              task-options="taskOptions"></div>
     </div>
@@ -24,6 +26,7 @@
 
         <div ng-repeat="task in tasks | byStatus: 'accepted'"
              task-panel task="task"
+             metrics-toggle="metricsToggle"
              task-on-edit="edit"
              task-options="taskOptions"></div>
     </div>
