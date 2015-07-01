@@ -17,8 +17,8 @@ module.exports = function (app) {
 
         var date = Date.parse(req.params.date);
         Task.find({
-                updatedAt: {$gte: getStartDate(date), $lte: getEndDate(date)}
-            })
+            updatedAt: {$gte: getStartDate(date), $lte: getEndDate(date)}
+        })
             .sort('-updatedAt')
             .exec(function (err, tasks) {
                 var tasksReport = [];
@@ -60,24 +60,20 @@ module.exports = function (app) {
                 updatedTasks.push(req.Task);
             }
 
+
             req.Task.deepFindByQuery(match, function (err, tasks) {
                 if (err) return next(err);
+                if (req.query.userId !== '') {
 
-                async.each(tasks, function (task, callback) {
-                    if (req.query.userId !== '') {
-                        if (task.developer.toString() == req.query.userId.toString()) {
-                            updatedTasks.push(task);
-                        }
-                    } else {
-                        updatedTasks.push(task);
-                    }
-                    task.deepFindByQuery(match, callback);
+                    tasks = _.filter(tasks, function (task) {
+                        return task.developer.toString() == req.query.userId.toString();
+                    })
+                }
 
-                }, function (err) {
-                    if (err) return next(err);
-                res.json(updatedTasks)
+                updatedTasks = updatedTasks.concat(tasks);
 
-                });
+                res.json(updatedTasks);
+
 
             });
 
