@@ -22,8 +22,8 @@
         <select ng-if="taskId" ng-model="developer" class="form-control input-sm w-sm pull-left"
                 ng-change="update(developer)"
                 >
-            <option value="" selected>All</option>
-            <option value="{{member.id}}" ng-repeat="member in team">{{member.username}}</option>
+            <option value="">All</option>
+            <option ng-selected="member.id == developer" value="{{member.id}}" ng-repeat="member in team">{{member.username}}</option>
         </select>
     </h5>
 

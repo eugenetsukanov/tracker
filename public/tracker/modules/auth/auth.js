@@ -11,7 +11,10 @@ angular
             user: null,
 
             getUser: function () {
-                return this.user
+                return this.user;
+            },
+            getUserId: function () {
+                return this.user._id;
             },
             getUsers: function () {
                 return User.query();

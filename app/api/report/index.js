@@ -10,15 +10,14 @@ module.exports = function (app) {
     };
 
     var getEndDate = function (date) {
-        return moment(date).startOf('day').add(1, 'd').toDate();
+        return moment(date).endOf('day').toDate();
     };
 
-    app.get('/api/tasks/report/:date', function (req, res, next) {
+    app.get('/api/tasks/report/:date', function (req, res) {
 
         var date = Date.parse(req.params.date);
         Task.find({
-                updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
-                //status: {$ne: ''}
+                updatedAt: {$gte: getStartDate(date), $lte: getEndDate(date)}
             })
             .sort('-updatedAt')
             .exec(function (err, tasks) {
@@ -43,8 +42,7 @@ module.exports = function (app) {
 
         var date = Date.parse(req.params.date) || Date.now();
         var match = {
-            updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)},
-            //status: {$ne: ''}
+            updatedAt: {$gte: getStartDate(date), $lte: getEndDate(date)}
         };
 
         var query = {

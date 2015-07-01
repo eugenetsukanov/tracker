@@ -10,13 +10,15 @@ angular
                 taskId: '=',
                 date: '=?',
                 metrics: '=',
-                status: '='
+                status: '=',
+                userId: '=userId'
             },
+
             controller: function ($scope, $stateParams, Team) {
 
                 $scope.taskId = $stateParams.taskId;
 
-                $scope.developer = '';
+                $scope.developer = $scope.userId || '';
                 $scope.team = [];
 
                 $scope.date = $scope.date || new Date();

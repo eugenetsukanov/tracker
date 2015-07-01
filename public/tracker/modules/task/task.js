@@ -15,7 +15,7 @@ angular
             name: "report"
         };
 
-        $scope.userId = UserService.getUser()._id;
+        $scope.userId = UserService.getUserId();
         $scope.taskId = $stateParams.taskId;
 
         $scope.init = function () {
