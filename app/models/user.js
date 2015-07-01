@@ -6,7 +6,9 @@ var UserSchema = new Schema({
 
     local: {
         username: {type: String, index: true},
-
+        firstName: String,
+        lastName: String,
+        email: String,
         passwordSalt: String,
         passwordHashed: String
     }
