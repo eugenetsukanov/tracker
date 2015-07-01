@@ -296,8 +296,30 @@ TaskSchema.methods = {
 
         })
     },
+    deepFindByQuery: function (query, next) {
+        this.getChildrenByQuery(query, function (err, children) {
+            if (err) return next(err);
+            var tasks = [];
 
-    getChildrenChanged: function (query, next) {
+            async.each(children, function (task, callback) {
+
+                tasks.push(task);
+
+                task.deepFindByQuery(query, function (err, aTasks) {
+                    if (err) return next(err);
+                    tasks = tasks.concat(aTasks);
+                    callback();
+                });
+
+            }, function (err) {
+                if (err) return next(err);
+                next(null, tasks);
+            });
+
+        })
+    },
+
+    getChildrenByQuery: function (query, next) {
         var query = _.extend({parentTaskId: this}, query);
 
         Task.find(query, function (err, tasks) {
