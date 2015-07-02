@@ -22,7 +22,8 @@ angular
                     $scope.$watch('UserService.user._id', function (id) {
                         if (id) {
                             $scope.user = UserService.getUser();
-                            $scope.$watch('[UserService.user.local.username, UserService.user.first, UserService.user.last]', function (userdata) {
+                            $scope.$watch('[UserService.user.local.username,' +
+                                ' UserService.user.first, UserService.user.last]', function (userdata) {
                                 $scope.displayName = function () {
                                     if ((userdata[1] + '').length || (userdata[2] + '').length) {
                                         var result = '';

@@ -36,7 +36,8 @@ module.exports = function (app, passport, nodemailer) {
         verifyToken(req.query.token, function () {
 
             var decoded = jwt.decode(req.query.token, {complete: true});
-            User.findById(decoded.payload, '-local.passwordHashed -local.passwordSalt', function (err, user) {
+
+            User.findById(decoded.payload.userId, '-local.passwordHashed -local.passwordSalt', function (err, user) {
                 if (err) return next(err);
 
                 user.local.password = req.query.password;
@@ -72,9 +73,7 @@ module.exports = function (app, passport, nodemailer) {
 
             if (user && user.local.username == req.body.username) {
 
-                var preToken = user._id;
-
-                var token = issueToken(preToken);
+                var token = issueToken({userId: user._id});
 
                 transporter.sendMail({
                     from: emailSender,
