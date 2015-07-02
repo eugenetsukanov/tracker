@@ -5,9 +5,9 @@ module.exports = function (app, passport, nodemailer) {
         field = form.field;
 
     var UserForm = form(
-        field("local.firstName").trim(),
-        field("local.lastName").trim(),
-        field("local.email").trim().required().isEmail()
+        field("first").trim(),
+        field("last").trim(),
+        field("email").trim().required().isEmail()
     );
 
     var jwt = require('jsonwebtoken');
@@ -62,7 +62,7 @@ module.exports = function (app, passport, nodemailer) {
 
     app.post('/api/resetPassword', function (req, res, next) {
 
-        User.findOne({'local.email': req.body.email}, function (err, user) {
+        User.findOne({'email': req.body.email}, function (err, user) {
 
             if (err) return next(err);
 
@@ -78,7 +78,7 @@ module.exports = function (app, passport, nodemailer) {
 
                 transporter.sendMail({
                     from: emailSender,
-                    to: user.local.email,
+                    to: user.email,
                     subject: 'Password reset',
                     text: 'http://192.168.10.21:3000/#/public/change-password/' + token
                 });
@@ -96,17 +96,11 @@ module.exports = function (app, passport, nodemailer) {
         User.findOne({'local.username': req.body.username}, function (err, user) {
             if (err) return next(err);
 
-            var o = false;
-
-            if (user) {
-                o = true;
-            }
-
-            if (!o) {
+            if (!user) {
                 var user = new User({
+                    email: req.body.email,
                     local: {
                         username: req.body.username,
-                        email: req.body.email,
                         password: req.body.password
                     }
                 });
@@ -142,15 +136,14 @@ module.exports = function (app, passport, nodemailer) {
     });
 
     app.put('/api/users/me', UserForm, function (req, res, next) {
-
         if (req.form.isValid) {
 
             User.findById(req.body._id, '-local.passwordHashed -local.passwordSalt', function (err, user) {
                 if (err) return next(err);
 
-                user.local.firstName = req.form.local.firstName;
-                user.local.lastName = req.form.local.lastName;
-                user.local.email = req.form.local.email;
+                user.first = req.form.first;
+                user.last = req.form.last;
+                user.email = req.form.email;
 
                 user.save(function (err, user) {
                     if (err) return next(err);
@@ -166,23 +159,25 @@ module.exports = function (app, passport, nodemailer) {
 
 
     app.post('/api/users/changePassword', function (req, res, next) {
-
-        User.findById(req.body._id, '-local.passwordHashed -local.passwordSalt', function (err, user) {
+        User.findById(req.body._id, function (err, user) {
 
             if (err) return next(err);
 
             var verify = function () {
-                if (user.validPassword(req.body.oldPassword)) {
+
+                if (user.validPassword(req.query.oldPassword)) {
                     return true;
                 }
             }();
 
             if (verify) {
 
-                user.setPassword(req.body.newPassword);
+                user.setPassword(req.query.newPassword);
 
                 user.save(function (err, user) {
                     if (err) return next(err);
+                    user.local.passwordSalt = undefined;
+                    user.local.passwordHashed = undefined;
                     res.json(user);
                 });
 

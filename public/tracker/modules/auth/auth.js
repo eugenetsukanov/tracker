@@ -107,26 +107,23 @@ angular
         $scope.oldPassword = '';
         $scope.newPassword = '';
         $scope.newPasswordConfirm = '';
-        $scope.email = $scope.user.email || '';
+        $scope.user.email = $scope.user.email || '';
 
         $scope.save = function () {
-            $scope.user.firstName = $scope.firstName;
-            $scope.user.lastName = $scope.lastName;
-            $scope.user.email = $scope.email;
 
             $scope.user.$update({
                 nested: 'me'
             }, function () {
 
                 toaster.pop({
-                    title: 'Saved',
+                    title: 'Saved'
                 });
 
             }, function (err) {
 
                 toaster.pop({
                     type: 'error',
-                    title: err.statusText,
+                    title: err.statusText
                 });
 
             });
@@ -134,11 +131,11 @@ angular
 
         $scope.passwordChange = function () {
             if ($scope.newPassword == $scope.newPasswordConfirm && $scope.newPassword !== $scope.oldPassword) {
-                $scope.user.oldPassword = $scope.oldPassword;
-                $scope.user.newPassword = $scope.newPassword;
 
                 $scope.user.$save({
-                    nested: 'changePassword'
+                    nested: 'changePassword',
+                    newPassword: $scope.newPassword,
+                    oldPassword: $scope.oldPassword
                 }, function () {
 
                     toaster.pop({
