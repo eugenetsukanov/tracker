@@ -11,7 +11,7 @@ angular
             .state('app', {
                 url: "/app",
                 templateUrl: "tracker/tracker.html",
-                controller: function ($scope, UserService, SearchService, toasterConfig, User, $q) {
+                controller: function ($scope, UserService, SearchService, toasterConfig) {
 
                     toasterConfig['prevent-duplicates'] = true;
 
@@ -19,6 +19,7 @@ angular
 
                     $scope.UserService = UserService;
                     $scope.displayName = '';
+
                     $scope.$watch('UserService.user._id', function (id) {
                         if (id) {
                             $scope.user = UserService.getUser();

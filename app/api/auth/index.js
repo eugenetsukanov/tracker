@@ -1,5 +1,7 @@
 module.exports = function (app, passport, nodemailer) {
 
+    var Tokenizer = app.container.get('Tokenizer');
+
     var User = require('../../models/user');
     var form = require("express-form"),
         field = form.field;
@@ -9,17 +11,6 @@ module.exports = function (app, passport, nodemailer) {
         field("last").trim(),
         field("email").trim().required().isEmail()
     );
-
-    var jwt = require('jsonwebtoken');
-
-    var issueToken = function (payload) {
-        var token = jwt.sign(payload, process.env.TOKEN_SECRET || "tracker");
-        return token;
-    };
-
-    var verifyToken = function (token, verified) {
-        return jwt.verify(token, process.env.TOKEN_SECRET || "tracker", {}, verified);
-    };
 
     var emailSender = 'mailtotesthere@gmail.com';
 
@@ -33,11 +24,11 @@ module.exports = function (app, passport, nodemailer) {
 
     app.post('/api/users/resetPassword', function (req, res, next) {
 
-        verifyToken(req.query.token, function () {
+        Tokenizer.verify(req.query.token, function () {
 
-            var decoded = jwt.decode(req.query.token, {complete: true});
+            var decodedToken = Tokenizer.decode(req.query.token);
 
-            User.findById(decoded.payload.userId, '-local.passwordHashed -local.passwordSalt', function (err, user) {
+            User.findById(decodedToken.payload.userId, '-local.passwordHashed -local.passwordSalt', function (err, user) {
                 if (err) return next(err);
 
                 user.local.password = req.query.password;
@@ -73,7 +64,7 @@ module.exports = function (app, passport, nodemailer) {
 
             if (user && user.local.username == req.body.username) {
 
-                var token = issueToken({userId: user._id});
+                var token = Tokenizer.encode({userId: user._id});
 
                 transporter.sendMail({
                     from: emailSender,
