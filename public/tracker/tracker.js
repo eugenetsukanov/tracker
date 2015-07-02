@@ -11,40 +11,33 @@ angular
             .state('app', {
                 url: "/app",
                 templateUrl: "tracker/tracker.html",
-                controller: function ($scope, UserService, SearchService, toasterConfig) {
+                controller: function ($scope, UserService, SearchService, toasterConfig, User, $q) {
 
                     toasterConfig['prevent-duplicates'] = true;
 
                     $scope.SearchService = SearchService;
 
                     $scope.UserService = UserService;
-
+                    $scope.displayName = '';
                     $scope.$watch('UserService.user._id', function (id) {
                         if (id) {
                             $scope.user = UserService.getUser();
+                            $scope.$watch('[UserService.user.local.username, UserService.user.first, UserService.user.last]', function (userdata) {
+                                $scope.displayName = function () {
+                                    if ((userdata[1] + '').length || (userdata[2] + '').length) {
+                                        var result = '';
+                                        result += userdata[1] ? userdata[1] : '';
+                                        result += userdata[2] ? ' ' + userdata[2] : '';
+                                    } else {
+                                        result = userdata[0];
+                                    }
+                                    return result.trim();
+                                }();
+                            });
                         } else {
                             $scope.user = null;
                         }
                     });
-
-                    $scope.displayName = '';
-
-                    $scope.$watch('UserService.user.local', function (local) {
-                        if (local) {
-                            $scope.displayName = function () {
-                                if (local.firstName || local.lastName) {
-                                    var result = '';
-                                    result += local.firstName ? local.firstName : '';
-                                    result += local.lastName ? ' ' + local.lastName : '';
-                                } else {
-                                    result = local.username;
-                                }
-                                return result.trim();
-                            }();
-                        }
-                    });
-
-
                 }
             })
             .state('app.tasks', {
