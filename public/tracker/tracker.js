@@ -11,7 +11,7 @@ angular
             .state('app', {
                 url: "/app",
                 templateUrl: "tracker/tracker.html",
-                controller: function ($scope, UserService, SearchService, toasterConfig, User, $q) {
+                controller: function ($scope, UserService, SearchService, toasterConfig) {
 
                     toasterConfig['prevent-duplicates'] = true;
 
@@ -19,10 +19,12 @@ angular
 
                     $scope.UserService = UserService;
                     $scope.displayName = '';
+
                     $scope.$watch('UserService.user._id', function (id) {
                         if (id) {
                             $scope.user = UserService.getUser();
-                            $scope.$watch('[UserService.user.local.username, UserService.user.first, UserService.user.last]', function (userdata) {
+                            $scope.$watch('[UserService.user.local.username,' +
+                                ' UserService.user.first, UserService.user.last]', function (userdata) {
                                 $scope.displayName = function () {
                                     if ((userdata[1] + '').length || (userdata[2] + '').length) {
                                         var result = '';

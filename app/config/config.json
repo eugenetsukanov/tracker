@@ -5,6 +5,12 @@
   "session": {
     "secret": "tracker$app$$secrettttt"
   },
+  "host": {
+    "url": "http://localhost:4000"
+  },
+  "tokenizer":{
+    "secret": "tracker$ker$app$$secret"
+  },
   "mongo": {
     "uri": "mongodb://localhost/tracker"
   },

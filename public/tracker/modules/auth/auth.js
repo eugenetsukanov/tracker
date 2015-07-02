@@ -47,6 +47,10 @@ angular
     })
     .controller('LoginCtrl', function ($scope, Login, $state, UserService, toaster) {
 
+        if(UserService.getUser()){
+            $state.go('app.tasks');
+        }
+
         $scope.login = function () {
 
             Login.save({
@@ -85,6 +89,10 @@ angular
     })
 
     .controller('RegisterCtrl', function ($scope, Register, $state, UserService) {
+
+        if(UserService.getUser()){
+            $state.go('app.tasks');
+        }
 
         $scope.register = function () {
             Register.save({
@@ -164,7 +172,11 @@ angular
         return $resource('/api/resetPassword');
     })
 
-    .controller('resetPasswordCtrl', function ($scope, resetPassword, toaster, User, $state, $stateParams) {
+    .controller('resetPasswordCtrl', function ($scope, resetPassword, toaster, User, UserService, $state, $stateParams) {
+
+        if(UserService.getUser()){
+            $state.go('app.tasks');
+        }
 
         $scope.username = '';
         $scope.email = '';

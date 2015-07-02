@@ -15,6 +15,7 @@ var passport = require('passport');
 
 app.container.get('Mongoose');
 app.container.get('GridFS');
+app.container.get('Tokenizer');
 
 app.use(cookieParser());
 app.use(bodyParser.json());
