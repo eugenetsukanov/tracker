@@ -24,11 +24,10 @@ module.exports = function (app, passport, nodemailer) {
 
     app.post('/api/users/resetPassword', function (req, res, next) {
 
-        Tokenizer.verify(req.query.token, function () {
+        Tokenizer.decode(req.query.token, function (err, decoded) {
+            if (err) return next(err);
 
-            var decodedToken = Tokenizer.decode(req.query.token);
-
-            User.findById(decodedToken.payload.userId, '-local.passwordHashed -local.passwordSalt', function (err, user) {
+            User.findById(decoded.userId, '-local.passwordHashed -local.passwordSalt', function (err, user) {
                 if (err) return next(err);
 
                 user.local.password = req.query.password;
@@ -59,24 +58,23 @@ module.exports = function (app, passport, nodemailer) {
             if (err) return next(err);
 
             if (!user) {
-                res.sendStatus(400);
+                return res.sendStatus(400);
             }
 
-            if (user && user.local.username == req.body.username) {
+            Tokenizer.encode({userId: user._id}, function (err, token) {
 
-                var token = Tokenizer.encode({userId: user._id});
+                if (err) return res.sendStatus(400);
 
                 transporter.sendMail({
                     from: emailSender,
                     to: user.email,
                     subject: 'Password reset',
-                    text: 'http://192.168.10.21:3000/#/public/change-password/' + token
+                    text: 'http://192.168.10.20:3000/#/public/change-password/' + token
                 });
 
                 res.sendStatus(200);
-            } else {
-                res.sendStatus(400);
-            }
+
+            });
         });
 
     });

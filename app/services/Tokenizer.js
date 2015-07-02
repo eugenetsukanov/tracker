@@ -4,16 +4,14 @@ var Tokenizer = function (secret) {
 
     var secret = secret || 'tracker';
 
-    this.encode = function (data) {
-        return jwt.sign(data, secret);
+    this.encode = function (data, next) {
+        next(null, jwt.sign(data, secret, {expiresInSeconds: 24*60*60}));
     };
 
-    this.verify = function (token, verified) {
-        return jwt.verify(token, secret, {}, verified);
-    };
-
-    this.decode = function (token) {
-        return jwt.decode(token, {complete: true});
+    this.decode = function (token, next) {
+        jwt.verify(token,secret, function (err, decoded) {
+            next(err, decoded)
+        });
     };
 
 };
