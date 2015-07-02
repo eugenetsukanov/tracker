@@ -163,14 +163,7 @@ module.exports = function (app, passport, nodemailer) {
 
             if (err) return next(err);
 
-            var verify = function () {
-
-                if (user.validPassword(req.query.oldPassword)) {
-                    return true;
-                }
-            }();
-
-            if (verify) {
+            if (user.validPassword(req.query.oldPassword)) {
 
                 user.setPassword(req.query.newPassword);
 
