@@ -1,6 +1,8 @@
-module.exports = function (app, passport, nodemailer) {
+module.exports = function (app, passport) {
 
     var Tokenizer = app.container.get('Tokenizer');
+    var Mailer = app.container.get('Mailer');
+    var Host = app.container.get('Host');
 
     var User = require('../../models/user');
     var form = require("express-form"),
@@ -11,16 +13,6 @@ module.exports = function (app, passport, nodemailer) {
         field("last").trim(),
         field("email").trim().required().isEmail()
     );
-
-    var emailSender = 'mailtotesthere@gmail.com';
-
-    var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-            user: emailSender,
-            pass: 'xxx666up'
-        }
-    });
 
     app.post('/api/users/resetPassword', function (req, res, next) {
 
@@ -65,12 +57,13 @@ module.exports = function (app, passport, nodemailer) {
 
                 if (err) return res.sendStatus(400);
 
-                transporter.sendMail({
-                    from: emailSender,
+                mailSettings = {
                     to: user.email,
                     subject: 'Password reset',
-                    text: 'http://192.168.10.20:3000/#/public/change-password/' + token
-                });
+                    text: Host.getUrl('/#/public/change-password/' + token)
+                };
+
+                Mailer.send(mailSettings);
 
                 res.sendStatus(200);
 

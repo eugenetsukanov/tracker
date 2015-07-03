@@ -11,6 +11,9 @@
   "tokenizer":{
     "secret": "tracker$ker$app$$secret"
   },
+  "mailer": {
+    "sender": "mailtotesthere@gmail.com"
+  },
   "mongo": {
     "uri": "mongodb://localhost/tracker"
   },

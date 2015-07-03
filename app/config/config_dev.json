@@ -3,7 +3,7 @@
     "port": 3000
   },
   "host": {
-    "url": "http://192.168.10.21:3000"
+    "url": "http://192.168.10.20:3000"
   },
   "mongo": {
     "uri": "mongodb://localhost/tracker_dev"

@@ -1,8 +1,8 @@
-var Tokenizer = function (secret) {
+var Tokenizer = function (_secret) {
 
     var jwt = require('jsonwebtoken');
 
-    var secret = secret || 'tracker';
+    var secret = _secret || 'tracker';
 
     this.encode = function (data, next) {
         next(null, jwt.sign(data, secret, {expiresInSeconds: 24*60*60}));
