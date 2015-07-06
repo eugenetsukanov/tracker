@@ -7,7 +7,7 @@ angular
             restrict: 'E',
             scope: {
                 task: '=',
-                metricsToggle: "=metricsToggle",
+                metricsDetails: "=metricsDetails",
                 edit: '=taskOnEdit'
             },
             templateUrl: 'tracker/modules/task/directives/taskTree/taskTree.html',
@@ -23,11 +23,11 @@ angular
                             myScope.task = task;
                             myScope.edit = scope.edit || null;
 
-                            scope.$watch('metricsToggle', function (toggler) {
-                                myScope.metricsToggle = toggler;
+                            scope.$watch('metricsDetails', function (toggler) {
+                                myScope.metricsDetails = toggler;
                             });
 
-                            var $el = $compile("<task-tree task='task' task-on-edit='edit' metrics-toggle='metricsToggle'></task-tree>")(myScope);
+                            var $el = $compile("<task-tree task='task' task-on-edit='edit' metrics-details='metricsDetails'></task-tree>")(myScope);
                             element.append($el);
 
                         });

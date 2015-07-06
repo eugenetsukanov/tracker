@@ -34,19 +34,40 @@ angular
     })
 
     .factory('SettingsService', function () {
-        var metricsToggle = 0;
+
+        var storage = {
+            metricsDetails: 0
+        };
 
         return {
-            getMetrics: function () {
-                return metricsToggle;
+            getProperty: function (name) {
+                return storage[name];
             },
-            toggleMetrics: function () {
-                if (metricsToggle < 2) {
-                    metricsToggle += 1
-                    return metricsToggle;
+            setProperty: function (name, value) {
+                storage[name] = value;
+            }
+
+        }
+    })
+
+    .factory('MetricsService', function (SettingsService) {
+        return {
+
+            getMetrics: function () {
+                return SettingsService.getProperty('metricsDetails');
+            },
+
+            getNewMetrics: function () {
+
+                var metricsDetails = SettingsService.getProperty('metricsDetails');
+
+                if (metricsDetails < 2) {
+                    metricsDetails += 1;
                 } else {
-                    metricsToggle = 0;
+                    metricsDetails = 0;
                 }
+
+                SettingsService.setProperty('metricsDetails', metricsDetails);
 
             }
         }

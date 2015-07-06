@@ -7,7 +7,7 @@ angular
             templateUrl: 'tracker/modules/task/directives/taskMetrics/taskMetrics.html',
             scope: {
                 task: "=task",
-                metricsToggle: "=metricsToggle",
+                metricsDetails: "=metricsDetails",
                 options: "=taskOptions"
             }
         }
