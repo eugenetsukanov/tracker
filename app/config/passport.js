@@ -9,7 +9,7 @@ module.exports = function (passport) {
     });
 
     passport.deserializeUser(function(id, done) {
-        User.findById(id, function(err, user) {
+        User.findById(id, '-local.passwordHashed -local.passwordSalt', function(err, user) {
             done(err, user);
         });
     });

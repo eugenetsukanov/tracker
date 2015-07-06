@@ -107,9 +107,7 @@ module.exports = function (app, passport) {
     });
 
     app.get('/api/users/me', function (req, res) {
-        User.findOne({_id: req.user._id}, '-local.passwordHashed -local.passwordSalt', function (err, user) {
-            res.json(user);
-        });
+        res.json(req.user);
     });
 
     app.get('/api/users', function (req, res) {
@@ -122,17 +120,13 @@ module.exports = function (app, passport) {
     app.put('/api/users/me', UserForm, function (req, res, next) {
         if (req.form.isValid) {
 
-            User.findById(req.body._id, '-local.passwordHashed -local.passwordSalt', function (err, user) {
+            req.user.first = req.form.first;
+            req.user.last = req.form.last;
+            req.user.email = req.form.email;
+
+            req.user.save(function (err, user) {
                 if (err) return next(err);
-
-                user.first = req.form.first;
-                user.last = req.form.last;
-                user.email = req.form.email;
-
-                user.save(function (err, user) {
-                    if (err) return next(err);
-                    res.json(user);
-                });
+                res.json(user);
             });
         }
         else {
@@ -143,26 +137,21 @@ module.exports = function (app, passport) {
 
 
     app.post('/api/users/changePassword', function (req, res, next) {
-        User.findById(req.body._id, function (err, user) {
 
-            if (err) return next(err);
+        if (req.user.validPassword(req.query.oldPassword)) {
 
-            if (user.validPassword(req.query.oldPassword)) {
+            req.user.setPassword(req.query.newPassword);
 
-                user.setPassword(req.query.newPassword);
+            req.user.save(function (err, user) {
+                if (err) return next(err);
+                user.local.passwordSalt = undefined;
+                user.local.passwordHashed = undefined;
+                res.json(user);
+            });
 
-                user.save(function (err, user) {
-                    if (err) return next(err);
-                    user.local.passwordSalt = undefined;
-                    user.local.passwordHashed = undefined;
-                    res.json(user);
-                });
-
-            } else {
-                res.sendStatus(403);
-            }
-
-        });
+        } else {
+            res.sendStatus(403);
+        }
 
     });
 

@@ -18,27 +18,10 @@ angular
                     $scope.SearchService = SearchService;
 
                     $scope.UserService = UserService;
-                    $scope.user = UserService.getUser();
-                    $scope.displayName = '';
 
-
-                    console.log($scope.user);
                     $scope.$watch('UserService.user._id', function (id) {
                         if (id) {
                             $scope.user = $scope.user || UserService.getUser();
-                            $scope.$watch('[UserService.user.local.username,' +
-                                ' UserService.user.first, UserService.user.last]', function (userdata) {
-                                $scope.displayName = function () {
-                                    if ((userdata[1] + '').length || (userdata[2] + '').length) {
-                                        var result = '';
-                                        result += userdata[1] ? userdata[1] : '';
-                                        result += userdata[2] ? ' ' + userdata[2] : '';
-                                    } else {
-                                        result = userdata[0];
-                                    }
-                                    return result.trim();
-                                }();
-                            });
                         } else {
                             $scope.user = null;
                         }

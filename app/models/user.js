@@ -15,6 +15,8 @@ var UserSchema = new Schema({
 
 });
 
+UserSchema.set('toJSON', { getters: true, virtuals: true });
+
 function hash(data) {
     return crypto
         .createHash("sha256")
@@ -39,6 +41,19 @@ UserSchema.methods = {
 
 UserSchema.virtual('local.password').set(function (password) {
     this.setPassword(password);
+});
+
+UserSchema.virtual('name').get(function () {
+    var name = '';
+
+    if (this.first || this.last) {
+        name += this.first ? this.first : '';
+        name += this.last ? ' ' + this.last : '';
+    } else {
+        name = this.local.username;
+    }
+
+    return name;
 });
 
 module.exports = mongoose.model('User', UserSchema);
