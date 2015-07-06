@@ -45,6 +45,12 @@ module.exports = function (app, passport) {
 
     app.post('/api/resetPassword', function (req, res, next) {
 
+        var mailSettings = {
+            to: user.email,
+            subject: 'Password reset',
+            text: Host.getUrl('/#/public/change-password/' + token)
+        };
+
         User.findOne({'email': req.body.email}, function (err, user) {
 
             if (err) return next(err);
@@ -56,12 +62,6 @@ module.exports = function (app, passport) {
             Tokenizer.encode({userId: user._id}, function (err, token) {
 
                 if (err) return res.sendStatus(400);
-
-                mailSettings = {
-                    to: user.email,
-                    subject: 'Password reset',
-                    text: Host.getUrl('/#/public/change-password/' + token)
-                };
 
                 Mailer.send(mailSettings);
 
