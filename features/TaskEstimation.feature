@@ -1,7 +1,5 @@
 Feature: TaskEstimation
 
-  hgfhgfhgfh
-
   Background:
     Given Home page
 
