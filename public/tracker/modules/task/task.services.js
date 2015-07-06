@@ -42,7 +42,7 @@ angular
             },
             toggleMetrics: function () {
                 if (metricsToggle < 2) {
-                    metricsToggle = metricsToggle += 1
+                    metricsToggle += 1
                     return metricsToggle;
                 } else {
                     metricsToggle = 0;
