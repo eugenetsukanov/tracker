@@ -18,11 +18,14 @@ angular
                     $scope.SearchService = SearchService;
 
                     $scope.UserService = UserService;
+                    $scope.user = UserService.getUser();
                     $scope.displayName = '';
 
+
+                    console.log($scope.user);
                     $scope.$watch('UserService.user._id', function (id) {
                         if (id) {
-                            $scope.user = UserService.getUser();
+                            $scope.user = $scope.user || UserService.getUser();
                             $scope.$watch('[UserService.user.local.username,' +
                                 ' UserService.user.first, UserService.user.last]', function (userdata) {
                                 $scope.displayName = function () {

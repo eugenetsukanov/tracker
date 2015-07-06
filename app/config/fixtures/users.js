@@ -7,8 +7,8 @@ function ObjectId(str) {
 exports.users = [
     {
         "_id" : ObjectId("5514462ae4eb270b4f115c2c"),
-        firstName: 'Andy',
-        lastName: 'Garcia',
+        first: 'Andy',
+        last: 'Garcia',
         email: 'mailtotesthere@gmail.com',
         local: {
             username: 'test',
@@ -18,8 +18,8 @@ exports.users = [
     },
     {
         "_id" : ObjectId("5514462ae4eb270b4f115c3c"),
-        firstName: 'Danny',
-        lastName: 'Trejo',
+        first: 'Danny',
+        last: 'Trejo',
         email: 'test2@gmail.com',
         local: {
             username: 'test2',
@@ -29,8 +29,8 @@ exports.users = [
     },
     {
         "_id" : ObjectId("5514462ae4eb270b4f115c4c"),
-        firstName: 'Arnie',
-        lastName: 'Shwarziniggah',
+        first: 'Arnie',
+        last: 'Shwarziniggah',
         email: 'test3@gmail.com',
         local: {
             username: 'test3',

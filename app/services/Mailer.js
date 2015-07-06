@@ -11,12 +11,14 @@ var Mailer = function (sender) {
         }
     });
 
-    this.send = function (mail) {
+    this.send = function (mail, callback) {
         transporter.sendMail({
             from: mail.from || emailSender,
             to: mail.to,
             subject: mail.subject,
             text: mail.text
+        }, function (err, info) {
+            callback(err, info);
         });
     }
 };
