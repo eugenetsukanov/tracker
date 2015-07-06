@@ -1,7 +1,7 @@
 <div class="row profile">
     <div class="col-md-6 col-md-offset-3">
         <h4 class="bold align-center">{{user.local.username}}</h4>
-        <form ng-submit="save()" class="form-horizontal">
+        <form ng-submit="save()" class="form-horizontal myprofile">
             <ul>
                 <li class="form-group form-group-sm">
                     <label for="firstName" class="col-sm-3 control-label">First&nbsp;Name</label>
@@ -38,7 +38,7 @@
                 </li>
                 <li class="form-group">
                     <div class="col-sm-7 col-sm-offset-3">
-                        <a ng-click="changePass = !changePass" class="btn btn-link btn-sm pull-right">Change&nbsp;Password</a>
+                        <a ng-click="changePass = !changePass" class="btn btn-link btn-sm pull-right change-password-btn">Change&nbsp;Password</a>
                         <button type="submit" class="btn btn-primary btn-sm pull-left">Save</button>
                     </div>
                 </li>

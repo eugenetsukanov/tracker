@@ -138,20 +138,22 @@ module.exports = function (app, passport) {
 
     app.post('/api/users/changePassword', function (req, res, next) {
 
-        if (req.user.validPassword(req.query.oldPassword)) {
+        User.findById(req.user._id, function (err, user) {
+            if (user.validPassword(req.query.oldPassword)) {
 
-            req.user.setPassword(req.query.newPassword);
+                user.setPassword(req.query.newPassword);
 
-            req.user.save(function (err, user) {
-                if (err) return next(err);
-                user.local.passwordSalt = undefined;
-                user.local.passwordHashed = undefined;
-                res.json(user);
-            });
+                user.save(function (err, user) {
+                    if (err) return next(err);
+                    user.local.passwordSalt = undefined;
+                    user.local.passwordHashed = undefined;
+                    res.json(user);
+                });
 
-        } else {
-            res.sendStatus(403);
-        }
+            } else {
+                res.sendStatus(403);
+            }
+        });
 
     });
 

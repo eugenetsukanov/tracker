@@ -1,6 +1,6 @@
 Feature: Profile
 
-  @wip
+
   Background:
     Given Home page
 
@@ -30,5 +30,29 @@ Feature: Profile
     And I see last name "Banderas" in form
     And I see email "antonio_banderas@mail.com" in form
 
+  @wip
+  Scenario: Change Password
 
+    Then I click my profile link
+    Then I see my profile form
+
+    Then I click Change Password link
+    Then I see change password form
+
+    Then I type "test" in Old Password field
+    Then I type "111" in New Password field
+    Then I type "111" in Confirm Password field
+
+    Then I click Change button
+
+    Then I sleep 4
+
+    Then I click Logout button
+
+    Then I see sign in form
+    When I type username "test"
+    When I type password "111"
+
+    And click on log in button
+    And I see task board
 
