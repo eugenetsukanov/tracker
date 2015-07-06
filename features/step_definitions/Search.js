@@ -60,4 +60,24 @@ module.exports = function () {
         );
     });
 
+    this.Then(/^I click on edit button$/, function (callback) {
+        this.iClick('a:contains("task 1.2") + span[ng-click="edit(task)"]', callback);
+    });
+
+    this.Then(/^I see edit form$/, function (callback) {
+        this.iSee('.modal-box>div[task-editor]', callback);
+    });
+
+    this.Then(/^I see title field$/, function (callback) {
+       this.iSee('.modal-box>div[task-editor] input[ng-model="task.title"]', callback);
+    });
+
+    this.Then(/^I type "([^"]*)"$/, function (arg1, callback) {
+        this.iType('.modal-box>div[task-editor] input[ng-model="task.title"]', arg1, callback);
+    });
+
+    this.Then(/^I reload page$/, function (callback) {
+       this.iReload(callback);
+    });
+
 };

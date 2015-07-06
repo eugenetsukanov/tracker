@@ -69,4 +69,22 @@ Feature: Search
     When I search "super-tag"
     And I see task "task 1.1"
 
+    @wip
+  Scenario: Edit on search page
 
+    Then I see task "task 1"
+    Then I click on task link "task 1"
+
+    Then I see search form
+    When I search "task"
+    Then I see task "task 1.2"
+
+    Then I click on edit button
+    Then I see edit form
+    And I see title field
+
+    Then I type "task 1.2 updated"
+    Then I click on save button
+
+    Then I reload page
+    And I see task "task 1.2 updated"
