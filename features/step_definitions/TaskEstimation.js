@@ -28,6 +28,12 @@ module.exports = function () {
         this.iSee("ul.task-metrics li[tooltip='Complexity / Points']:contains('" + arg1 + "')", callback);
     });
 
+    this.Then(/^I see task "([^"]*)" complexity "([^"]*)"$/, function (arg1, arg2, callback) {
+        this.chain
+            .iSee(' div h4 a:contains("' +arg1+ '")')
+            .iSee("ul.task-metrics li[tooltip='Complexity / Points']:contains('" + arg2 + "')")
+            .then(callback);
+    });
 
     this.Then(/^I click on task status "([^"]*)"$/, function (arg1, callback) {
         this.iClick("form div.btn-group label[ng-model='task.status']:contains('" + arg1 + "')", callback);
@@ -36,6 +42,44 @@ module.exports = function () {
     this.Then(/^I type task spent time "([^"]*)"$/, function (arg1, callback) {
         this.iType("form input[ng-model='task.spenttime']", arg1, callback);
     });
+
+    this.Then(/^I see task "([^"]*)" velocity "([^"]*)"$/, function (arg1, arg2, callback) {
+        this.chain
+            .iSee('.board-view a:contains("' +arg1+ '")')
+            .iSee('.board-view ul li[tooltip="Velocity"]("' +arg2+ '")')
+            .then(callback);
+    });
+
+    this.Then(/^I see task "([^"]*)" estimated time "([^"]*)"$/, function (arg1, arg2, callback) {
+        this.chain
+            .iSee('.board-view a:contains("' +arg1+ '")')
+            .iSee('.board-view ul li span[tooltip="Estimated"]:contains("' +arg2+ '")')
+            .then(callback);
+    });
+
+    this.Then(/^I click back to project "([^"]*)"$/, function (arg1, callback) {
+        this.iClick('div a:contains("' +arg1+ '")', callback);
+    });
+
+    this.Then(/^I see parent "([^"]*)" estimated time "([^"]*)"$/, function (arg1, arg2, callback) {
+        this.chain
+            .iSee('div h2:contains("' +arg1+ '")')
+            .iSee('div[ng-hide="task._id == newTask._id"] li span[tooltip="Estimated"]:contains("' +arg2+ '")')
+            .then(callback);
+    });
+
+    this.Then(/^I see parent "([^"]*)" complexity "([^"]*)"$/, function (arg1, arg2, callback) {
+        this.chain
+            .iSee('div h2:contains("' +arg1+ '")')
+            .iSee('div[ng-hide="task._id == newTask._id"] li[tooltip="Complexity / Points"]:contains("' +arg2+ '")')
+            .then(callback);
+    });
+
+
+
+
+
+
 
 
 };

@@ -1,5 +1,5 @@
 angular
-    .module('Tracker', ['ui.router', 'ngResource', 'ui.bootstrap', 'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize'])
+    .module('Tracker', ['ui.router', 'toaster', 'ngResource', 'ui.bootstrap', 'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize'])
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
 
@@ -11,7 +11,9 @@ angular
             .state('app', {
                 url: "/app",
                 templateUrl: "tracker/tracker.html",
-                controller: function ($scope, UserService, SearchService) {
+                controller: function ($scope, UserService, SearchService, toasterConfig) {
+
+                    toasterConfig['prevent-duplicates'] = true;
 
                     $scope.SearchService = SearchService;
 
@@ -19,7 +21,7 @@ angular
 
                     $scope.$watch('UserService.user._id', function (id) {
                         if (id) {
-                            $scope.user = UserService.getUser();
+                            $scope.user = $scope.user || UserService.getUser();
                         } else {
                             $scope.user = null;
                         }
@@ -90,7 +92,25 @@ angular
                 controller: "TaskArchiveCtrl",
                 templateUrl: "tracker/modules/task/views/view/task-view-archive.html"
             })
-
+            .state('app.profile', {
+                url: "/users/me",
+                controller: "ProfileCtrl",
+                templateUrl: "tracker/modules/auth/views/profile.html"
+            })
+            .state('app.reset-password', {
+                url: "/reset-password",
+                controller: "resetPasswordCtrl",
+                templateUrl: "tracker/modules/auth/views/reset-password.html"
+            })
+            .state('public', {
+                url: "/public",
+                templateUrl: "tracker/tracker.html"
+            })
+            .state('public.change-password', {
+                url: "/change-password/:token",
+                controller: "resetPasswordCtrl",
+                templateUrl: "tracker/modules/auth/views/change-password.html"
+            })
         ;
 
     })

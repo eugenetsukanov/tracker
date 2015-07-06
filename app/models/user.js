@@ -4,14 +4,18 @@ var crypto = require("crypto");
 
 var UserSchema = new Schema({
 
+    first: String,
+    last: String,
+    email: String,
     local: {
         username: {type: String, index: true},
-
         passwordSalt: String,
         passwordHashed: String
     }
 
 });
+
+UserSchema.set('toJSON', { getters: true, virtuals: true });
 
 function hash(data) {
     return crypto
@@ -37,6 +41,19 @@ UserSchema.methods = {
 
 UserSchema.virtual('local.password').set(function (password) {
     this.setPassword(password);
+});
+
+UserSchema.virtual('name').get(function () {
+    var name = '';
+
+    if (this.first || this.last) {
+        name += this.first ? this.first : '';
+        name += this.last ? ' ' + this.last : '';
+    } else {
+        name = this.local.username;
+    }
+
+    return name;
 });
 
 module.exports = mongoose.model('User', UserSchema);

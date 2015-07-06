@@ -25,11 +25,11 @@ module.exports = function () {
     });
 
     this.Then(/^I don't see username "([^"]*)"$/, function (arg1, callback) {
-        this.iDontSee('.nav span:contains("' + arg1 + '")', callback);
+        this.iDontSee('.nav a:contains("' + arg1 + '")', callback);
     });
 
     this.Then(/^I see username "([^"]*)"$/, function (arg1, callback) {
-        this.iSee('.nav span:contains("' + arg1 + '")', callback);
+        this.iSee('.nav a:contains("' + arg1 + '")', callback);
     });
 
 

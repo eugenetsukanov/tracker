@@ -10,7 +10,7 @@ Feature: Auth
     When I type password "test"
     And click on log in button
 
-    Then I see username "test"
+    Then I see username "Andy Garcia"
     And I see task board
 
 
