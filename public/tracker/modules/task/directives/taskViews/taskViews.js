@@ -43,7 +43,7 @@ angular
                 $scope.tooltipMetrics();
 
                 $scope.toggleMetrics = function(){
-                    MetricsService.getNewMetrics();
+                    MetricsService.toggle();
                     $scope.tooltipMetrics();
                     $scope.metricsDetails = MetricsService.getMetrics();
                 }

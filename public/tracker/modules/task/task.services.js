@@ -57,7 +57,7 @@ angular
                 return SettingsService.getProperty('metricsDetails');
             },
 
-            getNewMetrics: function () {
+            toggle: function () {
 
                 var metricsDetails = SettingsService.getProperty('metricsDetails');
 
