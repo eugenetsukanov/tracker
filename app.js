@@ -8,12 +8,13 @@ app.container = app.application.container;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-
+var nodemailer = require('nodemailer');
 var passport = require('passport');
 
 
 app.container.get('Mongoose');
 app.container.get('GridFS');
+app.container.get('Tokenizer');
 
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -39,7 +40,7 @@ app.use(express.static(__dirname + '/public'));
 require('./app/config/passport')(passport);
 
 // app routes
-require('./app/routes/app.routes')(app, passport);
+require('./app/routes/app.routes')(app, passport, nodemailer);
 
 if (app.config.get('fixtures:load')) {
     console.log('> load fixtures');

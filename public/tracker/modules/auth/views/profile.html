@@ -1,0 +1,88 @@
+<div class="row profile">
+    <div class="col-md-6 col-md-offset-3">
+        <h4 class="bold align-center">{{user.local.username}}</h4>
+        <form ng-submit="save()" class="form-horizontal myprofile">
+            <ul>
+                <li class="form-group form-group-sm">
+                    <label for="firstName" class="col-sm-3 control-label">First&nbsp;Name</label>
+                    <div class="col-sm-7">
+                    <input id="firstName"
+                           class="form-control input-sm"
+                           ng-model="user.first"
+                           type="text"
+                           value="{{user.first}}"
+                           placeholder="First Name"/>
+                        </div>
+                </li>
+                <li class="form-group form-group-sm">
+                    <label for="lastName" class="col-sm-3 control-label">Last&nbsp;Name</label>
+                    <div class="col-sm-7">
+                    <input id="lastName"
+                           class="form-control input-sm"
+                           ng-model="user.last"
+                           type="text"
+                           value="{{user.last}}"
+                           placeholder="Last Name"/>
+                        </div>
+                </li>
+                <li class="form-group form-group-sm mg">
+                    <label for="email" class="col-sm-3 control-label">email</label>
+                    <div class="col-sm-7">
+                    <input id="email"
+                           class="form-control input-sm"
+                           ng-model="user.email"
+                           type="text"
+                           value="{{user.email}}"
+                           placeholder="email"/>
+                        </div>
+                </li>
+                <li class="form-group">
+                    <div class="col-sm-7 col-sm-offset-3">
+                        <a ng-click="changePass = !changePass" class="btn btn-link btn-sm pull-right change-password-btn">Change&nbsp;Password</a>
+                        <button type="submit" class="btn btn-primary btn-sm pull-left">Save</button>
+                    </div>
+                </li>
+            </ul>
+        </form>
+
+        <form ng-show="changePass" ng-submit="passwordChange()" class="form-horizontal password">
+            <ul>
+                <li class="form-group form-group-sm">
+                    <label for="oldPassword" class="col-sm-3 control-label">Old&nbsp;Password</label>
+                    <div class="col-sm-7">
+                        <input id="oldPassword"
+                               class="form-control input-sm"
+                               ng-model="oldPassword"
+                               type="text"
+                               placeholder="Old Password"/>
+                    </div>
+                </li>
+                <li class="form-group form-group-sm">
+                    <label for="newPassword" class="col-sm-3 control-label">New&nbsp;Password</label>
+                    <div class="col-sm-7">
+                        <input id="newPassword"
+                               class="form-control input-sm"
+                               ng-model="newPassword"
+                               type="text"
+                               placeholder="New Password"/>
+                    </div>
+                </li>
+                <li class="form-group form-group-sm mg">
+                    <label for="newPasswordConfirm" class="col-sm-3 control-label">Confirm&nbsp;Password</label>
+                    <div class="col-sm-7">
+                        <input id="newPasswordConfirm"
+                               class="form-control input-sm"
+                               ng-model="newPasswordConfirm"
+                               type="text"
+                               placeholder="Confirm Password"/>
+                    </div>
+                </li>
+                <li class="form-group">
+                    <div class="col-sm-7 col-sm-offset-3">
+                        <button class="btn btn-primary btn-sm">Change</button>
+                    </div>
+                </li>
+            </ul>
+        </form>
+    </div>
+</div>
