@@ -141,6 +141,11 @@ hr {
     padding: 2px 5px;
     margin-right: 5px;
     border-radius: 10px;
+
+    -webkit-transition: all 0.2s ease;
+    -moz-transition:    all 0.2s ease;
+    -o-transition:      all 0.2s ease;
+    transition:         all 0.2s ease;
 }
 .task-metrics li:hover,
 .task-metrics-widget li:hover {
@@ -333,6 +338,15 @@ hr {
     border-radius: 10px;
     font-weight: normal;
     display: inline-block;
+
+    transition: all 0.2s ease;
+    -o-transition: all 0.2s ease;
+    -moz-transition: all 0.2s ease;
+    -webkit-transition: all 0.2s ease;
+}
+.tags.tags-panel .label:hover {
+    background: #5bc0de;
+    color: #fff;
 }
 .task-info .tags,
 .tags.tags-task {
