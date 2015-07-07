@@ -13,6 +13,8 @@ angular
                                   TaskComplexity,
                                   UserService,
                                   Team,
+                                  toaster,
+                                  File,
                                   TagsList) {
 
                 $scope.statuses = [
@@ -69,7 +71,7 @@ angular
                         $scope.tagsList = TagsList.query({taskId: id});
                     }
 
-                    if ($scope.task.status != 'accepted'){
+                    if ($scope.task.status != 'accepted') {
                         $scope.task.archived = false;
                     }
 
@@ -81,6 +83,9 @@ angular
 
                 };
 
+                $scope.init = function () {
+                    console.log(111);
+                };
 
                 $scope.onComplete = function () {
                     if ($scope.taskOnComplete) {
@@ -116,15 +121,15 @@ angular
 
                 $scope.delete = function (task) {
                     //delete itself
-                    if ($stateParams.taskId == task._id){
-                            var parentTaskId = task.parentTaskId || null;
-                            task.$delete().then(function () {
-                                if (parentTaskId) {
-                                    $state.go('app.task', {taskId: parentTaskId});
-                                } else {
-                                    $state.go('app.tasks');
-                                }
-                            }).then($scope.onComplete);
+                    if ($stateParams.taskId == task._id) {
+                        var parentTaskId = task.parentTaskId || null;
+                        task.$delete().then(function () {
+                            if (parentTaskId) {
+                                $state.go('app.task', {taskId: parentTaskId});
+                            } else {
+                                $state.go('app.tasks');
+                            }
+                        }).then($scope.onComplete);
 
                     } else {
                         task.$delete().then($scope.onComplete);
@@ -161,6 +166,25 @@ angular
                         $scope.task.spenttime = spenttime;
                     }
                 };
+
+
+                $scope.deleteFile = function (file) {
+
+                    File.delete({taskId: $scope.task._id, fileId: file._id}, function () {
+                        _.remove($scope.task.files || [], function (aFile) {
+                            return aFile._id == file._id;
+                        });
+                        toaster.pop({
+                            type: 'info',
+                            title: 'Deleted'
+                        });
+                    }, function () {
+                        toaster.pop({
+                            type: 'error',
+                            title: 'Wasn\'t deleted'
+                        });
+                    });
+                }
 
             },
             scope: {

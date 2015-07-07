@@ -1,13 +1,15 @@
 <div class="images-list">
     <ul>
-        <li ng-repeat="file in files" tooltip="{{file.metadata.originalname}}" ng-if="isImage(file.filename)">
+        <li class="file image" ng-repeat="file in files" tooltip="{{file.metadata.originalname}}" ng-if="isImage(file.filename)">
             <a href="/api/files/{{file.filename}}" target="_blank" class="img" style="background: url('/api/files/{{file.filename}}'); background-size: cover;"></a>
+            <a ng-if="onDelete" ng-click="deleteFile(file)" class="delete"><i class="fa fa-times-circle"></i></a>
         </li>
     </ul>
 
     <ul>
-        <li ng-repeat="file in files" tooltip="{{file.metadata.originalname}}" ng-if="!isImage(file.filename)">
+        <li class="file" ng-repeat="file in files" tooltip="{{file.metadata.originalname}}" ng-if="!isImage(file.filename)">
             <a href="/api/files/{{file.filename}}" target="_blank"><i class="fa fa-file"></i>&nbsp;{{file.metadata.originalname}}</a>
+            <a ng-if="onDelete" ng-click="deleteFile(file)" class="delete"><i class="fa fa-times-circle"></i></a>
         </li>
     </ul>
 </div>

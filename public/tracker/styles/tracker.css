@@ -206,10 +206,41 @@ hr {
     word-spacing: 0;
     border: 4px solid #fff;
     box-shadow: 0 0 1px #333;
+
+    transition: all 0.3s ease;
+    -o-transition: all 0.3s ease;
+    -moz-transition: all 0.3s ease;
+    -webkit-transition: all 0.3s ease;
 }
 
 .images-list li a.img:hover {
     border-color: #5bc0de;
+}
+
+.images-list li {
+    position: relative;
+}
+.images-list li .delete {
+    height: 20px;
+    width: 20px;
+    font-size: 22px;
+    line-height: 18px;
+    position: absolute;
+    vertical-align: bottom;
+    top: -9px;
+    right: -9px;
+    background: #fff;
+    border-radius: 10px;
+    padding: 0;
+    opacity: 0;
+    color: red;
+    cursor: pointer;
+}
+.images-list li .delete i.fa {
+    padding: 0;
+}
+.images-list li.image:hover .delete {
+    opacity: 1;
 }
 
 .task-edit-menu {

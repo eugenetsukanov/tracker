@@ -1,5 +1,7 @@
 module.exports = function (app) {
 
+    var GridFS = app.container.get('GridFS');
+
     var form = require("express-form"),
         field = form.field;
 
@@ -231,6 +233,16 @@ module.exports = function (app) {
 
     });
 
+    app.delete('/api/tasks/:taskId/files/:fileId', function (req, res, next) {
+        Task.update({_id: req.Task._id}, { $pull: { 'files': {_id: req.params.fileId} } }, function (err) {
+            if (err) next(err);
+
+            GridFS.removeFile(req.params.fileId, function () {
+                res.sendStatus(200);
+            });
+
+        });
+    });
 
     app.param('taskId', function (req, res, next, taskId) {
 

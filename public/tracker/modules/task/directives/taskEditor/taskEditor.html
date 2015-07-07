@@ -23,7 +23,7 @@
                 <div uploader files="task.files"></div>
 
                 <div ng-if="task.files.length">
-                    <div files-view files="task.files"></div>
+                    <div files-view files="task.files" on-delete="deleteFile"></div>
                 </div>
 
             </div>
