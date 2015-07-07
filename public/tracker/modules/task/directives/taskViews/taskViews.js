@@ -4,7 +4,7 @@ angular
         return {
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskViews/taskViews.html',
-            controller: function ($scope, TaskEditorModal, SettingsService, MetricsService) {
+            controller: function ($scope, TaskEditorModal, MetricsService) {
 
                 $scope.views = [
                     {title: 'Board', name: 'board'},
