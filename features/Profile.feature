@@ -30,7 +30,6 @@ Feature: Profile
     And I see last name "Banderas" in form
     And I see email "antonio_banderas@mail.com" in form
 
-  @wip
   Scenario: Change Password
 
     Then I click my profile link

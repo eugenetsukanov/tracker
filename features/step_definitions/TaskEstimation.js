@@ -75,6 +75,13 @@ module.exports = function () {
             .then(callback);
     });
 
+    this.When(/^I set max matrics details$/, function (callback) {
+        this.chain
+            .iClick('.task-views-block button.btn-metrics')
+            .iClick('.task-views-block button.btn-metrics')
+            .iSee('.task-views-block button.btn-metrics.btn-info')
+            .then(callback);
+    });
 
 
 

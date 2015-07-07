@@ -69,7 +69,6 @@ Feature: Search
     When I search "super-tag"
     And I see task "task 1.1"
 
-    @wip
   Scenario: Edit on search page
 
     Then I see task "task 1"
