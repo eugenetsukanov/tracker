@@ -15,7 +15,7 @@
             {{parentTask.title}}</a>
     </h5>
 
-    <div ng-hide="task._id == newTask._id" ng-click="edit(task)" task-metrics task="task"></div>
+    <div ng-hide="task._id == newTask._id" ng-click="edit(task)" task-metrics metrics-details="2" task="task"></div>
 
     <div ng-hide="task._id == newTask._id" ng-if="task.description" class="mg" text-extend="task.description"
          text-limit="170"></div>

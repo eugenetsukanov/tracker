@@ -67,7 +67,10 @@ TaskSchema.methods = {
     },
 
     updateEstimateTime: function (next) {
-        if (this.simple) return next();
+
+        if (this.simple) {
+            return this.calculateSimple(next);
+        }
 
         this.getChildren(function (err, tasks) {
             if (err) return next(err);
@@ -214,6 +217,8 @@ TaskSchema.methods = {
             var row = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
             var points = row[this.complexity];
             this.points = points;
+        } else {
+            this.points = 0;
         }
 
         if (this.points && this.spenttime && this.isAccepted()) {
@@ -438,9 +443,6 @@ TaskSchema.post('save', function (task) {
 
 TaskSchema.post('remove', function (task) {
     task.updateParent();
-});
-
-TaskSchema.post('remove', function (task) {
     task.removeChildren();
     task.removeFiles();
 });
