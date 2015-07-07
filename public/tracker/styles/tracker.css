@@ -120,7 +120,7 @@ hr {
     cursor: pointer;
 }
 .task-metrics-widget {
-    margin: 0 0 10px 10px;
+    margin: 0 0 10px;
 }
 .task-metrics-widget li {
     display: inline-block;

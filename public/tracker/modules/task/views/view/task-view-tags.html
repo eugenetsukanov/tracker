@@ -3,10 +3,12 @@
     <h3 ng-if="tasks.length">{{search.join(', ')}}</h3>
     <h3 ng-if="!tasks || tasks.length == 0">Search by tags</i></h3>
 
-    <h5>
-        <a href history-back><i class="fa fa-long-arrow-left"></i>
-            Back</a>
-    </h5>
+    <a href history-back>
+        <h5>
+            <i class="fa fa-long-arrow-left"></i>
+            Back
+        </h5>
+    </a>
 
     <div class="tags mg">
         <i class="fa fa-tags"></i>

@@ -1,13 +1,14 @@
 <div class="task-search">
     <h3 ng-if="tasks.length">Tasks found for: <i>'{{query}}'</i></h3>
+
     <h3 ng-if="!tasks.length">Nothing found for: <i>'{{query}}'</i></h3>
 
-    <h5>
-        <a href history-back>
+    <a href history-back>
+        <h5>
             <i class="fa fa-long-arrow-left"></i>
             Back
-        </a>
-    </h5>
+        </h5>
+    </a>
 
     <div ng-if="tasks.length" task-views tasks="tasks" task-on-complete="init"></div>
 </div>
