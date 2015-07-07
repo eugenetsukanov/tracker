@@ -12,7 +12,7 @@ Feature: TaskEstimation
     When I type password "test"
     And click on log in button
     And I see task board
-    And I set max matrics details
+    And I set max metrics details
 
   Scenario: CalculationPoints
     Then I see task "task 1"

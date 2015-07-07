@@ -475,11 +475,59 @@ hr {
 
 
 /*report page*/
-.report-page ul {
-    padding: 10px 0 0 20px;
+.report-page .p10,
+.report-page .result {
+    padding: 10px 0 0;
     margin: 0;
     border-top: 1px solid #eee;
 }
+.report-page .p10 {
+    padding: 10px 0 0;
+}
+.report-page .date-selector {
+    height: 30px;
+    line-height: 30px;
+    margin-right: 20px;
+}
+.report-page .result h4 {
+    margin-bottom: 5px;
+}
+.report-page .result ul {
+    list-style-type: none;
+    padding: 0 0 20px;
+}
+.report-page .result ul li,
+.report-page .result ul li *{
+    vertical-align: middle;
+    line-height: 20px;
+}
+.report-page .result ul .status {
+    color: #ff9357;
+    margin: 0 10px 0 0;
+    font-weight: bold;
+    font-size: 12px;
+}
+.report-page .result ul .status:after,
+.report-page .result ul .status:before {
+    content: '[';
+    display: inline-block;
+    padding: 0 1px;
+    color: #eee;
+    font-size: 14px;
+}
+.report-page .result ul .status:after {
+    content: ']';
+}
+
+.tag-search .task-metrics-widget,
+.report-page .task-metrics-widget {
+    margin: 0;
+}
+.report-page .detail-line,
+.tag-search .detail-line {
+    padding: 0;
+}
+
 .profile h4 {
     margin-bottom: 30px;
 }
@@ -516,6 +564,7 @@ hr {
 }
 .dropdown-menu {
     font-size: 12px;
+    padding: 5px;
 }
 .modal-open .modal {
     -webkit-transition: all 200ms ease 200ms;

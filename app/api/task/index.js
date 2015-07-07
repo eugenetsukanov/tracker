@@ -128,7 +128,9 @@ module.exports = function (app) {
     app.get('/api/tasks/:taskId/team', function (req, res, next) {
         req.Task.getRoot(function (err, root) {
             var team = root.team;
+
             team.push(root.owner);
+
             User.find({_id: {$in: team}}, '-local.passwordHashed -local.passwordSalt')
                 .exec(function (err, users) {
                     if (err) return next(err);

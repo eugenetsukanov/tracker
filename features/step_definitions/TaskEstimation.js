@@ -21,7 +21,9 @@ module.exports = function () {
     });
 
     this.Then(/^I click on save button$/, function (callback) {
-        this.iClick("form button:contains('Save')", callback);
+        this.chain
+            .iClick("form button:contains('Save')")
+            .then(callback);
     });
 
     this.Then(/^I see task complexity "([^"]*)"$/, function (arg1, callback) {
@@ -75,7 +77,7 @@ module.exports = function () {
             .then(callback);
     });
 
-    this.When(/^I set max matrics details$/, function (callback) {
+    this.When(/^I set max metrics details$/, function (callback) {
         this.chain
             .iClick('.task-views-block button.btn-metrics')
             .iClick('.task-views-block button.btn-metrics')

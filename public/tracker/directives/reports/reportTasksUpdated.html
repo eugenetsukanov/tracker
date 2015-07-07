@@ -1,30 +1,58 @@
 <div class="report-page">
-<h5>
-    <span class="pointer"
-          datepicker-popup
-          max-date="'{{date | toDate:'YYYY-MM-DD'}}'"
-          is-open="opened"
-          ng-model="date"
-          show-button-bar="false"
-          show-weeks="false"
-          ng-click="openDatePicker($event)">
+
+    <div ng-if="tasks.length" task-metrics-widget tasks="tasks"></div>
+
+    <h5 class="clearfix">
+        <div class="date-selector pull-left">
+        <span class="pointer"
+              datepicker-popup
+              max-date="'{{date | toDate:'YYYY-MM-DD'}}'"
+              is-open="opened"
+              ng-model="date"
+              show-button-bar="false"
+              show-weeks="false"
+              ng-click="openDatePicker($event)">
 
         {{ date | toDate }} <i class="fa fa-calendar"></i>
 
-    </span>
-</h5>
 
-<ul ng-show="tasks.length">
-    <li ng-repeat="task in tasks">
-        {{task.title}}
+        </span>
+        </div>
 
-            <span ng-show="status" class="label" task-status="task.status">
-                {{task.status || 'new'}}
-            </span>
+        <select ng-if="taskId" ng-model="developer" class="form-control input-sm w-sm pull-left"
+                ng-change="update(developer)"
+                >
+            <option value="">All</option>
+            <option ng-selected="member.id == developer" value="{{member.id}}" ng-repeat="member in team">{{member.username}}</option>
+        </select>
+    </h5>
 
-        <div ng-show="metrics" task-metrics task="task"></div>
-    </li>
-</ul>
+    <div ng-if="tasks.length" class="result">
 
-<p ng-show="!tasks.length">No changes for today</p>
+        <h5 ng-if="(tasks | byStatus: 'accepted').length">Done:</h5>
+        <ul ng-if="(tasks | byStatus: 'accepted').length" ng-show="tasks.length">
+            <li ng-repeat="task in tasks | byStatus: 'accepted' ">
+                <span class="status">+</span> {{task.title}}
+                <div ng-show="metrics" task-metrics task="task"></div>
+            </li>
+        </ul>
+
+        <h5 ng-if="(tasks | byStatus: 'in progress').length">In Progress:</h5>
+        <ul ng-if="(tasks | byStatus: 'in progress').length" ng-show="tasks.length">
+            <li ng-repeat="task in tasks | byStatus: 'in progress'">
+                <span class="status">></span> {{task.title}}
+                <div ng-show="metrics" task-metrics task="task"></div>
+            </li>
+        </ul>
+
+        <h5 ng-if="(tasks | byStatus: '').length">Plans:</h5>
+        <ul ng-if="(tasks | byStatus: '').length" ng-show="tasks.length">
+            <li ng-repeat="task in tasks | byStatus: ''">
+                <span class="status">&#8226;</span> {{task.title}}
+                <div ng-show="metrics" task-metrics task="task"></div>
+            </li>
+        </ul>
+    </div>
+
+    <p class="p10" ng-show="!tasks.length">No changes for this day</p>
 </div>

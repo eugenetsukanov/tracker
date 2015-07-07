@@ -71,26 +71,16 @@ module.exports = function () {
         }
 
         //takes String or Array
-        this.iSee = function (paths, callback) {
-            if (!_.isArray(paths)) {
-                paths = [paths];
-            }
-            async.each(
-                paths,
-                (function iterator(path, cb) {
-                    this.browser.wait(function () {
-                        return this.iFind(path).then(function (elements) {
-                            return elements.length > 0;
-                        }.bind(this))
-
-                    }.bind(this), this.waitTimeout).then(function () {
-                        cb.call(this);
-                    }.bind(this), function () {
-                        cb('I should see: ' + path);
-                    }.bind(this));
-                }).bind(this),
-                callback
-            );
+        this.iSee = function (path, callback) {
+            this.browser.wait(function () {
+                return this.iFind(path).then(function (elements) {
+                    return elements.length > 0;
+                }.bind(this));
+            }.bind(this), this.waitTimeout).then(function () {
+                callback.call(this);
+            }.bind(this), function (err) {
+                callback('I should see: ' + path + ' ' + err.message);
+            }.bind(this));
         };
 
         this.iDontSee = function (path, callback) {
@@ -143,11 +133,15 @@ module.exports = function () {
             this.iSee(path, function (err) {
                 if (err) return callback.call(this, err);
 
-                this.iFindOne(path).click().then(function () {
-                    callback.call(this);
-                }.bind(this), function () {
-                    callback.call(this, 'Path: `' + path + '` is not clickable');
-                }.bind(this));
+                setTimeout(function () {
+                    this.iFindOne(path).click().then(function () {
+                        callback.call(this);
+                    }.bind(this), function (err) {
+                        callback.call(this, 'Path: `' + path + '` is not clickable ' + err.message);
+                    }.bind(this));
+                }.bind(this), 200);
+
+
             }.bind(this));
         }
 

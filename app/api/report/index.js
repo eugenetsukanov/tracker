@@ -10,13 +10,15 @@ module.exports = function (app) {
     };
 
     var getEndDate = function (date) {
-        return moment(date).startOf('day').add(1, 'd').toDate();
+        return moment(date).endOf('day').toDate();
     };
 
     app.get('/api/tasks/report/:date', function (req, res) {
 
         var date = Date.parse(req.params.date);
-        Task.find({updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)}})
+        Task.find({
+            updatedAt: {$gte: getStartDate(date), $lte: getEndDate(date)}
+        })
             .sort('-updatedAt')
             .exec(function (err, tasks) {
                 var tasksReport = [];
@@ -36,50 +38,46 @@ module.exports = function (app) {
             });
     });
 
-    app.get('/api/tasks/:taskId/report/:date', function (req, res) {
+    app.get('/api/tasks/:taskId/report/:date', function (req, res, next) {
 
         var date = Date.parse(req.params.date) || Date.now();
 
-        var getAtDate = {
-            updatedAt: {$gt: getStartDate(date), $lt: getEndDate(date)}
-        };
-
-        var query = {
-            _id: req.params.taskId
+        var match = {
+            updatedAt: {$gte: getStartDate(date), $lte: getEndDate(date)}
         };
 
         var updatedTasks = [];
 
-        Task.findOne(_.extend(query, getAtDate), function (err, task) {
-            if (err) return next(err);
+        if (!req.Task) {
+            return res.json(updatedTasks)
+        } else {
 
-            if (!task) {
-                return res.json(updatedTasks)
+            if (req.query.userId !== '') {
+                if (req.Task.developer._id.toString() == req.query.userId.toString()) {
+                    updatedTasks.push(req.Task);
+                }
             } else {
-                updatedTasks.push(task);
+                updatedTasks.push(req.Task);
             }
-            var getChangedTasks = function (task, callback) {
 
-                task.getChildrenChanged(getAtDate, function (err, tasks) {
-                    if (err) return next(err);
 
-                    async.each(tasks, function (task, callback) {
-                        updatedTasks.push(task);
-                        getChangedTasks(task, callback);
-                    }, function (err) {
-                        if (err) return next(err);
-                        callback();
+            req.Task.deepFindByQuery(match, function (err, tasks) {
+                if (err) return next(err);
+                if (req.query.userId !== '') {
+
+                    tasks = _.filter(tasks, function (task) {
+                        return task.developer.toString() == req.query.userId.toString();
                     })
+                }
 
-                });
+                updatedTasks = updatedTasks.concat(tasks);
 
-            };
-
-            getChangedTasks(task, function () {
                 res.json(updatedTasks);
+
+
             });
 
-        });
-    });
+        }
 
+    });
 };

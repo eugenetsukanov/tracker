@@ -8,7 +8,9 @@ angular
         return $resource('/api/tasks/:taskId/report/:date', {taskId: '@_id'});
     })
 
-    .controller('ReportCtrl', function ($scope) {
+    .controller('ReportCtrl', function ($scope, $stateParams) {
+
+        $scope.userId = $stateParams.userId;
 
         $scope.date = new Date();
 
@@ -17,6 +19,7 @@ angular
             $event.stopPropagation();
             $scope.opened = true;
         };
+
     })
 ;
 
