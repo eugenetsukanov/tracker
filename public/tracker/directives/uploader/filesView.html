@@ -1,7 +1,7 @@
 <div class="images-list">
     <ul>
         <li class="file image" ng-repeat="file in files" tooltip="{{file.metadata.originalname}}" ng-if="isImage(file.filename)">
-            <a href="/api/files/{{file.filename}}" target="_blank" class="img" style="background: url('/api/files/{{file.filename}}'); background-size: cover;"></a>
+            <a href="/api/files/{{file.filename}}" target="_blank" class="img" style="background-image: url('/api/files/{{file.filename}}'); background-size: cover;"></a>
             <a ng-if="onDelete" ng-click="deleteFile(file)" class="delete"><i class="fa fa-times-circle"></i></a>
         </li>
     </ul>
