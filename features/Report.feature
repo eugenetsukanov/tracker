@@ -134,8 +134,10 @@ Feature: Report
 
     And I click on save button
 
+    And I am on "project 1" page
     Then I click on task link "project 1.1"
 
+#    Then stop
     And I am on "project 1.1" page
     And I don't see task "task 1"
     And I don't see task "project 1.2"

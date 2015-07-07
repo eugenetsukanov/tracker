@@ -6,7 +6,10 @@ module.exports = function () {
 
 
     this.Then(/^I click on task link "([^"]*)"$/, function (arg1, callback) {
-        this.iClick(".board-view a:contains('" + arg1 + "')", callback)
+        this.chain
+            .iDontSee('.modal-dialog .modal-content')
+            .iClick(".container .board-view a:contains('" + arg1 + "')")
+            .then(callback)
     });
 
     this.Then(/^I see search form$/, function (callback) {
@@ -23,7 +26,7 @@ module.exports = function () {
 
 
     this.Then(/^I am on "([^"]*)" page$/, function (arg1, callback) {
-        this.iSee("h2:contains('" + arg1 + "')", callback)
+        this.iSee(".container .task-info h2:contains('" + arg1 + "')", callback)
     });
 
     this.When(/^I don't see search form$/, function (callback) {
