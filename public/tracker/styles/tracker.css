@@ -47,6 +47,14 @@ hr {
 .panel-title .fa.vcenter {
     width: auto;
     margin-right: 0;
+    -webkit-transition: all 0.2s linear;
+    -moz-transition: all 0.2s linear;
+    -o-transition: all 0.2s linear;
+    transition: all 0.2s linear;
+
+}
+.panel-title .fa.vcenter:hover {
+    color: #337ab7;
 }
 
 .panel-title {
