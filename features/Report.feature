@@ -236,6 +236,7 @@ Feature: TaskEstimation
     And I don't see "project 1.1" in Plans tasks
 
     When I choose user "All"
+
     And I see "project 1.3" in Done tasks
     And I see "project 1.5" in Done tasks
     And I see "project 1.5.1" in Done tasks
