@@ -63,6 +63,10 @@ module.exports = function () {
     //    this.iDontSee('div li[ng-repeat*="\'\'"]:contains("'+arg1+'")', callback);
     //});
 
+    this.Then(/^I am on project "([^"]*)" page$/, function (arg1, callback) {
+        this.iSee("h4.panel-title a:contains('" + arg1 + "')", callback)
+    });
+
     this.Then(/^I click back to project "([^"]*)"$/, function (arg1, callback) {
         this.iClick('div a:contains("' +arg1+ '")', callback);
     });
