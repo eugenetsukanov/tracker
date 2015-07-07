@@ -14,7 +14,7 @@ angular
                                   UserService,
                                   Team,
                                   toaster,
-                                  File,
+                                  TaskFile,
                                   TagsList) {
 
                 $scope.statuses = [
@@ -175,7 +175,7 @@ angular
 
                     if ($scope.task._id) {
 
-                        File.delete({taskId: $scope.task._id, fileId: file._id}, function () {
+                        TaskFile.delete({taskId: $scope.task._id, fileId: file._id}, function () {
                             removeFileUI();
                             toaster.pop({
                                 type: 'info',

@@ -5,7 +5,7 @@ angular
         return {
             restrict: 'A',
             templateUrl: 'tracker/directives/uploader/filesView.html',
-            controller: function ($scope, $stateParams, File) {
+            controller: function ($scope) {
                 $scope.isImage = function (file) {
                     return /\.(jpg|jpeg|png|gif|bmp)$/i.test(file);
                 };

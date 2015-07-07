@@ -33,8 +33,8 @@ angular
         return $resource('/api/users/:userId/tasks', {userId: '@_id'}, {update: {method: 'PUT'}});
     })
 
-    .factory('File', function ($resource) {
-        return $resource('/api/tasks/:taskId/files/:fileId', {taskId: '@_id', fileId: '@_id'}, {update: {method: 'PUT'}});
+    .factory('TaskFile', function ($resource) {
+        return $resource('/api/tasks/:taskId/files/:fileId', {fileId: '@_id'}, {update: {method: 'PUT'}});
     })
 
     .factory('SettingsService', function () {
