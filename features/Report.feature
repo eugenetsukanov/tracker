@@ -79,8 +79,6 @@ Feature: Report
     And I see "project 1.1" in Plans tasks
     And I see "project 1.1.1" in Plans tasks
 
-  @wip
-
   Scenario: ReportForUser
 
     When I see task "task 1"
