@@ -83,9 +83,6 @@ angular
 
                 };
 
-                $scope.init = function () {
-                    console.log(111);
-                };
 
                 $scope.onComplete = function () {
                     if ($scope.taskOnComplete) {
@@ -170,20 +167,29 @@ angular
 
                 $scope.deleteFile = function (file) {
 
-                    File.delete({taskId: $scope.task._id, fileId: file._id}, function () {
+                    var removeFileUI = function () {
                         _.remove($scope.task.files || [], function (aFile) {
                             return aFile._id == file._id;
                         });
-                        toaster.pop({
-                            type: 'info',
-                            title: 'Deleted'
+                    };
+
+                    if ($scope.task._id) {
+
+                        File.delete({taskId: $scope.task._id, fileId: file._id}, function () {
+                            removeFileUI();
+                            toaster.pop({
+                                type: 'info',
+                                title: 'Deleted'
+                            });
+                        }, function () {
+                            toaster.pop({
+                                type: 'error',
+                                title: 'Wasn\'t deleted'
+                            });
                         });
-                    }, function () {
-                        toaster.pop({
-                            type: 'error',
-                            title: 'Wasn\'t deleted'
-                        });
-                    });
+                    } else {
+                        removeFileUI();
+                    }
                 }
 
             },

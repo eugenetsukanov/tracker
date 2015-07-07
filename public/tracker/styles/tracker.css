@@ -221,16 +221,24 @@ hr {
     position: relative;
 }
 .images-list li .delete {
+    top: -1px;
+    left: -3px;
+    border-radius: 0;
+}
+.images-list li.image .delete {
+    top: -9px;
+    left: auto;
+    right: -9px;
+    border-radius: 10px;
+}
+.images-list li .delete {
     height: 20px;
     width: 20px;
     font-size: 22px;
     line-height: 18px;
     position: absolute;
     vertical-align: bottom;
-    top: -9px;
-    right: -9px;
     background: #fff;
-    border-radius: 10px;
     padding: 0;
     opacity: 0;
     color: red;
@@ -239,7 +247,7 @@ hr {
 .images-list li .delete i.fa {
     padding: 0;
 }
-.images-list li.image:hover .delete {
+.images-list li:hover .delete {
     opacity: 1;
 }
 

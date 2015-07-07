@@ -237,7 +237,8 @@ module.exports = function (app) {
         Task.update({_id: req.Task._id}, { $pull: { 'files': {_id: req.params.fileId} } }, function (err) {
             if (err) next(err);
 
-            GridFS.removeFile(req.params.fileId, function () {
+            GridFS.removeFile({_id: req.params.fileId}, function (err) {
+                if (err) next(err);
                 res.sendStatus(200);
             });
 
