@@ -85,8 +85,8 @@ module.exports = function () {
 
                     }.bind(this), this.waitTimeout).then(function () {
                         cb.call(this);
-                    }.bind(this), function () {
-                        cb('I should see: ' + path);
+                    }.bind(this), function (err) {
+                        cb('I should see: ' + path + ' ' + err.message);
                     }.bind(this));
                 }).bind(this),
                 callback
@@ -145,8 +145,8 @@ module.exports = function () {
 
                 this.iFindOne(path).click().then(function () {
                     callback.call(this);
-                }.bind(this), function () {
-                    callback.call(this, 'Path: `' + path + '` is not clickable');
+                }.bind(this), function (err) {
+                    callback.call(this, 'Path: `' + path + '` is not clickable' + err.message);
                 }.bind(this));
             }.bind(this));
         }
