@@ -77,7 +77,14 @@ module.exports = function (app, passport) {
 
     app.post('/api/register', function (req, res, next) {
 
-        User.findOne({'local.username': req.body.username}, function (err, user) {
+        var query = {
+            $or: [
+                {'email': req.body.email},
+                {'local.username': req.body.username}
+            ]
+        };
+
+        User.findOne(query, function (err, user) {
             if (err) return next(err);
 
             if (!user) {
@@ -96,7 +103,11 @@ module.exports = function (app, passport) {
                     });
                 });
             } else {
-                res.sendStatus(403);
+                var error = (user.email == req.body.email)
+                    ? req.body.email + ' already exist'
+                    : req.body.username + ' already exist';
+
+                res.status(403).send(error);
             }
         });
     });

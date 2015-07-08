@@ -65,8 +65,7 @@ angular
             }, function (err) {
                 toaster.pop({
                     type: 'error',
-                    title: 'Please, check your credentials',
-                    timeout: 2000,
+                    title: 'Please, check your credentials'
                 });
 
             })
@@ -89,7 +88,7 @@ angular
         return $resource('/api/register');
     })
 
-    .controller('RegisterCtrl', function ($scope, Register, $state, UserService) {
+    .controller('RegisterCtrl', function ($scope, Register, $state, UserService, toaster) {
 
         $scope.register = function () {
             Register.save({
@@ -99,6 +98,11 @@ angular
             }, function () {
                 UserService.load().then(function () {
                     $state.go('app.tasks');
+                });
+            }, function (err) {
+                toaster.pop({
+                    type: 'error',
+                    title: err.data
                 });
             });
         }
