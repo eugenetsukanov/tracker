@@ -22,7 +22,7 @@
             <div text-extend="task.description"></div>
         </div>
 
-        <hr ng-if="task.tags.length"/>
+        <hr ng-if="task.tags.length && (task.description || metricsDetails > 0)"/>
 
         <div task-tags task="task"></div>
 
