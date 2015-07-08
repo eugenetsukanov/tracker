@@ -3,7 +3,11 @@ module.exports = function (passport) {
     var LocalStrategy = require('passport-local').Strategy;
     var User = require('./../models/user');
 
-    // passport
+    var checkEmail = function(email) {
+        var regular = /^([\w-]+(?:\.[\w-]+)*)@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$/i;
+        return regular.test(email);
+    };
+
     passport.serializeUser(function(user, done) {
         done(null, user._id);
     });
@@ -16,7 +20,10 @@ module.exports = function (passport) {
 
     passport.use(new LocalStrategy(
         function(username, password, done) {
-            User.findOne({ 'local.username': username }, function(err, user) {
+
+            var request = checkEmail(username) ? {'email': username} : {'local.username':username};
+
+            User.findOne(request, function(err, user) {
                 if (err) { return done(err); }
                 if (!user) {
                     return done(null, false, { message: 'Incorrect username.' });

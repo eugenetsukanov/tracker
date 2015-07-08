@@ -15,7 +15,7 @@ var UserSchema = new Schema({
 
 });
 
-UserSchema.set('toJSON', { getters: true, virtuals: true });
+UserSchema.set('toJSON', {getters: true, virtuals: true});
 
 function hash(data) {
     return crypto
@@ -30,7 +30,7 @@ UserSchema.methods = {
         return this.local.passwordHashed === hash(this.local.passwordSalt + password);
     },
     setPassword: function (password) {
-        var salt = 'key-' +  Math.random() + ' ' + Math.random() + new Date();
+        var salt = 'key-' + Math.random() + ' ' + Math.random() + new Date();
         this.local.passwordSalt = hash(salt);
         this.local.passwordHashed = hash(this.local.passwordSalt + password);
 

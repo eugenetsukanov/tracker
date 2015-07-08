@@ -50,12 +50,10 @@ angular
     })
     .controller('LoginCtrl', function ($scope, Login, $state, UserService, toaster) {
 
-
-
         $scope.login = function () {
 
             Login.save({
-                username: $scope.userName,
+                username: $scope.loginName,
                 password: $scope.userPassword
             }, function () {
                 UserService.load().then(function () {
@@ -65,8 +63,7 @@ angular
             }, function (err) {
                 toaster.pop({
                     type: 'error',
-                    title: 'Please, check your credentials',
-                    timeout: 2000,
+                    title: 'Please, check your credentials'
                 });
 
             })
