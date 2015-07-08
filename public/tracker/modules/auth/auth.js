@@ -55,7 +55,7 @@ angular
         $scope.login = function () {
 
             Login.save({
-                username: $scope.userName,
+                username: $scope.loginName,
                 password: $scope.userPassword
             }, function () {
                 UserService.load().then(function () {
