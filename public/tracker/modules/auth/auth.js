@@ -102,7 +102,7 @@ angular
             }, function (err) {
                 toaster.pop({
                     type: 'error',
-                    title: err.data
+                    title: err.data.toString()
                 });
             });
         }
@@ -132,7 +132,7 @@ angular
 
                 toaster.pop({
                     type: 'error',
-                    title: err.data
+                    title: err.data.toString()
                 });
 
             });

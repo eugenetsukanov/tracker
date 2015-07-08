@@ -144,23 +144,23 @@ module.exports = function (app, passport, flash) {
             User.findOne({email: req.form.email}, function (err, user) {
                 if (err) next(err);
 
-                if (!user) {
-                    user.first = req.form.first;
-                    user.last = req.form.last;
-                    user.email = req.form.email;
-
-                    user.save(function (err, user) {
-                        if (err) return next(err);
-                        res.json(user);
-                    });
-                } else {
+                if (user && user._id.toString() !== req.user._id.toString()) {
                     var error = '\'' + req.form.email + '\' already exist';
-                    res.status(403).send(error);
+                    return res.status(400).send(error);
                 }
 
+                req.user.email = req.form.email;
+                req.user.first = req.form.first;
+                req.user.last = req.form.last;
+
+                req.user.save(function (err, user) {
+                    if (err) return next(err);
+                    res.json(user);
+                });
+
             });
-        }
-        else {
+
+        } else {
             res.status(400).json(req.form.errors);
         }
 
