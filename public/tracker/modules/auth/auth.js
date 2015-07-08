@@ -65,7 +65,7 @@ angular
             }, function (err) {
                 toaster.pop({
                     type: 'error',
-                    title: err.data.toString() //'Please, check your credentials'
+                    title: err.data.toString()
                 });
 
             })

@@ -114,8 +114,8 @@ module.exports = function (app, passport, flash) {
                 });
             } else {
                 var error = (user.email == req.body.email)
-                    ? req.body.email + ' already exist'
-                    : req.body.username + ' already exist';
+                    ? '\'' + req.body.email + '\' already exist'
+                    : '\'' + req.body.username + '\' already exist';
 
                 res.status(403).send(error);
             }
