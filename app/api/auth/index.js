@@ -1,4 +1,4 @@
-module.exports = function (app, passport) {
+module.exports = function (app, passport, flash) {
 
     var Tokenizer = app.container.get('Tokenizer');
     var Mailer = app.container.get('Mailer');
@@ -34,8 +34,18 @@ module.exports = function (app, passport) {
 
     });
 
-    app.post('/api/login',
-        passport.authenticate('local', {successRedirect: '/api/users/me'})
+    app.post('/api/login', function (req, res, next) {
+            passport.authenticate('local', function(err, user, info) {
+                if (err) return next(err);
+
+                if (!user) return res.status(403).send(req.flash('loginMessage'));
+
+                req.logIn(user, {failureFlash: true}, function(err) {
+                    if (err) return next(err);
+                    return res.redirect('/api/users/me');
+                });
+            })(req, res, next);
+        }
     );
 
     app.post('/api/logout', function (req, res) {

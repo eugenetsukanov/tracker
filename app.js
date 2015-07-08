@@ -10,6 +10,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var nodemailer = require('nodemailer');
 var passport = require('passport');
+var flash = require('connect-flash');
 
 
 app.container.get('Mongoose');
@@ -20,6 +21,7 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.enable('trust proxy');
+app.use(flash());
 
 var MongoSessionStore = require('connect-mongo')(session);
 
