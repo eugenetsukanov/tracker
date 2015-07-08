@@ -141,13 +141,23 @@ module.exports = function (app, passport, flash) {
     app.put('/api/users/me', UserForm, function (req, res, next) {
         if (req.form.isValid) {
 
-            req.user.first = req.form.first;
-            req.user.last = req.form.last;
-            req.user.email = req.form.email;
+            User.findOne({email: req.form.email}, function (err, user) {
+                if (err) next(err);
 
-            req.user.save(function (err, user) {
-                if (err) return next(err);
-                res.json(user);
+                if (!user) {
+                    user.first = req.form.first;
+                    user.last = req.form.last;
+                    user.email = req.form.email;
+
+                    user.save(function (err, user) {
+                        if (err) return next(err);
+                        res.json(user);
+                    });
+                } else {
+                    var error = '\'' + req.form.email + '\' already exist';
+                    res.status(403).send(error);
+                }
+
             });
         }
         else {

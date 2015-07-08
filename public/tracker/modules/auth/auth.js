@@ -132,7 +132,7 @@ angular
 
                 toaster.pop({
                     type: 'error',
-                    title: err.statusText
+                    title: err.data
                 });
 
             });
