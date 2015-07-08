@@ -3,7 +3,8 @@
     <h2 ng-hide="task._id == newTask._id" class="clearfix">
         {{task.title}}
         <div class="pull-right" ng-controller="gotoRootTaskCtrl" ng-if="parentTask">
-            <a tooltip="Project: {{root.title | limitTo: 15}}" ng-if="root" class="btn btn-sm btn-default" ui-sref="app.task({taskId: root._id})"><i
+            <a tooltip="Project: {{root.title | limitTo: 15}}" ng-if="root" class="btn btn-sm btn-default"
+               ui-sref="app.task({taskId: root._id})"><i
                     class="fa fa-long-arrow-up"></i>&nbsp;{{root.title | limitTo: 15}}
                 <span ng-if="root.title.length > 10">...</span>
             </a>
@@ -28,17 +29,18 @@
 <div ng-if="!newTask._id" task-editor task="newTask" task-on-complete="init"
      class="edit-form"></div>
 
+<div ng-if="tasks.length">
+    <div class="pull-right board-buttons btn-group" role="group" ng-if="taskId">
+        <a class="btn btn-sm btn-default" ui-sref="app.tags-page({taskId: task._id})">Tags</a>
+        <a class="btn btn-sm btn-default" ui-sref="app.tasks-archive({taskId: task._id})">Archive</a>
+        <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: task._id, userId: userId})">Report</a>
+    </div>
 
-<div class="pull-right board-buttons btn-group" role="group" ng-if="taskId">
-    <a class="btn btn-sm btn-default" ui-sref="app.tags-page({taskId: task._id})">Tags</a>
-    <a class="btn btn-sm btn-default" ui-sref="app.tasks-archive({taskId: task._id})">Archive</a>
-    <a class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: task._id, userId: userId})">Report</a>
+    <div class="pull-right board-buttons" ng-if="!taskId">
+        <a class="btn btn-sm btn-default" ui-sref="app.projects-archive">Archive</a>
+    </div>
+
+    <div task-views tasks="tasks" task-on-complete="init"></div>
 </div>
-
-<div class="pull-right board-buttons" ng-if="!taskId">
-    <a class="btn btn-sm btn-default" ui-sref="app.projects-archive">Archive</a>
-</div>
-
-<div task-views tasks="tasks" task-on-complete="init"></div>
 
 
