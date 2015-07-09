@@ -9,6 +9,7 @@ module.exports = function (app, passport, flash) {
         field = form.field;
 
     var UserForm = form(
+        field("local.username").trim(),
         field("first").trim(),
         field("last").trim(),
         field("email").trim().required().isEmail()
@@ -149,6 +150,7 @@ module.exports = function (app, passport, flash) {
                     return res.status(400).send(error);
                 }
 
+                req.user.local.username = req.form.local.username;
                 req.user.email = req.form.email;
                 req.user.first = req.form.first;
                 req.user.last = req.form.last;

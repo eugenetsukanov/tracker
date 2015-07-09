@@ -116,7 +116,14 @@ angular
         $scope.oldPassword = '';
         $scope.newPassword = '';
         $scope.newPasswordConfirm = '';
+
         $scope.user.email = $scope.user.email || '';
+
+        $scope.$watch('user.local', function (local) {
+            if (local) {
+                $scope.user.local.username = local.username;
+            }
+        });
 
         $scope.save = function () {
 
