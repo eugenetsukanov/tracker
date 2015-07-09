@@ -14,7 +14,7 @@ angular
                 return this.user;
             },
             getUserId: function () {
-                return this.user._id;
+                if (this.user && this.user._id) return this.user._id || null;
             },
             getUsers: function () {
                 return User.query();

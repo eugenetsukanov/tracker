@@ -25,11 +25,13 @@ app.use(flash());
 
 var MongoSessionStore = require('connect-mongo')(session);
 
+app.set('trust proxy', 1);
 app.use(session({
     secret: app.config.get('session:secret'),
-    cookie: { maxAge: 4*7*24*60*1000 }, // 4 weeks
+    cookie: { maxAge: 4*7*24*60*60*1000 }, // 4 weeks
     resave: true,
     saveUninitialized: true,
+    rolling: true,
     store: new MongoSessionStore({ url: app.config.get('mongo:uri') })
 }));
 
