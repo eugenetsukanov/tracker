@@ -38,8 +38,7 @@ angular
     })
 
     .factory('SettingsService', function (
-        $localStorage,
-        $sessionStorage
+        $localStorage
     ) {
 
         
@@ -52,7 +51,11 @@ angular
                 return $localStorage[name] || defaultValues[name];
             },
             setProperty: function (name, value) {
-                $localStorage[name] = value;
+                if ($localStorage) {
+                    $localStorage[name] = value;
+                } else {
+                    defaultValues[name] = value;
+                }
             }
 
         }
