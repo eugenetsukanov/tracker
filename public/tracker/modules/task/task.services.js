@@ -37,11 +37,9 @@ angular
         return $resource('/api/tasks/:taskId/files/:fileId', {fileId: '@_id'}, {update: {method: 'PUT'}});
     })
 
-    .factory('SettingsService', function (
-        $localStorage
-    ) {
+    .factory('SettingsService', function ($localStorage) {
 
-        
+
         var defaultValues = {
             metricsDetails: 0
         };
@@ -134,6 +132,90 @@ angular
         };
 
         return box;
+    })
+
+    .factory('TitleService', function ($rootScope, Task, RootTask, $state, User) {
+
+        var self = {
+            setTitle: function () {
+                
+                $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+                    if ($state.is('app.tasks')) {
+                        $rootScope.trackerTitle = 'Projects';
+
+                    }
+                    else if ($state.is('app.task')) {
+                        Task.get({taskId: toParams.taskId}, function (task) {
+                            if (task) {
+                                RootTask.get({taskId: task._id}, function (root) {
+                                    if (task._id == root._id) {
+                                        $rootScope.trackerTitle = root.title;
+                                    } else {
+                                        $rootScope.trackerTitle = root.title + ' | ' + task.title;
+                                    }
+                                });
+                            }
+                        });
+                    }
+                    else if ($state.is('app.report')) {
+                        $rootScope.trackerTitle = 'Report';
+                    }
+                    else if ($state.is('app.task-report')) {
+                        //console.log(toParams)
+                        $rootScope.trackerTitle = 'Report';
+                        //Task.get({taskId: toParams.taskId}, function (task) {
+                        //    console.log(task.title);
+                        //    User.get({nested: toParams.userId}, function (user) {
+                        //        console.log(user.local.username);
+                        //        //$rootScope.trackerTitle = 'Report for' + task.title + 'by' + user.first + user.last;
+                        //    });
+                        //});
+                    }
+                    else if ($state.is('app.assigned-tasks')) {
+                        $rootScope.trackerTitle = 'My tasks';
+                    }
+                    else if ($state.is('app.tags-find')) {
+                        $rootScope.trackerTitle = 'Search by tags';
+                    }
+                    else if ($state.is('app.task-search')) {
+                        $rootScope.trackerTitle = 'Search';
+                    }
+                    else if ($state.is('app.tasks-archive')) {
+                        Task.get({taskId: toParams.taskId}, function (task) {
+                            if (task) {
+                                $rootScope.trackerTitle = task.title + ' | ' + 'Archive';
+                            }
+                        });
+                    }
+                    else if ($state.is('app.projects-archive')) {
+                        $rootScope.trackerTitle = 'Archive';
+                    }
+                    else if ($state.is('app.profile')) {
+                        $rootScope.trackerTitle = 'Profile';
+                    }
+                    else if ($state.is('app.login')) {
+                        $rootScope.trackerTitle = 'Login in to your Tracker';
+                    }
+                    else if ($state.is('app.register')) {
+                        $rootScope.trackerTitle = 'Registration | Tracker';
+                    }
+                    else if ($state.is('app.reset-password')) {
+                        $rootScope.trackerTitle = 'Reset Password | Tracker';
+                    }
+                    else if ($state.is('public.change-password')) {
+                        $rootScope.trackerTitle = 'Change Password';
+                    }
+                    else {
+                        $rootScope.trackerTitle = 'Tracker';
+                    }
+                });
+
+            }
+
+        };
+
+        return self;
     })
 
     .factory('TaskComplexity', function () {

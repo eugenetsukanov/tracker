@@ -11,7 +11,7 @@ angular
             .state('app', {
                 url: "/app",
                 templateUrl: "tracker/tracker.html",
-                controller: function ($scope, UserService, SearchService, toasterConfig) {
+                controller: function ($scope, $rootScope, UserService, SearchService, toasterConfig, TitleService) {
 
                     toasterConfig['prevent-duplicates'] = true;
 
@@ -26,6 +26,8 @@ angular
                             $scope.user = null;
                         }
                     });
+                    $rootScope.trackerTitle = 'Tracker';
+                    $rootScope.trackerTitle = TitleService.setTitle();
                 }
             })
             .state('app.tasks', {
@@ -125,6 +127,7 @@ angular
             }
         };
     })
+
 
 ;
 
