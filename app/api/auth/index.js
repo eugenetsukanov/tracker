@@ -128,7 +128,6 @@ module.exports = function (app, passport, flash) {
     });
 
     app.get('/api/users/me', function (req, res) {
-        console.log('req.session', req.session);
         res.json(req.user);
     });
 

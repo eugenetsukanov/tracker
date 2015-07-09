@@ -37,18 +37,22 @@ angular
         return $resource('/api/tasks/:taskId/files/:fileId', {fileId: '@_id'}, {update: {method: 'PUT'}});
     })
 
-    .factory('SettingsService', function () {
+    .factory('SettingsService', function (
+        $localStorage,
+        $sessionStorage
+    ) {
 
-        var storage = {
+        
+        var defaultValues = {
             metricsDetails: 0
         };
 
         return {
             getProperty: function (name) {
-                return storage[name];
+                return $localStorage[name] || defaultValues[name];
             },
             setProperty: function (name, value) {
-                storage[name] = value;
+                $localStorage[name] = value;
             }
 
         }
