@@ -56,8 +56,6 @@ Feature: Registration
 
     And I see task board
 
-    @wip
-
   Scenario: Add new user with wrong email
 
     Given Home page
