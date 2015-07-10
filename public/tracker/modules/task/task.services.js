@@ -217,10 +217,10 @@ angular
                         $rootScope.trackerTitle = 'Login in to your Tracker';
                     }
                     else if ($state.is('app.register')) {
-                        $rootScope.trackerTitle = 'Tracker | Registration';
+                        $rootScope.trackerTitle = 'Registration';
                     }
                     else if ($state.is('app.reset-password')) {
-                        $rootScope.trackerTitle = 'Tracker | Reset Password';
+                        $rootScope.trackerTitle = 'Reset Password';
                     }
                     else if ($state.is('public.change-password')) {
                         $rootScope.trackerTitle = 'Change Password';
