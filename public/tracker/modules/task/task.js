@@ -15,7 +15,10 @@ angular
             name: "report"
         };
 
-        $scope.userId = UserService.getUserId();
+        $scope.$watchCollection('UserService.user', function (user) {
+            if (user) $scope.userId = user._id;
+        });
+
         $scope.taskId = $stateParams.taskId;
 
         $scope.init = function () {

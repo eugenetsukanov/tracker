@@ -26,6 +26,7 @@ angular
                             $scope.user = null;
                         }
                     });
+
                     $rootScope.trackerTitle = 'Tracker';
                     $rootScope.trackerTitle = TitleService.setTitle();
                 }

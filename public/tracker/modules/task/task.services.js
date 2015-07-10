@@ -134,19 +134,20 @@ angular
         return box;
     })
 
-    .factory('TitleService', function ($rootScope, Task, RootTask, $state, User) {
+    .factory('TitleService', function ($rootScope, Task, RootTask, $state, User, $stateParams) {
 
         var self = {
             setTitle: function () {
-                
-                $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams, fromState, fromParams) {
+
+                $rootScope.$on('$viewContentLoaded', function (event) {
 
                     if ($state.is('app.tasks')) {
                         $rootScope.trackerTitle = 'Projects';
 
                     }
                     else if ($state.is('app.task')) {
-                        Task.get({taskId: toParams.taskId}, function (task) {
+
+                        Task.get({taskId: $stateParams.taskId}, function (task) {
                             if (task) {
                                 RootTask.get({taskId: task._id}, function (root) {
                                     if (task._id == root._id) {
@@ -162,15 +163,33 @@ angular
                         $rootScope.trackerTitle = 'Report';
                     }
                     else if ($state.is('app.task-report')) {
-                        //console.log(toParams)
-                        $rootScope.trackerTitle = 'Report';
-                        //Task.get({taskId: toParams.taskId}, function (task) {
-                        //    console.log(task.title);
-                        //    User.get({nested: toParams.userId}, function (user) {
-                        //        console.log(user.local.username);
-                        //        //$rootScope.trackerTitle = 'Report for' + task.title + 'by' + user.first + user.last;
-                        //    });
-                        //});
+
+                        $rootScope.developer = '';
+
+                        var developer = $stateParams.userId;
+                        var reportFor = 'All';
+
+                        $rootScope.$watch('developer', function (dev) {
+                            if (dev) {
+                                developer = dev;
+
+                                User.get({nested: developer}, function (user) {
+                                    if (user) {
+                                        reportFor = user.name;
+                                    }
+                                });
+
+                            } else {
+                                reportFor = 'All';
+                            }
+
+                            Task.get({taskId: $stateParams.taskId}, function (task) {
+                                $rootScope.trackerTitle = '(' + reportFor + '): ' + task.title;
+                            });
+
+                        });
+
+
                     }
                     else if ($state.is('app.assigned-tasks')) {
                         $rootScope.trackerTitle = 'My tasks';
@@ -182,7 +201,7 @@ angular
                         $rootScope.trackerTitle = 'Search';
                     }
                     else if ($state.is('app.tasks-archive')) {
-                        Task.get({taskId: toParams.taskId}, function (task) {
+                        Task.get({taskId: $stateParams.taskId}, function (task) {
                             if (task) {
                                 $rootScope.trackerTitle = task.title + ' | ' + 'Archive';
                             }
@@ -198,10 +217,10 @@ angular
                         $rootScope.trackerTitle = 'Login in to your Tracker';
                     }
                     else if ($state.is('app.register')) {
-                        $rootScope.trackerTitle = 'Registration | Tracker';
+                        $rootScope.trackerTitle = 'Tracker | Registration';
                     }
                     else if ($state.is('app.reset-password')) {
-                        $rootScope.trackerTitle = 'Reset Password | Tracker';
+                        $rootScope.trackerTitle = 'Tracker | Reset Password';
                     }
                     else if ($state.is('public.change-password')) {
                         $rootScope.trackerTitle = 'Change Password';

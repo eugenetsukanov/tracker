@@ -14,11 +14,12 @@ angular
                 userId: '=userId'
             },
 
-            controller: function ($scope, $stateParams, Team) {
+            controller: function ($scope, $stateParams, $rootScope, Team) {
 
                 $scope.taskId = $stateParams.taskId;
 
                 $scope.developer = $scope.userId || '';
+                $rootScope.developer = $scope.developer;
                 $scope.team = [];
 
                 $scope.date = $scope.date || new Date();
@@ -36,7 +37,7 @@ angular
                         team.forEach(function (member) {
                             $scope.team.push({
                                 id: member._id,
-                                username: member.local.username
+                                name: member.name
                             });
                         });
 
@@ -61,6 +62,7 @@ angular
                 };
 
                 $scope.update = function (dev) {
+                    $rootScope.developer = dev;
                     $scope.developer = dev;
                     getTasks($scope.date);
                 };
