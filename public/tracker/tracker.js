@@ -27,8 +27,7 @@ angular
                         }
                     });
 
-                    $rootScope.trackerTitle = 'Tracker';
-                    $rootScope.trackerTitle = TitleService.setTitle();
+                    TitleService.observe();
                 }
             })
             .state('app.tasks', {

@@ -7,6 +7,8 @@ angular
                                       $state,
                                       $stateParams,
                                       Task,
+                                      TitleService,
+                                      RootTask,
                                       UserService) {
 
 
@@ -36,6 +38,18 @@ angular
                             Task.get({taskId: task.parentTaskId}, function (parentTask) {
                                 $scope.parentTask = parentTask;
                             });
+                        }
+
+                        if ($state.is('app.task')) {
+
+                            RootTask.get({taskId: task._id}, function (root) {
+                                if (task._id == root._id) {
+                                    TitleService.setTitle(root.title);
+                                } else {
+                                    TitleService.setTitle(task.title, root.title);
+                                }
+                            });
+
                         }
                     });
 
@@ -183,15 +197,33 @@ angular
 
     })
 
-    .controller('TaskArchiveCtrl', function ($scope, $stateParams, Task, ArchivedProjects) {
+    .controller('TaskArchiveCtrl', function ($state, $scope, $stateParams, Task, ArchivedProjects, TitleService) {
 
         $scope.init = function () {
+
+
 
             if ($stateParams.taskId) {
 
                 Task.query({taskId: $stateParams.taskId, nested: 'archive'}, function (tasks) {
                     $scope.tasks = tasks;
                 });
+
+                if ($state.is('app.tasks-archive')) {
+                    Task.get({taskId: $stateParams.taskId}, function (task) {
+                        if (task) {
+                            TitleService.setTitle('Archive', task.title);
+                        }
+                    });
+                }
+
+                //if (TitleService.checkSettings()) {
+                //    Task.get({taskId: $stateParams.taskId}, function (task) {
+                //        if (task) {
+                //            TitleService.setTitle(task.title, 'Archived');
+                //        }
+                //    });
+                //}
             }
             else {
 
@@ -201,6 +233,8 @@ angular
                     });
                 });
             }
+
+
 
         };
 

@@ -134,104 +134,71 @@ angular
         return box;
     })
 
-    .factory('TitleService', function ($rootScope, Task, RootTask, $state, User, $stateParams) {
+    .factory('TitleSettings', function () {
 
         var self = {
-            setTitle: function () {
 
-                $rootScope.$on('$viewContentLoaded', function (event) {
-
-                    if ($state.is('app.tasks')) {
-                        $rootScope.trackerTitle = 'Projects';
-
-                    }
-                    else if ($state.is('app.task')) {
-
-                        Task.get({taskId: $stateParams.taskId}, function (task) {
-                            if (task) {
-                                RootTask.get({taskId: task._id}, function (root) {
-                                    if (task._id == root._id) {
-                                        $rootScope.trackerTitle = root.title;
-                                    } else {
-                                        $rootScope.trackerTitle = root.title + ' | ' + task.title;
-                                    }
-                                });
-                            }
-                        });
-                    }
-                    else if ($state.is('app.report')) {
-                        $rootScope.trackerTitle = 'Report';
-                    }
-                    else if ($state.is('app.task-report')) {
-
-                        $rootScope.developer = '';
-
-                        var developer = $stateParams.userId;
-                        var reportFor = 'All';
-
-                        $rootScope.$watch('developer', function (dev) {
-                            if (dev) {
-                                developer = dev;
-
-                                User.get({nested: developer}, function (user) {
-                                    if (user) {
-                                        reportFor = user.name;
-                                    }
-                                });
-
-                            } else {
-                                reportFor = 'All';
-                            }
-
-                            Task.get({taskId: $stateParams.taskId}, function (task) {
-                                $rootScope.trackerTitle = '(' + reportFor + '): ' + task.title;
-                            });
-
-                        });
-
-
-                    }
-                    else if ($state.is('app.assigned-tasks')) {
-                        $rootScope.trackerTitle = 'My tasks';
-                    }
-                    else if ($state.is('app.tags-find')) {
-                        $rootScope.trackerTitle = 'Search by tags';
-                    }
-                    else if ($state.is('app.task-search')) {
-                        $rootScope.trackerTitle = 'Search';
-                    }
-                    else if ($state.is('app.tasks-archive')) {
-                        Task.get({taskId: $stateParams.taskId}, function (task) {
-                            if (task) {
-                                $rootScope.trackerTitle = task.title + ' | ' + 'Archive';
-                            }
-                        });
-                    }
-                    else if ($state.is('app.projects-archive')) {
-                        $rootScope.trackerTitle = 'Archive';
-                    }
-                    else if ($state.is('app.profile')) {
-                        $rootScope.trackerTitle = 'Profile';
-                    }
-                    else if ($state.is('app.login')) {
-                        $rootScope.trackerTitle = 'Login in to your Tracker';
-                    }
-                    else if ($state.is('app.register')) {
-                        $rootScope.trackerTitle = 'Registration';
-                    }
-                    else if ($state.is('app.reset-password')) {
-                        $rootScope.trackerTitle = 'Reset Password';
-                    }
-                    else if ($state.is('public.change-password')) {
-                        $rootScope.trackerTitle = 'Change Password';
-                    }
-                    else {
-                        $rootScope.trackerTitle = 'Tracker';
-                    }
-                });
-
+            'app.tasks' : {
+                title: 'Projects'
+            },
+            'app.report' : {
+                title: 'Report'
+            },
+            'app.assigned-tasks' : {
+                title: 'My Tasks'
+            },
+            'app.tags-find' : {
+                title: 'Search by tags'
+            },
+            'app.task-search' : {
+                title: 'Search'
+            },
+            'app.projects-archive' : {
+                title: 'Archived Projects'
+            },
+            'app.profile' : {
+                title: 'Profile'
+            },
+            'app.login' : {
+                title: 'Login to your Tracker'
+            },
+            'app.register' : {
+                title: 'Register'
+            },
+            'app.reset-password' : {
+                title: 'Reset Password'
+            },
+            'public.change-password' : {
+                title: 'Change Password'
             }
 
+        };
+
+        return self;
+    })
+
+    .factory('TitleService', function (TitleSettings, $rootScope, Task, RootTask, $state, User, $stateParams) {
+
+        var self = {
+
+            checkSettings: function () {
+                return TitleSettings[$state.current.name]
+            },
+
+            setTitle: function (title, prefix) {
+                return $rootScope.trackerTitle = (prefix) ? prefix + ' | ' + title : title;
+            },
+            
+            observe: function () {
+                $rootScope.$on('$viewContentLoaded', function (event) {
+                    if (self.checkSettings()) {
+                        var route = self.checkSettings();
+                        $rootScope.trackerTitle = (route.prefix) ? route.prefix + ' | ' + route.title : route.title;
+                    } else {
+                        return $rootScope.trackerTitle = 'Tracker';
+                    }
+                });
+            }
         };
 
         return self;

@@ -14,12 +14,15 @@ angular
                 userId: '=userId'
             },
 
-            controller: function ($scope, $stateParams, $rootScope, Team) {
+            controller: function ($scope, $stateParams, $rootScope, Team, User, Task) {
 
                 $scope.taskId = $stateParams.taskId;
 
                 $scope.developer = $scope.userId || '';
                 $rootScope.developer = $scope.developer;
+
+                var reportFor = 'All';
+
                 $scope.team = [];
 
                 $scope.date = $scope.date || new Date();
@@ -32,7 +35,7 @@ angular
 
                 if ($scope.taskId) {
 
-                    Team.query({taskId: $stateParams.taskId}, function (team) {
+                    Team.query({taskId: $scope.taskId}, function (team) {
 
                         team.forEach(function (member) {
                             $scope.team.push({
@@ -48,7 +51,11 @@ angular
 
                     if ($scope.taskId) {
 
-                        ReportByTaskId.query({taskId: $scope.taskId, date: date, userId: $scope.developer }, function (tasks) {
+                        ReportByTaskId.query({
+                            taskId: $scope.taskId,
+                            date: date,
+                            userId: $scope.developer
+                        }, function (tasks) {
                             $scope.tasks = tasks;
                         });
 
@@ -61,11 +68,32 @@ angular
                     }
                 };
 
+                var setTitle = function (dev) {
+
+                    if (dev) {
+                        User.get({nested: dev}, function (user) {
+                            if (user) {
+                                reportFor = user.name;
+                            }
+                        });
+
+                    } else {
+                        reportFor = 'All';
+                    }
+                    Task.get({taskId: $stateParams.taskId}, function (task) {
+                        $rootScope.trackerTitle = '(' + reportFor + '): ' + task.title;
+                    });
+
+                };
+
                 $scope.update = function (dev) {
                     $rootScope.developer = dev;
                     $scope.developer = dev;
                     getTasks($scope.date);
+                    setTitle(dev);
                 };
+
+                if ($scope.developer) setTitle($scope.developer);
 
                 $scope.$watch('date', function (date) {
                     $scope.date = date || new Date();
