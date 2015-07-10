@@ -1,9 +1,13 @@
 angular
-    .module('Tracker', ['ui.router', 'toaster', 'ngAnimate', 'ngResource', 'ui.bootstrap', 'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize', 'ngStorage'])
+    .module('Tracker', ['ui.router', 'toaster', 'ngAnimate', 'ngResource', 'ui.bootstrap',
+        'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize', 'ngStorage', 'angular-loading-bar'])
 
-    .config(function ($stateProvider, $urlRouterProvider, $httpProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider) {
 
         $httpProvider.interceptors.push('HttpInterceptor');
+
+        cfpLoadingBarProvider.includeSpinner = false;
+        cfpLoadingBarProvider.includeBar = true;
 
         $urlRouterProvider.otherwise("/app/tasks");
 

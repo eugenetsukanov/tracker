@@ -680,3 +680,8 @@ hr {
     80% { opacity: 1; }
     100% { opacity: 0; }
 }
+
+#loading-bar .bar {
+    background: #000000;
+}
+
