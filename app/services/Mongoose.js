@@ -1,7 +1,8 @@
-var Mongoose = function (uri) {
+var Mongoose = function (config) {
 
     var mongoose = require('mongoose');
-    mongoose.connect(uri);
+    mongoose.set('debug', config.debug);
+    mongoose.connect(config.uri);
 
     return mongoose;
 };
