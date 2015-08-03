@@ -50,28 +50,49 @@ module.exports = function (app, passport, flash) {
 
     //------------------------------------------GOOGLE------------------------------------------
 
-    app.get('/api/auth/google',
+    app.get('/public/auth/google',
         passport.authenticate('google', {failureRedirect: '/login'}),
         function (req, res) {
             res.redirect('/');
         }
     );
 
-
-    app.get('/api/auth/google/return',
+    app.get('/public/auth/google/return',
         passport.authenticate('google', {failureRedirect: '/login'}),
         function (req, res) {
             res.redirect('/');
         }
     );
 
+    //------------------------------------------FACEBOOK------------------------------------------
+
+    app.get('/api/auth/facebook',
+        passport.authenticate('facebook'));
+
+    app.get('/api/auth/facebook/return',
+        passport.authenticate('facebook', { failureRedirect: '/login' }),
+        function(req, res) {
+            res.redirect('/');
+        });
+
+    //-------------------------------------------TWITTER-------------------------------------------
+
+    app.get('/public/auth/twitter',
+        passport.authenticate('twitter'));
+
+    app.get('/public/auth/twitter/return',
+        passport.authenticate('twitter', { failureRedirect: '/login' }),
+        function(req, res) {
+            res.redirect('/');
+        });
+
+    //---------------------------------------------------------------------------------------------
 
     app.post('/api/logout', function (req, res) {
         req.logout();
         res.sendStatus(200);
     });
 
-//------------------------------------------RESET PASSWORD------------------------------------------
 
 
     app.post('/api/resetPassword', function (req, res, next) {

@@ -12,15 +12,15 @@ var UserSchema = new Schema({
         passwordSalt: String,
         passwordHashed: String
     },
-    google: {
-
-    },
     facebook: {
-
+        //id: {type: ObjectId, ref: 'User'},
+        profileId: String,
+        accessToken: String
     },
-    twitter: {
+    created: {type: Date, default: Date.now}
 
-    }
+
+
 
 });
 

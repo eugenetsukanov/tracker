@@ -7,6 +7,8 @@ module.exports = function (passport) {
 
     var User = require('./../models/user');
 
+    var configAuth = require('./auth');
+
     passport.serializeUser(function(user, done) {
         done(null, user._id);
     });
@@ -43,9 +45,10 @@ module.exports = function (passport) {
         }
     ));
 
+    //---------------------Google
 
     passport.use(new GoogleStrategy({
-            returnURL: 'http://localhost:3000/auth/google/return',
+            returnURL: configAuth.googleAuth.callbackURL,
             realm: 'http://localhost:3000/'
         },
         function(identifier, profile, done) {
@@ -56,7 +59,57 @@ module.exports = function (passport) {
     ));
 
 
+    //---------------------Facebook
+
+    passport.use(new FacebookStrategy({
+            clientID: configAuth.facebookAuth.clientID,
+            clientSecret: configAuth.facebookAuth.clientSecret,
+            callbackURL: configAuth.facebookAuth.callbackURL,
+            enableProof: false
+        },
+        function(accessToken, refreshToken, profile, done) {
+            User.findOne({ 'facebook.id': profile.id }, function (err, user) {
+
+                if (err) {
+                    return done(err);
+                }
+                console.log(profile);
+                //No user was found... so create a new user with values from Facebook (all the profile. stuff)
+                if (!user) {
+
+                    user = new User({
+                        'facebook.profileId': profile.id,
+                        first: profile.displayName,
+                        //email: profile.emails[0].value,
+                        //now in the future searching on User.findOne({'facebook.id': profile.id } will match because of this next line
+                        facebook: profile._json
+                    });
+
+                    user.save(function(err) {
+                        if (err) console.log(err);
+                        return done(err, user);
+                    });
+                } else {
+                    return done(err, user);
+                }
+
+            });
+        }
+    ));
 
 
+    //---------------------Twitter
+
+    //passport.use(new TwitterStrategy({
+    //        consumerKey: configAuth.twitterAuth.clientID,
+    //        consumerSecret: configAuth.twitterAuth.consumerSecret,
+    //        callbackURL: configAuth.twitterAuth.callbackURL
+    //    },
+    //    function(token, tokenSecret, profile, done) {
+    //        User.findOrCreate({ twitterId: profile.id }, function (err, user) {
+    //            return done(err, user);
+    //        });
+    //    }
+    //));
 
 };
