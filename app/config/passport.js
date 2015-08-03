@@ -1,6 +1,10 @@
 module.exports = function (passport) {
 
-    var LocalStrategy = require('passport-local').Strategy;
+    var LocalStrategy = require('passport-local').Strategy,
+        GoogleStrategy = require('passport-google').Strategy,
+        TwitterStrategy = require('passport-twitter').Strategy,
+        FacebookStrategy = require('passport-facebook').Strategy;
+
     var User = require('./../models/user');
 
     passport.serializeUser(function(user, done) {
@@ -38,5 +42,21 @@ module.exports = function (passport) {
             });
         }
     ));
+
+
+    passport.use(new GoogleStrategy({
+            returnURL: 'http://localhost:3000/auth/google/return',
+            realm: 'http://localhost:3000/'
+        },
+        function(identifier, profile, done) {
+            User.findOrCreate({ openId: identifier }, function(err, user) {
+                done(err, user);
+            });
+        }
+    ));
+
+
+
+
 
 };

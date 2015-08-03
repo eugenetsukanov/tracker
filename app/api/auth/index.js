@@ -36,23 +36,43 @@ module.exports = function (app, passport, flash) {
     });
 
     app.post('/api/login', function (req, res, next) {
-            passport.authenticate('local', function(err, user, info) {
+        passport.authenticate('local', function (err, user, info) {
+            if (err) return next(err);
+
+            if (!user) return res.status(403).send(req.flash('loginMessage'));
+
+            req.logIn(user, {failureFlash: true}, function (err) {
                 if (err) return next(err);
+                return res.redirect('/api/users/me');
+            });
+        })(req, res, next);
+    });
 
-                if (!user) return res.status(403).send(req.flash('loginMessage'));
+    //------------------------------------------GOOGLE------------------------------------------
 
-                req.logIn(user, {failureFlash: true}, function(err) {
-                    if (err) return next(err);
-                    return res.redirect('/api/users/me');
-                });
-            })(req, res, next);
+    app.get('/api/auth/google',
+        passport.authenticate('google', {failureRedirect: '/login'}),
+        function (req, res) {
+            res.redirect('/');
         }
     );
+
+
+    app.get('/api/auth/google/return',
+        passport.authenticate('google', {failureRedirect: '/login'}),
+        function (req, res) {
+            res.redirect('/');
+        }
+    );
+
 
     app.post('/api/logout', function (req, res) {
         req.logout();
         res.sendStatus(200);
     });
+
+//------------------------------------------RESET PASSWORD------------------------------------------
+
 
     app.post('/api/resetPassword', function (req, res, next) {
 
@@ -191,4 +211,5 @@ module.exports = function (app, passport, flash) {
     });
 
 
-};
+}
+;

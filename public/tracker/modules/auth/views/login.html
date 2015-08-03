@@ -11,7 +11,14 @@
                 <input ng-model="userPassword" type="password" class="form-control" placeholder="Password">
             </div>
             <button type="submit" class="btn btn-primary pull-left btn-sm">Login</button>
+            <div class="clearfix">
+                <div class="pull-right">
+                    <a href="/auth/google"><img src="/tracker/modules/auth/views/social-logo/google.png" class="d30"/></a>
+                    <a href="/auth/facebook"><img src="/tracker/modules/auth/views/social-logo/facebook.png" class="d30"/></a>
+                    <a href="/auth/twitter"><img src="/tracker/modules/auth/views/social-logo/twitter.png" class="d30"/></a>
+                </div>
 
+            </div>
             <a ui-sref="app.reset-password" class="btn btn-link btn-sm pull-right">Forgot password</a>
         </form>
 

@@ -11,6 +11,15 @@ var UserSchema = new Schema({
         username: {type: String, index: true},
         passwordSalt: String,
         passwordHashed: String
+    },
+    google: {
+
+    },
+    facebook: {
+
+    },
+    twitter: {
+
     }
 
 });
