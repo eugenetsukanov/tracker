@@ -50,14 +50,14 @@ module.exports = function (app, passport, flash) {
 
     //------------------------------------------GOOGLE------------------------------------------
 
-    app.get('/public/auth/google',
+    app.get('/auth/google',
         passport.authenticate('google', {failureRedirect: '/login'}),
         function (req, res) {
             res.redirect('/');
         }
     );
 
-    app.get('/public/auth/google/return',
+    app.get('/auth/google/callback',
         passport.authenticate('google', {failureRedirect: '/login'}),
         function (req, res) {
             res.redirect('/');
@@ -66,21 +66,21 @@ module.exports = function (app, passport, flash) {
 
     //------------------------------------------FACEBOOK------------------------------------------
 
-    app.get('/api/auth/facebook',
-        passport.authenticate('facebook'));
+    app.get('/auth/facebook',
+        passport.authenticate('facebook', { scope: 'email' }));
 
-    app.get('/api/auth/facebook/return',
-        passport.authenticate('facebook', { failureRedirect: '/login' }),
+    app.get('/auth/facebook/callback',
+        passport.authenticate('facebook', { failureRedirect: '/' }),
         function(req, res) {
             res.redirect('/');
         });
 
     //-------------------------------------------TWITTER-------------------------------------------
 
-    app.get('/public/auth/twitter',
+    app.get('/auth/twitter',
         passport.authenticate('twitter'));
 
-    app.get('/public/auth/twitter/return',
+    app.get('/auth/twitter/callback',
         passport.authenticate('twitter', { failureRedirect: '/login' }),
         function(req, res) {
             res.redirect('/');

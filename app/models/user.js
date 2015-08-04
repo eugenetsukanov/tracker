@@ -13,14 +13,25 @@ var UserSchema = new Schema({
         passwordHashed: String
     },
     facebook: {
-        //id: {type: ObjectId, ref: 'User'},
-        profileId: String,
-        accessToken: String
+        id: String,
+        token: String,
+        name: String,
+        email: String
     },
+    twitter: {
+        id: String,
+        token: String,
+        name: String,
+        email: String
+    },
+    google: {
+        id: String,
+        token: String,
+        name: String,
+        email: String
+    },
+
     created: {type: Date, default: Date.now}
-
-
-
 
 });
 

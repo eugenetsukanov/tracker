@@ -2,20 +2,20 @@ module.exports = {
 
     'facebookAuth' : {
         'clientID'      : '423090387878355',
-        'clientSecret'  : 'b2947c5c47ca55abbd0a12cc8b6c6',
-        'callbackURL'   : 'http://localhost:3000/auth/facebook/return'
+        'clientSecret'  : '074b2947c5c47ca55abbd0a12cc8b6c6',
+        'callbackURL'   : 'http://localhost:3000/auth/facebook/callback'
     },
 
     'twitterAuth' : {
-        'consumerKey'       : 'your-consumer-key-here',
-        'consumerSecret'    : 'your-client-secret-here',
-        'callbackURL'       : 'http://localhost:8080/auth/twitter/return'
+        'consumerKey'       : 'NyVl8IVcKPMEK3fGdyq3hHGu3',
+        'consumerSecret'    : 'ba5YfOLefi7xgaabQTyh6MEhvxtSMcXM1UXfMssP5pP8mgBYCv',
+        'callbackURL'       : 'http://localhost:3000/auth/twitter/callback'
     },
 
     'googleAuth' : {
         'clientID'      : '796647392665-dk8m7crco569d9on57phtsp2ilfg7221.apps.googleusercontent.com',
         'clientSecret'  : '5ZYQjvsIfYXo97W_MXiFxZ46',
-        'callbackURL'   : 'http://localhost:8080/auth/google/return'
+        'callbackURL'   : 'http://localhost:3000/auth/google/callback'
     }
 
 };

@@ -5,12 +5,6 @@ angular
         return $resource('/api/users/:nested', {}, {update: {method: 'PUT'}});
     })
 
-    //.factory('Facebook', function ($resource) {
-    //    return $resource('/api/auth/facebook');
-    //})
-
-
-
     .factory('UserService', function ($q, User, Logout) {
         var self = {
 
