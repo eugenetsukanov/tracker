@@ -61,7 +61,6 @@ module.exports = function (passport) {
                     return done(err);
                 }
                 console.log(profile);
-                //No user was found... so create a new user with values from Facebook (all the profile. stuff)
                 if (!user) {
 
                     user = new User({
@@ -103,14 +102,12 @@ module.exports = function (passport) {
                         return done(err);
                     }
 
-                    //No user was found... so create a new user with values from Facebook (all the profile. stuff)
                     if (!user) {
 
                         var newUser = new User();
                         newUser.facebook.id = profile.id;
-                        newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+                        newUser.facebook.name = profile.displayName;
                         newUser.facebook.token = accessToken;
-                        newUser.facebook.email = profile.emails[0].value;
 
                         newUser.save(function (err) {
                             if (err) console.log(err);
@@ -144,15 +141,13 @@ module.exports = function (passport) {
                     if (err) {
                         return done(err);
                     }
-                    console.log(profile);
-                    //No user was found... so create a new user with values from Facebook (all the profile. stuff)
+
                     if (!user) {
 
                         var newUser = new User();
                         newUser.twitter.id = profile.id;
                         newUser.twitter.name = profile.displayName;
                         newUser.twitter.token = token;
-                        //newUser.twitter.email = profile.emails[0].value;
 
                         newUser.save(function (err) {
                             if (err) console.log(err);
