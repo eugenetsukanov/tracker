@@ -1,7 +1,7 @@
 module.exports = function (passport) {
 
     var LocalStrategy = require('passport-local').Strategy,
-        GoogleStrategy = require('passport-google').Strategy,
+        GoogleStrategy = require('passport-google-oauth').OAuth2Strategy,
         TwitterStrategy = require('passport-twitter').Strategy,
         FacebookStrategy = require('passport-facebook').Strategy;
 
@@ -50,34 +50,36 @@ module.exports = function (passport) {
     //---------------------Google
 
     passport.use(new GoogleStrategy({
-            returnURL: configAuth.googleAuth.callbackURL,
-            realm: 'http://localhost:3000/'
+            clientID: configAuth.googleAuth.clientID,
+            clientSecret: configAuth.googleAuth.clientSecret,
+            callbackURL: configAuth.googleAuth.callbackURL
         },
-        function (identifier, profile, done) {
+        function (accessToken, refreshToken, profile, done) {
+            process.nextTick(function () {
 
-            User.findOne({'google.id': identifier}, function (err, user) {
+                User.findOne({'google.id': profile.id}, function (err, user) {
 
-                if (err) {
-                    return done(err);
-                }
-                console.log(profile);
-                if (!user) {
+                    if (err) {
+                        return done(err);
+                    }
+                    console.log(profile);
+                    if (!user) {
 
-                    user = new User({
-                        'google.profileId': identifier,
-                        first: profile.displayName
-                        //email: profile.emails[0].value,
+                        var newUser = new User();
+                        newUser.google.id = profile.id;
+                        newUser.google.name = profile.displayName;
+                        newUser.google.token = accessToken;
+                        //newUser.email: profile.emails[0].value,
 
-                    });
-
-                    user.save(function (err) {
-                        if (err) console.log(err);
+                        newUser.save(function (err) {
+                            if (err) console.log(err);
+                            return done(err, newUser);
+                        });
+                    } else {
                         return done(err, user);
-                    });
-                } else {
-                    return done(err, user);
-                }
+                    }
 
+                });
             });
 
         }

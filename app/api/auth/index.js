@@ -51,18 +51,15 @@ module.exports = function (app, passport, flash) {
     //------------------------------------------GOOGLE------------------------------------------
 
     app.get('/auth/google',
-        passport.authenticate('google', {failureRedirect: '/login'}),
-        function (req, res) {
-            res.redirect('/');
-        }
+        passport.authenticate('google', {scope: ['profile', 'email']})
     );
 
-    app.get('/auth/google/callback',
-        passport.authenticate('google', {failureRedirect: '/login'}),
-        function (req, res) {
-            res.redirect('/');
-        }
+    app.get('/auth/google/callback',passport.authenticate('google', {
+        successRedirect : '/',
+        failureRedirect : '/'})
     );
+
+
 
     //------------------------------------------FACEBOOK------------------------------------------
 
