@@ -92,9 +92,11 @@ module.exports = function (passport) {
             clientID: configAuth.facebookAuth.clientID,
             clientSecret: configAuth.facebookAuth.clientSecret,
             callbackURL: configAuth.facebookAuth.callbackURL,
-            enableProof: false
+            //enableProof: false,
+            profileFields: ['id', 'displayName', 'emails']
         },
         function (accessToken, refreshToken, profile, done) {
+            console.log(arguments)
 
             process.nextTick(function () {
 
