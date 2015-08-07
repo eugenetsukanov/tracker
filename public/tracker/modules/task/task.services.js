@@ -179,18 +179,25 @@ angular
 
     .factory('TitleService', function (TitleSettings, $rootScope, Task, RootTask, $state, User, $stateParams) {
 
+        //@@TODO clean up incoming parameters, remove not used
+        //@@TODO need inversion; rootScope should know about title service, TitleService should not know about rootScope
+        // $rootScope.TitleService = TitleService;
+        // in HTML/View, {{TitleService.getTitle()}}
+
         var self = {
 
             checkSettings: function () {
+                //@@TODO naming -> getRouteTitle
                 return TitleSettings[$state.current.name]
             },
 
             setTitle: function (title, prefix) {
-                return $rootScope.trackerTitle = (prefix) ? prefix + ' | ' + title : title;
+                return $rootScope.trackerTitle = prefix ? prefix + ' | ' + title : title;
             },
             
             observe: function () {
                 $rootScope.$on('$viewContentLoaded', function (event) {
+                    //@@TODO self.getRouteTitle()
                     if (self.checkSettings()) {
                         var route = self.checkSettings();
                         $rootScope.trackerTitle = (route.prefix) ? route.prefix + ' | ' + route.title : route.title;

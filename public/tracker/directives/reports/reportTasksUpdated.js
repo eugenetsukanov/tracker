@@ -19,6 +19,8 @@ angular
                 $scope.taskId = $stateParams.taskId;
 
                 $scope.developer = $scope.userId || '';
+                //@TODO review and refactor this controller to TitleSerivce
+                //@TODO why we should share developer to rootScope?
                 $rootScope.developer = $scope.developer;
 
                 var reportFor = 'All';
@@ -69,6 +71,7 @@ angular
                 };
 
                 var setTitle = function (dev) {
+                    //@TODO not need to use `dev`; naming to `developer`
 
                     if (dev) {
                         User.get({nested: dev}, function (user) {
@@ -81,12 +84,15 @@ angular
                         reportFor = 'All';
                     }
                     Task.get({taskId: $stateParams.taskId}, function (task) {
+                        //@TODO incorrect way $rootScope.trackerTitle
+                        // refactor this to TitleSerivce
                         $rootScope.trackerTitle = '(' + reportFor + '): ' + task.title;
                     });
 
                 };
 
                 $scope.update = function (dev) {
+                    //@TODO remove $rootScope.developer
                     $rootScope.developer = dev;
                     $scope.developer = dev;
                     getTasks($scope.date);

@@ -40,6 +40,9 @@ angular
                             });
                         }
 
+                        //@@TODO this part move to gotoRootTaskCtrl, no need to load root again
+                        // it should work as TitileService.setPrefix(root.title);
+
                         if ($state.is('app.task')) {
 
                             RootTask.get({taskId: task._id}, function (root) {
@@ -216,14 +219,6 @@ angular
                         }
                     });
                 }
-
-                //if (TitleService.checkSettings()) {
-                //    Task.get({taskId: $stateParams.taskId}, function (task) {
-                //        if (task) {
-                //            TitleService.setTitle(task.title, 'Archived');
-                //        }
-                //    });
-                //}
             }
             else {
 
@@ -233,8 +228,6 @@ angular
                     });
                 });
             }
-
-
 
         };
 
