@@ -15,7 +15,8 @@
     "sender": "mailtotesthere@gmail.com"
   },
   "mongo": {
-    "uri": "mongodb://localhost/tracker"
+    "uri": "mongodb://localhost/tracker",
+    "debug": false
   },
   "fixtures": {
     "load": false
