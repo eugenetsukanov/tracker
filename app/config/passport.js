@@ -62,14 +62,16 @@ module.exports = function (passport) {
                     if (err) {
                         return done(err);
                     }
-                    console.log(profile);
                     if (!user) {
 
                         var newUser = new User();
                         newUser.google.id = profile.id;
                         newUser.google.name = profile.displayName;
                         newUser.google.token = accessToken;
-                        //newUser.email: profile.emails[0].value,
+                        newUser.email = profile.emails[0].value;
+                        newUser.first = profile.displayName.split(' ')[0];
+                        newUser.last = profile.displayName.split(' ')[1];
+
 
                         newUser.save(function (err) {
                             if (err) console.log(err);
@@ -112,6 +114,9 @@ module.exports = function (passport) {
                         newUser.facebook.id = profile.id;
                         newUser.facebook.name = profile.displayName;
                         newUser.facebook.token = accessToken;
+                        newUser.email = profile.emails[0].value;
+                        newUser.first = profile.displayName.split(' ')[0];
+                        newUser.last = profile.displayName.split(' ')[1];
 
                         newUser.save(function (err) {
                             if (err) console.log(err);
@@ -137,7 +142,7 @@ module.exports = function (passport) {
         },
 
         function (token, tokenSecret, profile, done) {
-
+            
             process.nextTick(function () {
 
                 User.findOne({'twitter.id': profile.id}, function (err, user) {
@@ -152,6 +157,9 @@ module.exports = function (passport) {
                         newUser.twitter.id = profile.id;
                         newUser.twitter.name = profile.displayName;
                         newUser.twitter.token = token;
+                        //newUser.email = profile.emails[0].value;
+                        newUser.first = profile.displayName.split(' ')[0];
+                        newUser.last = profile.displayName.split(' ')[1];
 
                         newUser.save(function (err) {
                             if (err) console.log(err);
