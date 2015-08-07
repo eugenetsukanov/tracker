@@ -9,6 +9,7 @@ var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var passport = require('passport');
+var flash = require('connect-flash');
 
 app.container.get('Mongoose');
 app.container.get('GridFS');
@@ -18,14 +19,17 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.enable('trust proxy');
+app.use(flash());
 
 var MongoSessionStore = require('connect-mongo')(session);
 
+app.set('trust proxy', 1);
 app.use(session({
     secret: app.config.get('session:secret'),
-    cookie: { maxAge: 4*7*24*60*1000 }, // 4 weeks
+    cookie: { maxAge: 4*7*24*60*60*1000 }, // 4 weeks
     resave: true,
     saveUninitialized: true,
+    rolling: true,
     store: new MongoSessionStore({ url: app.config.get('mongo:uri') })
 }));
 

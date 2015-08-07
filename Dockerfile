@@ -16,3 +16,4 @@ RUN apt-get -y install nodejs
 RUN npm install -g bower
 RUN npm install -g forever
 RUN npm install -g pm2
+RUN npm install -g nodemon

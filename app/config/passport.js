@@ -3,7 +3,6 @@ module.exports = function (passport) {
     var LocalStrategy = require('passport-local').Strategy;
     var User = require('./../models/user');
 
-    // passport
     passport.serializeUser(function(user, done) {
         done(null, user._id);
     });
@@ -14,15 +13,26 @@ module.exports = function (passport) {
         });
     });
 
-    passport.use(new LocalStrategy(
-        function(username, password, done) {
-            User.findOne({ 'local.username': username }, function(err, user) {
+    passport.use(new LocalStrategy({
+            passReqToCallback : true,
+            failureFlash: true
+        },
+        function(req, username, password, done) {
+
+            var query = {
+                $or: [
+                    {'email': username},
+                    {'local.username': username}
+                ]
+            };
+
+            User.findOne(query, function(err, user) {
                 if (err) { return done(err); }
                 if (!user) {
-                    return done(null, false, { message: 'Incorrect username.' });
+                    return done(null, false, req.flash('loginMessage', 'User \''+username+'\' is not registered'));
                 }
                 if (!user.validPassword(password)) {
-                    return done(null, false, { message: 'Incorrect password.' });
+                    return done(null, false, req.flash('loginMessage', 'Wrong password'));
                 }
                 return done(null, user);
             });
