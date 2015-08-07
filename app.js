@@ -8,9 +8,8 @@ app.container = app.application.container;
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
-var nodemailer = require('nodemailer');
 var passport = require('passport');
-
+var flash = require('connect-flash');
 
 app.container.get('Mongoose');
 app.container.get('GridFS');
@@ -20,14 +19,17 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 app.enable('trust proxy');
+app.use(flash());
 
 var MongoSessionStore = require('connect-mongo')(session);
 
+app.set('trust proxy', 1);
 app.use(session({
     secret: app.config.get('session:secret'),
-    cookie: { maxAge: 4*7*24*60*1000 }, // 4 weeks
+    cookie: { maxAge: 4*7*24*60*60*1000 }, // 4 weeks
     resave: true,
     saveUninitialized: true,
+    rolling: true,
     store: new MongoSessionStore({ url: app.config.get('mongo:uri') })
 }));
 
@@ -40,7 +42,10 @@ app.use(express.static(__dirname + '/public'));
 require('./app/config/passport')(passport);
 
 // app routes
-require('./app/routes/app.routes')(app, passport, nodemailer);
+require('./app/routes/app.routes')(app, passport);
+
+// cron
+require('./app/config/cron')(app.container.get('Cron'), app.container);
 
 if (app.config.get('fixtures:load')) {
     console.log('> load fixtures');

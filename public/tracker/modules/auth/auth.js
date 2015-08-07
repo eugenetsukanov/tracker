@@ -14,7 +14,7 @@ angular
                 return this.user;
             },
             getUserId: function () {
-                return this.user._id;
+                if (this.user && this.user._id) return this.user._id || null;
             },
             getUsers: function () {
                 return User.query();
@@ -55,7 +55,7 @@ angular
         $scope.login = function () {
 
             Login.save({
-                username: $scope.userName,
+                username: $scope.loginName,
                 password: $scope.userPassword
             }, function () {
                 UserService.load().then(function () {
@@ -65,8 +65,7 @@ angular
             }, function (err) {
                 toaster.pop({
                     type: 'error',
-                    title: 'Please, check your credentials',
-                    timeout: 2000,
+                    title: err.data.toString()
                 });
 
             })
@@ -89,7 +88,7 @@ angular
         return $resource('/api/register');
     })
 
-    .controller('RegisterCtrl', function ($scope, Register, $state, UserService) {
+    .controller('RegisterCtrl', function ($scope, Register, $state, UserService, toaster) {
 
         $scope.register = function () {
             Register.save({
@@ -99,6 +98,11 @@ angular
             }, function () {
                 UserService.load().then(function () {
                     $state.go('app.tasks');
+                });
+            }, function (err) {
+                toaster.pop({
+                    type: 'error',
+                    title: err.data.toString()
                 });
             });
         }
@@ -112,7 +116,14 @@ angular
         $scope.oldPassword = '';
         $scope.newPassword = '';
         $scope.newPasswordConfirm = '';
+
         $scope.user.email = $scope.user.email || '';
+
+        $scope.$watch('user.local', function (local) {
+            if (local) {
+                $scope.user.local.username = local.username;
+            }
+        });
 
         $scope.save = function () {
 
@@ -128,7 +139,7 @@ angular
 
                 toaster.pop({
                     type: 'error',
-                    title: err.statusText
+                    title: err.data.toString()
                 });
 
             });

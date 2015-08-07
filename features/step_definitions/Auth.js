@@ -9,7 +9,7 @@ module.exports = function () {
     });
 
     this.When(/^I type username "([^"]*)"$/, function (arg1, callback) {
-        this.iType('input[ng-model="userName"]', arg1, callback);
+        this.iType('input[ng-model="loginName"]', arg1, callback);
     });
 
     this.When(/^I type password "([^"]*)"$/, function (arg1, callback) {

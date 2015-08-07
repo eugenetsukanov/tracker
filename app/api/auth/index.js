@@ -1,4 +1,4 @@
-module.exports = function (app, passport) {
+module.exports = function (app, passport, flash) {
 
     var Tokenizer = app.container.get('Tokenizer');
     var Mailer = app.container.get('Mailer');
@@ -9,6 +9,7 @@ module.exports = function (app, passport) {
         field = form.field;
 
     var UserForm = form(
+        field("local.username").trim(),
         field("first").trim(),
         field("last").trim(),
         field("email").trim().required().isEmail()
@@ -34,8 +35,18 @@ module.exports = function (app, passport) {
 
     });
 
-    app.post('/api/login',
-        passport.authenticate('local', {successRedirect: '/api/users/me'})
+    app.post('/api/login', function (req, res, next) {
+            passport.authenticate('local', function(err, user, info) {
+                if (err) return next(err);
+
+                if (!user) return res.status(403).send(req.flash('loginMessage'));
+
+                req.logIn(user, {failureFlash: true}, function(err) {
+                    if (err) return next(err);
+                    return res.redirect('/api/users/me');
+                });
+            })(req, res, next);
+        }
     );
 
     app.post('/api/logout', function (req, res) {
@@ -77,7 +88,14 @@ module.exports = function (app, passport) {
 
     app.post('/api/register', function (req, res, next) {
 
-        User.findOne({'local.username': req.body.username}, function (err, user) {
+        var query = {
+            $or: [
+                {'email': req.body.email},
+                {'local.username': req.body.username}
+            ]
+        };
+
+        User.findOne(query, function (err, user) {
             if (err) return next(err);
 
             if (!user) {
@@ -96,7 +114,11 @@ module.exports = function (app, passport) {
                     });
                 });
             } else {
-                res.sendStatus(403);
+                var error = (user.email == req.body.email)
+                    ? '\'' + req.body.email + '\' already exist'
+                    : '\'' + req.body.username + '\' already exist';
+
+                res.status(403).send(error);
             }
         });
     });
@@ -120,16 +142,27 @@ module.exports = function (app, passport) {
     app.put('/api/users/me', UserForm, function (req, res, next) {
         if (req.form.isValid) {
 
-            req.user.first = req.form.first;
-            req.user.last = req.form.last;
-            req.user.email = req.form.email;
+            User.findOne({email: req.form.email}, function (err, user) {
+                if (err) next(err);
 
-            req.user.save(function (err, user) {
-                if (err) return next(err);
-                res.json(user);
+                if (user && user._id.toString() !== req.user._id.toString()) {
+                    var error = '\'' + req.form.email + '\' already exist';
+                    return res.status(400).send(error);
+                }
+
+                req.user.local.username = req.form.local.username;
+                req.user.email = req.form.email;
+                req.user.first = req.form.first;
+                req.user.last = req.form.last;
+
+                req.user.save(function (err, user) {
+                    if (err) return next(err);
+                    res.json(user);
+                });
+
             });
-        }
-        else {
+
+        } else {
             res.status(400).json(req.form.errors);
         }
 
