@@ -98,7 +98,6 @@ module.exports = function (passport) {
             profileFields: ['id', 'displayName', 'emails']
         },
         function (accessToken, refreshToken, profile, done) {
-            console.log(arguments)
 
             process.nextTick(function () {
 
@@ -157,7 +156,6 @@ module.exports = function (passport) {
                         newUser.twitter.id = profile.id;
                         newUser.twitter.name = profile.displayName;
                         newUser.twitter.token = token;
-                        //newUser.email = profile.emails[0].value;
                         newUser.first = profile.displayName.split(' ')[0];
                         newUser.last = profile.displayName.split(' ')[1];
 
