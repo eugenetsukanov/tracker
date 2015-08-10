@@ -19,7 +19,6 @@ angular
                 $scope.taskId = $stateParams.taskId;
 
                 $scope.developer = $scope.userId || '';
-                //@TODO review and refactor this controller to TitleSerivce
 
                 $scope.team = [];
 

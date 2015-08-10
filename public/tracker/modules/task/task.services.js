@@ -179,11 +179,6 @@ angular
 
     .factory('TitleService', function (TitleSettings, $state, $rootScope) {
 
-        //@@TODO clean up incoming parameters, remove not used
-        //@@TODO need inversion; rootScope should know about title service, TitleService should not know about rootScope
-        // $rootScope.TitleService = TitleService;
-        // in HTML/View, {{TitleService.getTitle()}}
-
         var self = {
 
             getRouteTitle: function () {
