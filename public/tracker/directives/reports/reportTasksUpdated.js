@@ -14,16 +14,12 @@ angular
                 userId: '=userId'
             },
 
-            controller: function ($scope, $stateParams, $rootScope, Team, User, Task) {
+            controller: function ($scope, $stateParams, $rootScope, Team, User, Task, TitleService) {
 
                 $scope.taskId = $stateParams.taskId;
 
                 $scope.developer = $scope.userId || '';
                 //@TODO review and refactor this controller to TitleSerivce
-                //@TODO why we should share developer to rootScope?
-                $rootScope.developer = $scope.developer;
-
-                var reportFor = 'All';
 
                 $scope.team = [];
 
@@ -70,36 +66,34 @@ angular
                     }
                 };
 
-                var setTitle = function (dev) {
-                    //@TODO not need to use `dev`; naming to `developer`
+                var setTitle = function (developer) {
 
-                    if (dev) {
-                        User.get({nested: dev}, function (user) {
+                    if (developer) {
+                        User.get({nested: developer}, function (user) {
                             if (user) {
-                                reportFor = user.name;
+                                TitleService.setTitle(user.name);
                             }
                         });
 
                     } else {
-                        reportFor = 'All';
+                        TitleService.setTitle('All');
                     }
+
                     Task.get({taskId: $stateParams.taskId}, function (task) {
-                        //@TODO incorrect way $rootScope.trackerTitle
-                        // refactor this to TitleSerivce
-                        $rootScope.trackerTitle = '(' + reportFor + '): ' + task.title;
+                        TitleService.setPrefix(task.title);
                     });
 
                 };
 
-                $scope.update = function (dev) {
-                    //@TODO remove $rootScope.developer
-                    $rootScope.developer = dev;
-                    $scope.developer = dev;
+                $scope.update = function (developer) {
+                    $scope.developer = developer;
                     getTasks($scope.date);
-                    setTitle(dev);
+                    setTitle(developer);
                 };
 
-                if ($scope.developer) setTitle($scope.developer);
+                if ($scope.developer) {
+                    setTitle($scope.developer)
+                }
 
                 $scope.$watch('date', function (date) {
                     $scope.date = date || new Date();

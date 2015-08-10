@@ -177,7 +177,7 @@ angular
         return self;
     })
 
-    .factory('TitleService', function (TitleSettings, $rootScope, Task, RootTask, $state, User, $stateParams) {
+    .factory('TitleService', function (TitleSettings, $state, $rootScope) {
 
         //@@TODO clean up incoming parameters, remove not used
         //@@TODO need inversion; rootScope should know about title service, TitleService should not know about rootScope
@@ -186,25 +186,31 @@ angular
 
         var self = {
 
-            checkSettings: function () {
-                //@@TODO naming -> getRouteTitle
+            getRouteTitle: function () {
                 return TitleSettings[$state.current.name]
             },
 
             setTitle: function (title, prefix) {
-                return $rootScope.trackerTitle = prefix ? prefix + ' | ' + title : title;
+                this.title = title;
+                self.setPrefix(prefix);
+            },
+
+            getTitle: function () {
+                return (self.prefix) ? self.prefix + ' | ' + self.title : self.title;
             },
             
             observe: function () {
-                $rootScope.$on('$viewContentLoaded', function (event) {
-                    //@@TODO self.getRouteTitle()
-                    if (self.checkSettings()) {
-                        var route = self.checkSettings();
-                        $rootScope.trackerTitle = (route.prefix) ? route.prefix + ' | ' + route.title : route.title;
+                $rootScope.$on('$viewContentLoaded', function () {
+                    if (self.getRouteTitle()) {
+                        var route = self.getRouteTitle();
+                        self.setTitle(route.title, route.prefix);
                     } else {
-                        return $rootScope.trackerTitle = 'Tracker';
+                       self.setTitle('Tracker');
                     }
                 });
+            },
+            setPrefix: function (prefix) {
+                this.prefix = prefix;
             }
         };
 

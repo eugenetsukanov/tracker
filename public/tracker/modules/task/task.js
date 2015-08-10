@@ -33,26 +33,12 @@ angular
 
                     Task.get({taskId: $scope.taskId}, function (task) {
                         $scope.task = task;
+                        TitleService.setTitle($scope.task.title);
 
                         if (task.parentTaskId) {
                             Task.get({taskId: task.parentTaskId}, function (parentTask) {
                                 $scope.parentTask = parentTask;
                             });
-                        }
-
-                        //@@TODO this part move to gotoRootTaskCtrl, no need to load root again
-                        // it should work as TitileService.setPrefix(root.title);
-
-                        if ($state.is('app.task')) {
-
-                            RootTask.get({taskId: task._id}, function (root) {
-                                if (task._id == root._id) {
-                                    TitleService.setTitle(root.title);
-                                } else {
-                                    TitleService.setTitle(task.title, root.title);
-                                }
-                            });
-
                         }
                     });
 
@@ -111,7 +97,6 @@ angular
     })
 
     .controller('tagsFindCtrl', function ($scope,
-                                          $state,
                                           $stateParams,
                                           TaskEditorModal,
                                           Task,
@@ -168,16 +153,16 @@ angular
 
     .controller('gotoRootTaskCtrl', function ($scope,
                                               $stateParams,
-                                              RootTask) {
+                                              RootTask,
+                                              TitleService) {
 
-        var getRoot = function () {
+        if($stateParams.taskId) {
+
             RootTask.get({taskId: $stateParams.taskId}, function (root) {
                 $scope.root = root;
+                TitleService.setPrefix(root.title);
             });
-        };
 
-        if ($stateParams.taskId) {
-            getRoot();
         }
 
     })

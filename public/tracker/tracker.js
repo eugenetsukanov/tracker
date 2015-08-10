@@ -27,9 +27,7 @@ angular
                         }
                     });
 
-                    //@@TODO need inversion; rootScope should know about title service, TitleService should not know about rootScope
-                    // $rootScope.TitleService = TitleService;
-                    // in HTML/View, {{TitleService.getTitle()}}
+                    $rootScope.TitleService = TitleService;
                     TitleService.observe();
                 }
             })
