@@ -59,9 +59,8 @@ module.exports = function (passport) {
 
                 User.findOne({'google.id': profile.id}, function (err, user) {
 
-                    if (err) {
-                        return done(err);
-                    }
+                    if (err) return done(err);
+
                     if (!user) {
 
                         var newUser = new User();
@@ -71,11 +70,11 @@ module.exports = function (passport) {
                         newUser.first = profile.displayName.split(' ')[0];
                         newUser.last = profile.displayName.split(' ')[1];
 
-
                         newUser.save(function (err) {
                             if (err) console.log(err);
                             return done(err, newUser);
                         });
+
                     } else {
                         return done(err, user);
                     }
@@ -86,14 +85,12 @@ module.exports = function (passport) {
         }
     ));
 
-
     //---------------------Facebook
 
     passport.use(new FacebookStrategy({
             clientID: configAuth.facebookAuth.clientID,
             clientSecret: configAuth.facebookAuth.clientSecret,
             callbackURL: configAuth.facebookAuth.callbackURL,
-            //enableProof: false,
             profileFields: ['id', 'displayName', 'emails']
         },
         function (accessToken, refreshToken, profile, done) {
@@ -102,9 +99,7 @@ module.exports = function (passport) {
 
                 User.findOne({'facebook.id': profile.id}, function (err, user) {
 
-                    if (err) {
-                        return done(err);
-                    }
+                    if (err) return done(err);
 
                     if (!user) {
 
@@ -119,6 +114,7 @@ module.exports = function (passport) {
                             if (err) console.log(err);
                             return done(err, newUser);
                         });
+
                     } else {
                         return done(err, user);
                     }
@@ -139,14 +135,12 @@ module.exports = function (passport) {
         },
 
         function (token, tokenSecret, profile, done) {
-            
+
             process.nextTick(function () {
 
                 User.findOne({'twitter.id': profile.id}, function (err, user) {
 
-                    if (err) {
-                        return done(err);
-                    }
+                    if (err) return done(err);
 
                     if (!user) {
 
@@ -160,6 +154,7 @@ module.exports = function (passport) {
                             if (err) console.log(err);
                             return done(err, newUser);
                         });
+
                     } else {
                         return done(err, user);
                     }
@@ -169,7 +164,6 @@ module.exports = function (passport) {
             })
 
         }
-
     ));
 
 };
