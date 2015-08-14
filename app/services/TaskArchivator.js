@@ -3,7 +3,6 @@ module.exports = function () {
     var Task = require('../models/task');
     var moment = require('moment');
 
-
     this.archive = function (next) {
 
         var query = {
@@ -14,8 +13,4 @@ module.exports = function () {
 
         Task.archive(query, next);
     }
-
-
-
-
 };

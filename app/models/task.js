@@ -429,9 +429,7 @@ TaskSchema.methods = {
                 next();
             });
         });
-
     }
-
 };
 
 TaskSchema.statics.archive = function (query, next) {
