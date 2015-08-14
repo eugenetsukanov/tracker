@@ -430,6 +430,15 @@ TaskSchema.methods = {
             });
         });
 
+    },
+
+    archive: function (query) {
+        Task.update(query, { $set: { archived: true }}, {multi: true}, function (err, rawResponse) {
+            if (err) return next(err);
+
+            console.log('The raw response from Mongo was ', rawResponse);
+
+        });
     }
 
 
