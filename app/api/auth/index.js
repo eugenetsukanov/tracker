@@ -59,18 +59,17 @@ module.exports = function (app, passport, flash) {
         failureRedirect : '/'})
     );
 
-
-
     //------------------------------------------FACEBOOK------------------------------------------
 
     app.get('/auth/facebook',
-        passport.authenticate('facebook', { scope: 'email' }));
+        passport.authenticate('facebook', {scope: 'email'}));
 
     app.get('/auth/facebook/callback',
-        passport.authenticate('facebook', { failureRedirect: '/' }),
-        function(req, res) {
+        passport.authenticate('facebook', {failureRedirect: '/'}),
+        function (req, res) {
             res.redirect('/');
-        });
+        }
+    );
 
     //-------------------------------------------TWITTER-------------------------------------------
 
@@ -78,22 +77,17 @@ module.exports = function (app, passport, flash) {
         passport.authenticate('twitter'));
 
     app.get('/auth/twitter/callback',
-        passport.authenticate('twitter', { failureRedirect: '/login' }),
-        function(req, res) {
+        passport.authenticate('twitter', {failureRedirect: '/login'}),
+        function (req, res) {
             res.redirect('/');
         });
-
-    //---------------------------------------------------------------------------------------------
 
     app.post('/api/logout', function (req, res) {
         req.logout();
         res.sendStatus(200);
     });
 
-
-
     app.post('/api/resetPassword', function (req, res, next) {
-
 
         User.findOne({'email': req.body.email}, function (err, user) {
 

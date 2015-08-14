@@ -57,7 +57,14 @@ module.exports = function (passport) {
         function (accessToken, refreshToken, profile, done) {
             process.nextTick(function () {
 
-                User.findOne({'google.id': profile.id}, function (err, user) {
+                var query = {
+                    $or: [
+                        {'google.id': profile.id},
+                        {email: profile.email}
+                    ]
+                };
+
+                User.findOne(query, function (err, user) {
 
                     if (err) return done(err);
 
@@ -76,7 +83,16 @@ module.exports = function (passport) {
                         });
 
                     } else {
-                        return done(err, user);
+
+                        if (!user.google.id) {
+                            user.google.id = profile.id;
+                            user.save(function (err) {
+                                if (err) console.log(err);
+                                return done(err, user);
+                            });
+                        } else {
+                            return done(err, user);
+                        }
                     }
 
                 });
@@ -97,7 +113,15 @@ module.exports = function (passport) {
 
             process.nextTick(function () {
 
-                User.findOne({'facebook.id': profile.id}, function (err, user) {
+                var query = {
+                    $or: [
+                        {'facebook.id': profile.id},
+                        {email: profile.email}
+                    ]
+                };
+
+                User.findOne(query, function (err, user) {
+
 
                     if (err) return done(err);
 
@@ -116,7 +140,16 @@ module.exports = function (passport) {
                         });
 
                     } else {
-                        return done(err, user);
+
+                        if (!user.facebook.id) {
+                            user.facebook.id = profile.id;
+                            user.save(function (err) {
+                                if (err) console.log(err);
+                                return done(err, user);
+                            });
+                        } else {
+                            return done(err, user);
+                        }
                     }
 
                 });
