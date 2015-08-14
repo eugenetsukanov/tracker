@@ -81,7 +81,7 @@ module.exports = function (app) {
             return _.filter(tasks, function(task) {
                 return task.archived == false;
             });
-        }
+        };
 
 
         var tasks = [];

@@ -1,22 +1,20 @@
 module.exports = function () {
 
     var Task = require('../models/task');
+    var moment = require('moment');
 
 
-    var query = {
-        status: 'accepted',
-        updatedAt: {"$gte": new Date(2012, 7, 14)},
-        archived: {$ne: true}
-    };
+    this.archive = function (next) {
 
-    Task.archive(query);
+        var query = {
+            status: 'accepted',
+            updatedAt: {"$lte": moment().subtract(30, 'days')},
+            archived: {$ne: true}
+        };
 
+        Task.archive(query, next);
+    }
 
-    //moment("20120620", "YYYYMMDD").fromNow();
-
-    //Task.find(q, function () {
-    //
-    //})
 
 
 
