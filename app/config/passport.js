@@ -60,7 +60,7 @@ module.exports = function (passport) {
                 var query = {
                     $or: [
                         {'google.id': profile.id},
-                        {email: profile.email}
+                        {email: profile.emails[0].value}
                     ]
                 };
 
@@ -86,6 +86,9 @@ module.exports = function (passport) {
 
                         if (!user.google.id) {
                             user.google.id = profile.id;
+                            user.google.token = accessToken;
+                            user.first = user.first || profile.displayName.split(' ')[0];
+                            user.last = user.last || profile.displayName.split(' ')[1];
                             user.save(function (err) {
                                 if (err) console.log(err);
                                 return done(err, user);
@@ -116,7 +119,7 @@ module.exports = function (passport) {
                 var query = {
                     $or: [
                         {'facebook.id': profile.id},
-                        {email: profile.email}
+                        {email: profile.emails[0].value}
                     ]
                 };
 
@@ -143,6 +146,10 @@ module.exports = function (passport) {
 
                         if (!user.facebook.id) {
                             user.facebook.id = profile.id;
+                            user.facebook.token = accessToken;
+                            user.first = user.first || profile.displayName.split(' ')[0];
+                            user.last = user.last || profile.displayName.split(' ')[1];
+
                             user.save(function (err) {
                                 if (err) console.log(err);
                                 return done(err, user);
