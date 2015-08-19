@@ -14,6 +14,7 @@ var UserSchema = new Schema({
     },
     facebook: {
         id: String,
+        email: String,
         token: String
     },
     twitter: {
@@ -22,6 +23,7 @@ var UserSchema = new Schema({
     },
     google: {
         id: String,
+        email: String,
         token: String
     },
 

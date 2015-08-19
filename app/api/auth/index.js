@@ -54,9 +54,10 @@ module.exports = function (app, passport, flash) {
         passport.authenticate('google', {scope: ['profile', 'email']})
     );
 
-    app.get('/auth/google/callback',passport.authenticate('google', {
-        successRedirect : '/',
-        failureRedirect : '/'})
+    app.get('/auth/google/callback', passport.authenticate('google', {
+            successRedirect: '/',
+            failureRedirect: '/'
+        })
     );
 
     //------------------------------------------FACEBOOK------------------------------------------
@@ -199,7 +200,6 @@ module.exports = function (app, passport, flash) {
         }
 
     });
-
 
     app.post('/api/users/changePassword', function (req, res, next) {
 

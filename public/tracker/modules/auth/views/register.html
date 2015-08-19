@@ -1,9 +1,16 @@
 <div class="row">
     <div class="col-md-4 col-md-offset-4">
 
-        <form ng-submit="register()">
-            <h1>Registration</h1>
+        <div class="clearfix">
+            <h1 class="pull-left">Registration</h1>
 
+            <div class="pull-right login-social-link">
+                <a href="/auth/twitter"><i class="fa fa-twitter"></i></a>
+                <a href="/auth/facebook"><i class="fa fa-facebook-square"></i></a>
+                <a href="/auth/google"><i class="fa fa-google"></i></a>
+            </div>
+        </div>
+        <form ng-submit="register()">
             <div class="form-group">
                 <input ng-model="username" type="text" class="form-control" placeholder="Username" required>
             </div>
@@ -14,11 +21,6 @@
                 <input ng-model="password" type="password" class="form-control" placeholder="Password" required>
             </div>
             <button type="submit" class="btn btn-primary btn-sm">Register</button>
-            <div class="pull-right">
-                <a href="/auth/google"><img src="/tracker/modules/auth/views/social-logo/google.png" class="d30"/></a>
-                <a href="/auth/facebook"><img src="/tracker/modules/auth/views/social-logo/facebook.png" class="d30"/></a>
-                <a href="/auth/twitter"><img src="/tracker/modules/auth/views/social-logo/twitter.png" class="d30"/></a>
-            </div>
 
         </form>
 
