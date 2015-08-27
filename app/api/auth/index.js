@@ -55,7 +55,7 @@ module.exports = function (app, passport, flash) {
     );
 
     app.get('/auth/google/callback', passport.authenticate('google', {
-            successRedirect: '/',
+            successRedirect: '/#/app/users/me',
             failureRedirect: '/'
         })
     );
@@ -68,7 +68,7 @@ module.exports = function (app, passport, flash) {
     app.get('/auth/facebook/callback',
         passport.authenticate('facebook', {failureRedirect: '/'}),
         function (req, res) {
-            res.redirect('/');
+            res.redirect('/#/app/users/me');
         }
     );
 
@@ -80,7 +80,7 @@ module.exports = function (app, passport, flash) {
     app.get('/auth/twitter/callback',
         passport.authenticate('twitter', {failureRedirect: '/login'}),
         function (req, res) {
-            res.redirect('/');
+            res.redirect('/#/app/users/me');
         });
 
     app.post('/api/logout', function (req, res) {
