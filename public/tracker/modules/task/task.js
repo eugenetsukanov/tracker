@@ -10,23 +10,35 @@ angular
                                       UserService) {
 
 
+        var busyScroll = true;
+        var page = 0;
+
         $scope.report = {
             title: 'Report',
             name: "report"
         };
-
         $scope.userId = UserService.getUserId();
         $scope.taskId = $stateParams.taskId;
+        $scope.tasks = [];
 
-        $scope.init = function () {
-
+        var loadTasks = function () {
             if ($scope.taskId) {
+                var query = {
+                    taskId: $scope.taskId,
+                    nested: 'tasks',
+                    page: page
+                };
 
-                Task.query({taskId: $scope.taskId, nested: 'tasks'}, function (tasks) {
+                Task.query(query, function (tasks) {
 
-                    $scope.tasks = tasks;
+                    if (tasks.length) {
+                        $scope.tasks = $scope.tasks.concat(tasks);
+                        page++;
+                    }
+                    busyScroll = false;
 
                     Task.get({taskId: $scope.taskId}, function (task) {
+
                         $scope.task = task;
 
                         if (task.parentTaskId) {
@@ -40,10 +52,34 @@ angular
                     $state.go('app.tasks');
                 });
             } else {
-                Task.query(function (tasks) {
-                    $scope.tasks = tasks;
+                Task.query({page: page}, function (tasks) {
+                    if (tasks.length) {
+                        $scope.tasks = $scope.tasks.concat(tasks);
+                        busyScroll = false;
+                        page++;
+                    }
+
                 });
             }
+        };
+
+        $scope.scroll = function () {
+
+            if (busyScroll) {
+                return;
+            } else {
+                busyScroll = true;
+                loadTasks();
+            }
+
+        };
+
+        $scope.init = function () {
+
+            $scope.tasks.length = 0;
+            page = 0;
+
+            loadTasks();
 
             $scope.newTask = new Task({
                 simple: true,
