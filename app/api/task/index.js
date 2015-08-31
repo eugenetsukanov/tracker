@@ -26,7 +26,7 @@ module.exports = function (app) {
     var User = require('../../models/user');
 
     var _ = require('lodash');
-    var limit = 3;
+    var limit = 60;
 
     app.get('/api/tasks', function (req, res) {
 
