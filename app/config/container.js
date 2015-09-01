@@ -6,4 +6,4 @@ module.exports = function (container) {
     container.register('Mailer', require('../services/Mailer'), ['config/mailer/sender']);
     container.register('Host', require('../services/Host'), ['config/host/url']);
     
-}
+};

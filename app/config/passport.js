@@ -6,6 +6,11 @@ module.exports = function (passport) {
         FacebookStrategy = require('passport-facebook').Strategy;
 
     var User = require('./../models/user');
+    var Config = require('./../config/config');
+    var application = require('./application');
+    var Container = application.container;
+
+    var Host = Container.get('Host');
 
     var configAuth = require('./auth');
 
@@ -50,13 +55,13 @@ module.exports = function (passport) {
     //---------------------Google
 
     passport.use(new GoogleStrategy({
-            clientID: configAuth.googleAuth.clientID,
-            clientSecret: configAuth.googleAuth.clientSecret,
-            callbackURL: configAuth.googleAuth.callbackURL,
+            clientID: Config.googleAuth.clientID,
+            clientSecret: Config.googleAuth.clientSecret,
+            callbackURL: Host.getUrl(Config.googleAuth.callbackURL),
             passReqToCallback: true
         },
         function (req, accessToken, refreshToken, profile, done) {
-
+            console.log(Host.getUrl(Config.googleAuth.callbackURL));
             if (!req.user) {
 
                 var query = {
@@ -108,9 +113,9 @@ module.exports = function (passport) {
     //---------------------Facebook
 
     passport.use(new FacebookStrategy({
-            clientID: configAuth.facebookAuth.clientID,
-            clientSecret: configAuth.facebookAuth.clientSecret,
-            callbackURL: configAuth.facebookAuth.callbackURL,
+            clientID: Config.facebookAuth.clientID,
+            clientSecret: Config.facebookAuth.clientSecret,
+            callbackURL: Host.getUrl(Config.facebookAuth.callbackURL),
             profileFields: ['id', 'displayName', 'emails'],
             passReqToCallback: true
         },
@@ -169,9 +174,9 @@ module.exports = function (passport) {
     //---------------------Twitter
 
     passport.use(new TwitterStrategy({
-            consumerKey: configAuth.twitterAuth.consumerKey,
-            consumerSecret: configAuth.twitterAuth.consumerSecret,
-            callbackURL: configAuth.twitterAuth.callbackURL,
+            consumerKey: Config.twitterAuth.consumerKey,
+            consumerSecret: Config.twitterAuth.consumerSecret,
+            callbackURL: Host.getUrl(Config.twitterAuth.callbackURL),
             passReqToCallback: true
         },
 
