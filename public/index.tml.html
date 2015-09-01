@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html ng-app="Tracker">
+<head lang="en">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+
+  <link rel="shortcut icon" href="/favicon.png" />
+
+  <title>Tracker</title>
+
+  <!--JS-->
+
+  <!--vendors-->
+  <!-- build:js /dist/libs.js?rev=@@hash -->
+  <script src="lib/jquery/dist/jquery.js"></script>
+  <script src="lib/bootstrap/dist/js/bootstrap.js"></script>
+  <script src="lib/angular/angular.js"></script>
+  <script src="lib/ng-file-upload/ng-file-upload.js"></script>
+  <script src="lib/ng-file-upload/ng-file-upload-shim.js"></script>
+  <script src="lib/angular-ui-router/release/angular-ui-router.js"></script>
+  <script src="lib/angular-resource/angular-resource.js"></script>
+  <script src="lib/angularjs-toaster/toaster.js"></script>
+  <script src="lib/angular-bootstrap/ui-bootstrap.js"></script>
+  <script src="lib/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <script src="lib/moment/moment.js"></script>
+  <script src="lib/angular-elastic/elastic.js"></script>
+  <script src="lib/angular-ui-select/dist/select.js"></script>
+  <script src="lib/angular-sanitize/angular-sanitize.js"></script>
+  <script src="lib/lodash/lodash.js"></script>
+  <script src="lib/angular-animate/angular-animate.js"></script>
+  <script src="lib/ngstorage/ngStorage.js"></script>
+  <script src="lib/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
+  <!-- endbuild -->
+
+  <!--tracker-->
+  <!-- build:js /dist/main.js?rev=@@hash -->
+  <script src="tracker/tracker.js"></script>
+
+  <script src="tracker/modules/task/directives/taskTree/taskTree.js"></script>
+  <script src="tracker/directives/reports/reportTasksUpdated.js"></script>
+  <script src="tracker/directives/uploader/uploader.js"></script>
+  <script src="tracker/directives/uploader/filesView.js"></script>
+  <script src="tracker/directives/textExtend/textExtend.js"></script>
+  <script src="tracker/directives/historyBack/historyBack.js"></script>
+
+  <script src="tracker/filters/date.js"></script>
+  <script src="tracker/filters/propsFilter.js"></script>
+  <script src="tracker/filters/toDate.js"></script>
+  <script src="tracker/filters/round.js"></script>
+  <script src="tracker/filters/text.js"></script>
+
+  <script src="tracker/modules/auth/auth.js"></script>
+  <script src="tracker/modules/report/report.js"></script>
+
+  <script src="tracker/modules/task/task.js"></script>
+  <script src="tracker/modules/task/task.services.js"></script>
+
+  <script src="tracker/modules/task/filters/byStatus.js"></script>
+  <script src="tracker/modules/task/filters/humanComplexity.js"></script>
+
+  <script src="tracker/modules/task/directives/taskMetrics/taskMetrics.js"></script>
+  <script src="tracker/modules/task/directives/taskPanel/taskPanel.js"></script>
+  <script src="tracker/modules/task/directives/taskStatusLabel/taskStatusLabel.js"></script>
+  <script src="tracker/modules/task/directives/taskEditor/taskEditor.js"></script>
+  <script src="tracker/modules/task/directives/taskMetricsWidget/taskMetricsWidget.js"></script>
+  <script src="tracker/modules/task/directives/taskSearch/taskSearch.js"></script>
+  <script src="tracker/modules/task/directives/taskViews/taskViews.js"></script>
+  <script src="tracker/modules/task/directives/taskTags/taskTags.js"></script>
+  <!-- endbuild -->
+
+  <!--CSS -->
+  <!-- build:css /dist/libs.css?rev=@@hash -->
+  <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.css"/>
+  <link rel="stylesheet" href="lib/components-font-awesome/css/font-awesome.css">
+  <link rel="stylesheet" href="lib/angularjs-toaster/toaster.css"/>
+  <link rel="stylesheet" href="lib/angular-ui-select/dist/select.css">
+  <!-- endbuild -->
+
+  <!-- build:css /dist/main.css?rev=@@hash -->
+  <link rel="stylesheet" href="tracker/styles/tracker.css"/>
+  <!-- endbuild -->
+
+</head>
+<body ui-view></body>
+</html>

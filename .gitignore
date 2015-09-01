@@ -9,3 +9,6 @@
 /app/config/parameters.json
 /chromedriver
 /selenium-server-standalone-*
+/public/index.html
+/public/dist
+
