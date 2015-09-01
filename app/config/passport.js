@@ -12,8 +12,6 @@ module.exports = function (passport) {
 
     var Host = Container.get('Host');
 
-    var configAuth = require('./auth');
-
     passport.serializeUser(function (user, done) {
         done(null, user._id);
     });
