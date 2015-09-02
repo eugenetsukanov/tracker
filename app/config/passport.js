@@ -59,7 +59,6 @@ module.exports = function (passport) {
             passReqToCallback: true
         },
         function (req, accessToken, refreshToken, profile, done) {
-            console.log(Host.getUrl(Config.googleAuth.callbackURL));
             if (!req.user) {
 
                 var query = {
