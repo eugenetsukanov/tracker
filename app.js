@@ -47,6 +47,11 @@ require('./app/routes/app.routes')(app, passport);
 // cron
 require('./app/config/cron')(app.container.get('Cron'), app.container);
 
+app.use(function (err, req, res, next) {
+    console.log(req.url, err);
+    next(err);
+});
+
 if (app.config.get('fixtures:load')) {
     console.log('> load fixtures');
 
