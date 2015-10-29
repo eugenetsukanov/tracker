@@ -89,6 +89,7 @@ Feature: Report
     Then I see task form
 
     And I share this task on user "Danny Trejo"
+    And I sleep 1
     And I share this task on user "Arnie Shwarziniggah"
 
     Then I click on save button
