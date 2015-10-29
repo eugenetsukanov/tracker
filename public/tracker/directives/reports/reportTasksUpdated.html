@@ -23,7 +23,7 @@
                 ng-change="update(developer)"
                 >
             <option value="">All</option>
-            <option ng-selected="member.id == developer" value="{{member.id}}" ng-repeat="member in team">{{member.username}}</option>
+            <option ng-selected="member.id == developer" value="{{member.id}}" ng-repeat="member in team">{{member.name}}</option>
         </select>
     </h5>
 

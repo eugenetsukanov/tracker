@@ -88,8 +88,8 @@ Feature: Report
     When I type task title "project 1"
     Then I see task form
 
-    And I share this task on user "test2"
-    And I share this task on user "test3"
+    And I share this task on user "Danny Trejo"
+    And I share this task on user "Arnie Shwarziniggah"
 
     Then I click on save button
 
@@ -162,7 +162,7 @@ Feature: Report
 
     When I type task title "project 1.4"
     Then I see task form
-    And I assign it to user "test2"
+    And I assign it to user "Danny Trejo"
 
     Then I click on save button
 
@@ -179,7 +179,7 @@ Feature: Report
 
     When I type task title "project 1.5"
     Then I see task form
-    And I assign it to user "test3"
+    And I assign it to user "Arnie Shwarziniggah"
 
     Then I click on save button
 
@@ -200,7 +200,7 @@ Feature: Report
     Then I see task form
 
     Then I click on task status "Accepted"
-    Then I assign it to user "test3"
+    Then I assign it to user "Arnie Shwarziniggah"
 
     Then I click on save button
 
@@ -216,19 +216,19 @@ Feature: Report
 
     When I click Report button in task menu
 
-    Then I see "test" in assigned users
+    Then I see "Andy Garcia" in assigned users
     And I see "project 1.3" in Done tasks
     And I see "project 1.2" in In Progress tasks
     And I see "project 1.1" in Plans tasks
     And I see "project 1.1.1" in Plans tasks
 
-    When I choose user "test2"
-    Then I see "test2" in assigned users
+    When I choose user "Danny Trejo"
+    Then I see "Danny Trejo" in assigned users
     And I see "project 1.4" in Plans tasks
     And I don't see "project 1.1.1" in Plans tasks
     And I don't see "project 1.3" in Done tasks
 
-    When I choose user "test3"
+    When I choose user "Arnie Shwarziniggah"
     And I see "project 1.5" in Done tasks
     And I see "project 1.5.1" in Done tasks
     And I don't see "project 1.2" in In Progress tasks

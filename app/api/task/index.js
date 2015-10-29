@@ -77,6 +77,12 @@ module.exports = function (app) {
 
     app.get('/api/tasks/:taskId/move', function (req, res, next) {
 
+        var excludeArchived = function (tasks) {
+            return _.filter(tasks, function(task) {
+                return task.archived == false;
+            });
+        };
+
 
         var tasks = [];
         // grand parent
@@ -96,6 +102,7 @@ module.exports = function (app) {
                     req.Task.getSiblings(function (err, siblings) {
                         if (err) return next(err);
                         tasks = tasks.concat(siblings);
+                        tasks = excludeArchived(tasks);
                         res.json(tasks);
                     });
                 })
@@ -117,6 +124,7 @@ module.exports = function (app) {
                         },
                         function (err) {
                             if (err) return next(err);
+                            tasks = excludeArchived(tasks);
                             res.json(tasks);
                         });
                 });
@@ -276,6 +284,7 @@ module.exports = function (app) {
 
     app.delete('/api/tasks/:taskId', function (req, res, next) {
         req.Task.remove(function (err) {
+            // console.log(req.Task.updatedAt);
             if (err) return next(err);
             req.Task.updateParent(function (err) {
                 if (err) return next(err);

@@ -100,10 +100,12 @@
 
             <hr class="mg"/>
 
-            <div class="form-group clearfix" ng-show="task.title">
-                <i class="fa fa-user fa-md vcenter pull-left" tooltip="Assigned to..."></i>
-                <select ng-model="task.developer" ng-options="member._id as member.local.username for member in team"
-                        class="form-control input-sm w-sm pull-left"></select>
+            <div class="form-group clearfix icon-fix" ng-show="task.title">
+                <i class="fa fa-user fa-md vcenter" tooltip="Assigned to..."></i>
+                <div class="field-fix">
+                <select ng-model="task.developer" ng-options="member._id as member.name for member in team"
+                        class="form-control input-sm field-full "></select>
+                    </div>
             </div>
 
             <div class="form-group clearfix icon-fix" ng-if="task.parentTaskId == null" ng-show="task.title">
@@ -111,9 +113,9 @@
                 <i class="fa fa-user-plus fa-md vcenter" tooltip="Shared for..."></i>
                 <div class="field-fix">
                 <ui-select multiple ng-model="task.team" class="input-sm field-full">
-                    <ui-select-match placeholder="Share...">{{$item.local.username}}</ui-select-match>
+                    <ui-select-match placeholder="Share...">{{$item.name}}</ui-select-match>
                     <ui-select-choices repeat="user._id as user in users | filter:$select.search">
-                        {{user.local.username}}
+                        {{user.name}}
                     </ui-select-choices>
                 </ui-select>
                 </div>

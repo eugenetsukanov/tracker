@@ -1,6 +1,14 @@
 module.exports = function (app) {
 
     var Task = require('../../models/task');
+    var User = require('../../models/user');
+
+    app.get('/api/users/:userId', function (req, res, next) {
+        User.findById(req.params.userId, '-local.passwordHashed -local.passwordSalt', function (err, user) {
+            if (err) next(err);
+            res.json(user);
+        });
+    });
 
     app.get('/api/users/:userId/tasks', function (req, res, next) {
 

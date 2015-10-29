@@ -37,11 +37,9 @@ angular
         return $resource('/api/tasks/:taskId/files/:fileId', {fileId: '@_id'}, {update: {method: 'PUT'}});
     })
 
-    .factory('SettingsService', function (
-        $localStorage
-    ) {
+    .factory('SettingsService', function ($localStorage) {
 
-        
+
         var defaultValues = {
             metricsDetails: 0
         };
@@ -134,6 +132,84 @@ angular
         };
 
         return box;
+    })
+
+    .factory('TitleSettings', function () {
+
+        var self = {
+
+            'app.tasks' : {
+                title: 'Projects'
+            },
+            'app.report' : {
+                title: 'Report'
+            },
+            'app.assigned-tasks' : {
+                title: 'My Tasks'
+            },
+            'app.tags-find' : {
+                title: 'Search by tags'
+            },
+            'app.task-search' : {
+                title: 'Search'
+            },
+            'app.projects-archive' : {
+                title: 'Archived Projects'
+            },
+            'app.profile' : {
+                title: 'Profile'
+            },
+            'app.login' : {
+                title: 'Login to your Tracker'
+            },
+            'app.register' : {
+                title: 'Register'
+            },
+            'app.reset-password' : {
+                title: 'Reset Password'
+            },
+            'public.change-password' : {
+                title: 'Change Password'
+            }
+
+        };
+
+        return self;
+    })
+
+    .factory('TitleService', function (TitleSettings, $state, $rootScope) {
+
+        var self = {
+
+            getRouteTitle: function () {
+                return TitleSettings[$state.current.name]
+            },
+
+            setTitle: function (title, prefix) {
+                this.title = title;
+                self.setPrefix(prefix);
+            },
+
+            getTitle: function () {
+                return (self.prefix) ? self.prefix + ' | ' + self.title : self.title;
+            },
+            
+            observe: function () {
+                $rootScope.$on('$viewContentLoaded', function () {
+                    if (self.getRouteTitle()) {
+                        var route = self.getRouteTitle();
+                        self.setTitle(route.title, route.prefix);
+                    } else {
+                       self.setTitle('Tracker');
+                    }
+                });
+            },
+            setPrefix: function (prefix) {
+                this.prefix = prefix;
+            }
+        };
+
+        return self;
     })
 
     .factory('TaskComplexity', function () {

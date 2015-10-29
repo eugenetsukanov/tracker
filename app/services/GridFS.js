@@ -19,15 +19,15 @@ var GridFS = function (uri) {
 
     this.getFs = function () {
         return this.gfs;
-    }
+    };
 
     this.getWriteStream = function (options) {
         return this.getFs().createWriteStream(options);
-    }
+    };
 
     this.getFile = function (fileName, next) {
         this.findFile({filename: fileName}, next);
-    }
+    };
 
     this.getFileWithReadStream = function (fileName, next) {
 
@@ -40,19 +40,19 @@ var GridFS = function (uri) {
             next(null, file);
         });
 
-    }
+    };
 
     this.findFile = function (options, next) {
         this.getFs().files.findOne(options, next);
-    }
+    };
 
     this.getReadStream = function (options) {
         return this.getFs().createReadStream(options);
-    }
+    };
 
     this.getReadStreamForFile = function (file) {
         return this.getReadStream({_id: file._id});
-    }
+    };
 
     this.save = function (filePath, options, next) {
 
@@ -82,7 +82,7 @@ var GridFS = function (uri) {
 
         });
 
-    }
+    };
 
     this.remove = function (file, next) {
         if (_.isArray(file)) {
@@ -92,7 +92,7 @@ var GridFS = function (uri) {
         } else {
             this.removeFile(file, next);
         }
-    }
+    };
 
     this.removeFile = function (file, next) {
 
@@ -110,7 +110,7 @@ var GridFS = function (uri) {
             next();
         });
 
-    }
+    };
 
     this.connect = function (file, next) {
         if (_.isArray(file)) {
@@ -120,7 +120,7 @@ var GridFS = function (uri) {
         } else {
             this.connectFile(file, next);
         }
-    }
+    };
 
     this.connectFile = function (file, next) {
         var File = connection.db.collection('fs.files');
@@ -139,6 +139,24 @@ var GridFS = function (uri) {
                 if (err) return next(err);
                 next();
             });
+    };
+
+    this.cleanupUnconnected = function (next) {
+
+        var File = connection.db.collection('fs.files');
+
+        File.find(
+        {
+            'metadata.connected': {$ne: true}
+        }).toArray(
+        function (err, result) {
+            async.each(result, function (item, next) {
+                self.removeFile({_id: item._id}, next);
+            }, function () {
+                if (err) return next(err);
+                next(null, result.length);
+            });
+        });
     }
 };
 

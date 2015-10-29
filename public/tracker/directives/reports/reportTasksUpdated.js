@@ -14,11 +14,12 @@ angular
                 userId: '=userId'
             },
 
-            controller: function ($scope, $stateParams, Team) {
+            controller: function ($scope, $stateParams, $rootScope, Team, User, Task, TitleService) {
 
                 $scope.taskId = $stateParams.taskId;
 
                 $scope.developer = $scope.userId || '';
+
                 $scope.team = [];
 
                 $scope.date = $scope.date || new Date();
@@ -31,12 +32,12 @@ angular
 
                 if ($scope.taskId) {
 
-                    Team.query({taskId: $stateParams.taskId}, function (team) {
+                    Team.query({taskId: $scope.taskId}, function (team) {
 
                         team.forEach(function (member) {
                             $scope.team.push({
                                 id: member._id,
-                                username: member.local.username
+                                name: member.name
                             });
                         });
 
@@ -47,7 +48,11 @@ angular
 
                     if ($scope.taskId) {
 
-                        ReportByTaskId.query({taskId: $scope.taskId, date: date, userId: $scope.developer }, function (tasks) {
+                        ReportByTaskId.query({
+                            taskId: $scope.taskId,
+                            date: date,
+                            userId: $scope.developer
+                        }, function (tasks) {
                             $scope.tasks = tasks;
                         });
 
@@ -60,10 +65,34 @@ angular
                     }
                 };
 
-                $scope.update = function (dev) {
-                    $scope.developer = dev;
-                    getTasks($scope.date);
+                var setTitle = function (developer) {
+
+                    if (developer) {
+                        User.get({nested: developer}, function (user) {
+                            if (user) {
+                                TitleService.setTitle(user.name);
+                            }
+                        });
+
+                    } else {
+                        TitleService.setTitle('All');
+                    }
+
+                    Task.get({taskId: $stateParams.taskId}, function (task) {
+                        TitleService.setPrefix(task.title);
+                    });
+
                 };
+
+                $scope.update = function (developer) {
+                    $scope.developer = developer;
+                    getTasks($scope.date);
+                    setTitle(developer);
+                };
+
+                if ($scope.developer) {
+                    setTitle($scope.developer)
+                }
 
                 $scope.$watch('date', function (date) {
                     $scope.date = date || new Date();

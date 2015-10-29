@@ -12,10 +12,12 @@
     "secret": "tracker$ker$app$$secret"
   },
   "mailer": {
-    "sender": "mailtotesthere@gmail.com"
+    "sender": "mailtotesthere@gmail.com",
+    "password": "xxx666up"
   },
   "mongo": {
-    "uri": "mongodb://localhost/tracker"
+    "uri": "mongodb://localhost/tracker",
+    "debug": false
   },
   "fixtures": {
     "load": false

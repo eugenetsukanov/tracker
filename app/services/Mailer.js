@@ -1,19 +1,18 @@
-var Mailer = function (sender) {
+var Mailer = function (mailerConfig) {
 
     var nodemailer = require('nodemailer');
-    var emailSender = sender;
 
     var transporter = nodemailer.createTransport({
         service: 'gmail',
         auth: {
-            user: emailSender,
-            pass: 'xxx666up'
+            user: mailerConfig.sender,
+            pass: mailerConfig.password
         }
     });
 
     this.send = function (mail, callback) {
         transporter.sendMail({
-            from: mail.from || emailSender,
+            from: mail.from || mailerConfig.sender,
             to: mail.to,
             subject: mail.subject,
             text: mail.text

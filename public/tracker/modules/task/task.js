@@ -7,6 +7,8 @@ angular
                                       $state,
                                       $stateParams,
                                       Task,
+                                      TitleService,
+                                      RootTask,
                                       UserService) {
 
 
@@ -15,7 +17,10 @@ angular
             name: "report"
         };
 
-        $scope.userId = UserService.getUserId();
+        $scope.$watchCollection('UserService.user', function (user) {
+            if (user) $scope.userId = user._id;
+        });
+
         $scope.taskId = $stateParams.taskId;
 
         $scope.init = function () {
@@ -28,6 +33,7 @@ angular
 
                     Task.get({taskId: $scope.taskId}, function (task) {
                         $scope.task = task;
+                        TitleService.setTitle($scope.task.title);
 
                         if (task.parentTaskId) {
                             Task.get({taskId: task.parentTaskId}, function (parentTask) {
@@ -91,7 +97,6 @@ angular
     })
 
     .controller('tagsFindCtrl', function ($scope,
-                                          $state,
                                           $stateParams,
                                           TaskEditorModal,
                                           Task,
@@ -148,16 +153,16 @@ angular
 
     .controller('gotoRootTaskCtrl', function ($scope,
                                               $stateParams,
-                                              RootTask) {
+                                              RootTask,
+                                              TitleService) {
 
-        var getRoot = function () {
+        if($stateParams.taskId) {
+
             RootTask.get({taskId: $stateParams.taskId}, function (root) {
                 $scope.root = root;
+                TitleService.setPrefix(root.title);
             });
-        };
 
-        if ($stateParams.taskId) {
-            getRoot();
         }
 
     })
@@ -180,15 +185,25 @@ angular
 
     })
 
-    .controller('TaskArchiveCtrl', function ($scope, $stateParams, Task, ArchivedProjects) {
+    .controller('TaskArchiveCtrl', function ($state, $scope, $stateParams, Task, ArchivedProjects, TitleService) {
 
         $scope.init = function () {
+
+
 
             if ($stateParams.taskId) {
 
                 Task.query({taskId: $stateParams.taskId, nested: 'archive'}, function (tasks) {
                     $scope.tasks = tasks;
                 });
+
+                if ($state.is('app.tasks-archive')) {
+                    Task.get({taskId: $stateParams.taskId}, function (task) {
+                        if (task) {
+                            TitleService.setTitle('Archive', task.title);
+                        }
+                    });
+                }
             }
             else {
 
