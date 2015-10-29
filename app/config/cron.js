@@ -1,6 +1,6 @@
 module.exports = function (Cron, container) {
 
-    Cron.register('0 */1 * * * *', function () {
+    Cron.register('0 */1 * * *', function () {
 
         var GridFS = container.get('GridFS');
         GridFS.cleanupUnconnected(function (err, status) {
