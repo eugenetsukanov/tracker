@@ -83,7 +83,11 @@ Feature: Search
     And I see title field
 
     Then I type "task 1.2 updated"
+    Then I sleep 1
     Then I click on save button
+    Then I sleep 1
 
     Then I reload page
+    Then I sleep 1
+
     And I see task "task 1.2 updated"

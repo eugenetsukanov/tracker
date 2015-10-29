@@ -429,10 +429,14 @@ TaskSchema.methods = {
                 next();
             });
         });
-
     }
+};
 
-
+TaskSchema.statics.archive = function (query, next) {
+    Task.update(query, {$set: {archived: true}}, {multi: true}, function (err) {
+        if (err) return next(err);
+        next();
+    });
 };
 
 TaskSchema.post('save', function (task) {
