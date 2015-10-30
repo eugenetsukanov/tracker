@@ -23,6 +23,7 @@
 
 
     <div ng-if="tasks.length" task-views tasks="tasks" task-on-complete="init"></div>
+    <div ng-if="!tags.length">No existing tags.</div>
 
     <div ng-if="tasks.length == 0">There are no tasks matched such request.</div>
 </div>
