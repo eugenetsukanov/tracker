@@ -42,6 +42,9 @@ angular
 
         var defaultValues = {
             metricsDetails: 0
+            //sortBy: {
+            //    priority: -1
+            //}
         };
 
         return {
@@ -81,6 +84,29 @@ angular
             }
         }
     })
+
+    //.factory('SortingService', function (SettingsService) {
+    //    return {
+    //
+    //        getSortingOrder: function (sortBy) {
+    //            return SettingsService.getProperty('sortBy.' + sortBy);
+    //        },
+    //
+    //        toggle: function (sortBy) {
+    //
+    //            var sortByValue = SettingsService.getProperty('sortBy.priority');
+    //
+    //            if (sortByValue === -1) {
+    //                sortByValue = 1
+    //            } else {
+    //                sortByValue = -1;
+    //            }
+    //
+    //            SettingsService.setProperty('sortBy.' + sortBy, sortByValue);
+    //
+    //        }
+    //    }
+    //})
 
     .factory('SearchService', function ($q, Task, $stateParams) {
 
