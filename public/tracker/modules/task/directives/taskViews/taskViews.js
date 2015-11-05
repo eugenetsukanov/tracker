@@ -4,9 +4,7 @@ angular
         return {
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskViews/taskViews.html',
-            controller: function ($scope, TaskEditorModal, MetricsService
-                                  //SortingService
-            ) {
+            controller: function ($scope, TaskEditorModal, MetricsService) {
 
                 $scope.views = [
                     {title: 'Board', name: 'board'},
@@ -29,7 +27,6 @@ angular
                 };
 
                 $scope.metricsDetails = MetricsService.getMetrics();
-                //$scope.sortByPriority = SortingService.getSortingOrder();
 
                 $scope.tooltipMetrics = function () {
                     if (MetricsService.getMetrics() == 0) {
@@ -51,13 +48,6 @@ angular
                     $scope.metricsDetails = MetricsService.getMetrics();
                 };
 
-                //$scope.sortByPriority = function () {
-                //    if ($scope.sortByPriority == 1) {
-                //        $scope.tasks.reverse();
-                //    } else {
-                //        $scope.tasks.reverse();
-                //    }
-                //};
                 $scope.sortByPriority = function () {
                     $scope.tasks.reverse();
                 }
