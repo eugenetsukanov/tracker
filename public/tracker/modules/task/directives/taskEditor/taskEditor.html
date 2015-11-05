@@ -100,7 +100,7 @@
 
             <hr class="mg"/>
 
-            <div class="form-group clearfix icon-fix" ng-show="task.title">
+            <div ng-if="task.parentTaskId" class="form-group clearfix icon-fix">
                 <i class="fa fa-user fa-md vcenter" uib-tooltip="Assigned to..."></i>
                 <div class="field-fix">
                 <select ng-model="task.developer" ng-options="member._id as member.name for member in team"
