@@ -107,12 +107,12 @@ angular
         return self;
     })
 
-    .factory('TaskEditorModal', function ($modal) {
+    .factory('TaskEditorModal', function ($uibModal) {
 
         var box = {
             modal: null,
             show: function (task, init) {
-                this.modal = $modal.open({
+                this.modal = $uibModal.open({
                     size: 'lg',
                     templateUrl: 'tracker/modules/task/views/task-edit-modal.html',
                     controller: function ($scope) {

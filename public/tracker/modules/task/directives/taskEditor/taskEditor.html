@@ -39,11 +39,11 @@
 
                 <div ng-if="task.simple" class="pull-left">
 
-                    <i class="fa fa-check-square-o fa-md vcenter" tooltip="Status"></i>
+                    <i class="fa fa-check-square-o fa-md vcenter" uib-tooltip="Status"></i>
 
                     <div class="btn-group task-statuses">
                         <label ng-repeat="status in statuses" class="btn btn-default btn-sm" ng-model="task.status"
-                               btn-radio="status.value" ng-class="{'disabled' : task.archived == true}">{{status.name}}</label>
+                               uib-btn-radio="status.value" ng-class="{'disabled' : task.archived == true}">{{status.name}}</label>
                     </div>
                 </div>
 
@@ -66,28 +66,28 @@
             <hr ng-if="task.simple || task.status == 'accepted'" class="mg"/>
 
             <div ng-if="task.simple" class="form-group" ng-show="task.title"> <!--Complexity-->
-                <i class="fa fa-puzzle-piece fa-md vcenter" tooltip="Complexity"></i>
+                <i class="fa fa-puzzle-piece fa-md vcenter" uib-tooltip="Complexity"></i>
 
                 <div class="btn-group complexity">
                     <label ng-repeat="complexity in complexities" class="btn btn-default btn-sm"
                            ng-model="task.complexity"
-                           btn-radio="complexity.value">{{complexity.name}}</label>
+                           uib-btn-radio="complexity.value">{{complexity.name}}</label>
                 </div>
             </div>
 
             <div class="form-group" ng-show="task.title"> <!-- Priority-->
-                <i class="fa fa-bolt fa-md vcenter" tooltip="Priority"></i>
+                <i class="fa fa-bolt fa-md vcenter" uib-tooltip="Priority"></i>
 
                 <div class="btn-group priority">
                     <label ng-repeat="priority in priorities" class="btn btn-default btn-sm" ng-model="task.priority"
-                           btn-radio="priority">{{priority}}</label>
+                           uib-btn-radio="priority">{{priority}}</label>
                 </div>
             </div>
 
             <hr ng-if="task.simple" class="mg"/>
 
             <div class="form-group clearfix" ng-show="task.title" ng-if="task.simple">
-                <i class="fa fa-clock-o fa-md vcenter pull-left" tooltip="Spent time"></i>
+                <i class="fa fa-clock-o fa-md vcenter pull-left" uib-tooltip="Spent time"></i>
 
                 <input ng-model="task.spenttime" type="text" class="form-control w-xs pull-left input-sm"
                        id="spentTime"
@@ -101,7 +101,7 @@
             <hr class="mg"/>
 
             <div class="form-group clearfix icon-fix" ng-show="task.title">
-                <i class="fa fa-user fa-md vcenter" tooltip="Assigned to..."></i>
+                <i class="fa fa-user fa-md vcenter" uib-tooltip="Assigned to..."></i>
                 <div class="field-fix">
                 <select ng-model="task.developer" ng-options="member._id as member.name for member in team"
                         class="form-control input-sm field-full "></select>
@@ -110,7 +110,7 @@
 
             <div class="form-group clearfix icon-fix" ng-if="task.parentTaskId == null" ng-show="task.title">
 
-                <i class="fa fa-user-plus fa-md vcenter" tooltip="Shared for..."></i>
+                <i class="fa fa-user-plus fa-md vcenter" uib-tooltip="Shared for..."></i>
                 <div class="field-fix">
                 <ui-select multiple ng-model="task.team" class="input-sm field-full">
                     <ui-select-match placeholder="Share...">{{$item.name}}</ui-select-match>
@@ -125,7 +125,7 @@
 
             <div class="form-group clearfix icon-fix">
 
-                <i class="fa fa-tags fa-md vcenter" tooltip="Tags"></i>
+                <i class="fa fa-tags fa-md vcenter" uib-tooltip="Tags"></i>
 
                 <div class="field-fix">
                 <ui-select tagging tagging-label="(add)"

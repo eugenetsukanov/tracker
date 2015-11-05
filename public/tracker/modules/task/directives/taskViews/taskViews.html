@@ -10,7 +10,7 @@
         </div>
 
         <button class="btn btn-default btn-sm btn-metrics" 
-                tooltip="{{tooltip}}"
+                uib-tooltip="{{tooltip}}"
                 ng-click="toggleMetrics()"
                 ng-class="{'btn-warning' : metricsDetails == 1,'btn-info' : metricsDetails == 2}">
             <i class="fa"
@@ -19,7 +19,7 @@
         </button>
 
         <button class="btn btn-default btn-sm btn-metrics"
-                tooltip="Sort By Priority"
+                uib-tooltip="Sort By Priority"
                 ng-click="sortByPriority()"
                 ng-class="{'active': active == true }">
             <i class="fa fa-bolt"></i>
