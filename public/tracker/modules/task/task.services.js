@@ -42,9 +42,6 @@ angular
 
         var defaultValues = {
             metricsDetails: 0
-            //sortBy: {
-            //    priority: -1
-            //}
         };
 
         return {
