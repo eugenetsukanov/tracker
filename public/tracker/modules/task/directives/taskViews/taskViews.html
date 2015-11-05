@@ -9,7 +9,7 @@
             </button>
         </div>
 
-        <button class="btn btn-default btn-sm btn-metrics"
+        <button class="btn btn-default btn-sm btn-metrics" 
                 tooltip="{{tooltip}}"
                 ng-click="toggleMetrics()"
                 ng-class="{'btn-warning' : metricsDetails == 1,'btn-info' : metricsDetails == 2}">
@@ -18,9 +18,13 @@
             </i>
         </button>
 
+        <button class="btn btn-default btn-sm btn-metrics" tooltip="Sort By Priority" ng-click="sortByPriority()">
+            <i class="fa fa-bolt"></i>
+        </button>
     </div>
 
     <div class="clearfix"
-         ng-include="'tracker/modules/task/directives/taskViews/views/view-'+view.name+'.html'"></div>
+         ng-include="'tracker/modules/task/directives/taskViews/views/view-'+view.name+'.html'">
+    </div>
 </div>
 
