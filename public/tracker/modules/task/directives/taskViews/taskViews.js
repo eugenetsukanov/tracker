@@ -5,6 +5,7 @@ angular
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskViews/taskViews.html',
             controller: function ($scope, TaskEditorModal, MetricsService) {
+                $scope.active = false;
 
                 $scope.views = [
                     {title: 'Board', name: 'board'},
@@ -50,6 +51,7 @@ angular
 
                 $scope.sortByPriority = function () {
                     $scope.tasks.reverse();
+                    $scope.active = !$scope.active;
                 }
 
             },
