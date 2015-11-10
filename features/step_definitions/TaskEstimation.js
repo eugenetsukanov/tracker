@@ -27,13 +27,13 @@ module.exports = function () {
     });
 
     this.Then(/^I see task complexity "([^"]*)"$/, function (arg1, callback) {
-        this.iSee("ul.task-metrics li[tooltip='Complexity / Points']:contains('" + arg1 + "')", callback);
+        this.iSee("ul.task-metrics li[uib-tooltip='Complexity / Points']:contains('" + arg1 + "')", callback);
     });
 
     this.Then(/^I see task "([^"]*)" complexity "([^"]*)"$/, function (arg1, arg2, callback) {
         this.chain
             .iSee(' div h4 a:contains("' +arg1+ '")')
-            .iSee("ul.task-metrics li[tooltip='Complexity / Points']:contains('" + arg2 + "')")
+            .iSee("ul.task-metrics li[uib-tooltip='Complexity / Points']:contains('" + arg2 + "')")
             .then(callback);
     });
 
@@ -48,14 +48,14 @@ module.exports = function () {
     this.Then(/^I see task "([^"]*)" velocity "([^"]*)"$/, function (arg1, arg2, callback) {
         this.chain
             .iSee('.board-view a:contains("' +arg1+ '")')
-            .iSee('.board-view ul li[tooltip="Velocity"]("' +arg2+ '")')
+            .iSee('.board-view ul li[uib-tooltip="Velocity"]("' +arg2+ '")')
             .then(callback);
     });
 
     this.Then(/^I see task "([^"]*)" estimated time "([^"]*)"$/, function (arg1, arg2, callback) {
         this.chain
             .iSee('.board-view a:contains("' +arg1+ '")')
-            .iSee('.board-view ul li span[tooltip="Estimated"]:contains("' +arg2+ '")')
+            .iSee('.board-view ul li span[uib-tooltip="Estimated"]:contains("' +arg2+ '")')
             .then(callback);
     });
 
@@ -66,14 +66,14 @@ module.exports = function () {
     this.Then(/^I see parent "([^"]*)" estimated time "([^"]*)"$/, function (arg1, arg2, callback) {
         this.chain
             .iSee('div h2:contains("' +arg1+ '")')
-            .iSee('div[ng-hide="task._id == newTask._id"] li span[tooltip="Estimated"]:contains("' +arg2+ '")')
+            .iSee('div[ng-hide="task._id == newTask._id"] li span[uib-tooltip="Estimated"]:contains("' +arg2+ '")')
             .then(callback);
     });
 
     this.Then(/^I see parent "([^"]*)" complexity "([^"]*)"$/, function (arg1, arg2, callback) {
         this.chain
             .iSee('div h2:contains("' +arg1+ '")')
-            .iSee('div[ng-hide="task._id == newTask._id"] li[tooltip="Complexity / Points"]:contains("' +arg2+ '")')
+            .iSee('div[ng-hide="task._id == newTask._id"] li[uib-tooltip="Complexity / Points"]:contains("' +arg2+ '")')
             .then(callback);
     });
 

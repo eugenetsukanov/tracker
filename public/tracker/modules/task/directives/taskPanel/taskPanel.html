@@ -19,7 +19,7 @@
 
         <div ng-if="task.description">
             <hr ng-if="metricsDetails"/>
-            <div text-extend="task.description"></div>
+            <div text-extend="task.description" style="overflow: hidden;"></div>
         </div>
 
         <hr ng-if="task.tags.length && (task.description || metricsDetails > 0)"/>

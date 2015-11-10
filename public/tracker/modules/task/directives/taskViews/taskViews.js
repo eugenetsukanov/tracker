@@ -5,6 +5,7 @@ angular
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskViews/taskViews.html',
             controller: function ($scope, TaskEditorModal, MetricsService) {
+                $scope.active = false;
 
                 $scope.views = [
                     {title: 'Board', name: 'board'},
@@ -28,10 +29,10 @@ angular
 
                 $scope.metricsDetails = MetricsService.getMetrics();
 
-                $scope.tooltipMetrics = function(){
-                    if (MetricsService.getMetrics() == 0){
+                $scope.tooltipMetrics = function () {
+                    if (MetricsService.getMetrics() == 0) {
                         $scope.tooltip = 'Metrics';
-                    } else if (MetricsService.getMetrics() == 1){
+                    } else if (MetricsService.getMetrics() == 1) {
                         $scope.tooltip = 'Full Metrics';
                     } else if (MetricsService.getMetrics() == 2) {
                         $scope.tooltip = 'Hide Metrics';
@@ -42,10 +43,15 @@ angular
 
                 $scope.tooltipMetrics();
 
-                $scope.toggleMetrics = function(){
+                $scope.toggleMetrics = function () {
                     MetricsService.toggle();
                     $scope.tooltipMetrics();
                     $scope.metricsDetails = MetricsService.getMetrics();
+                };
+
+                $scope.sortByPriority = function () {
+                    $scope.tasks.reverse();
+                    $scope.active = !$scope.active;
                 }
 
             },
