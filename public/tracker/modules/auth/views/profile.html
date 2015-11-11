@@ -1,9 +1,16 @@
 <div class="row profile">
+    <div class="pull-right login-social-link">
+        <p>Link your social account</p>
+        <a href="/auth/twitter"><i class="fa fa-twitter"></i></a>
+        <a href="/auth/facebook"><i class="fa fa-facebook-square"></i></a>
+        <a href="/auth/google"><i class="fa fa-google"></i></a>
+    </div>
     <div class="col-md-6 col-md-offset-3">
         <form ng-submit="save()" class="form-horizontal myprofile">
             <ul>
                 <li class="form-group form-group-sm">
                     <label for="username" class="col-sm-3 control-label">Username</label>
+
                     <div class="col-sm-7">
                         <input id="username"
                                class="form-control input-sm"
@@ -15,40 +22,44 @@
                 </li>
                 <li class="form-group form-group-sm">
                     <label for="firstName" class="col-sm-3 control-label">First&nbsp;Name</label>
+
                     <div class="col-sm-7">
-                    <input id="firstName"
-                           class="form-control input-sm"
-                           ng-model="user.first"
-                           type="text"
-                           value="{{user.first}}"
-                           placeholder="First Name"/>
-                        </div>
+                        <input id="firstName"
+                               class="form-control input-sm"
+                               ng-model="user.first"
+                               type="text"
+                               value="{{user.first}}"
+                               placeholder="First Name"/>
+                    </div>
                 </li>
                 <li class="form-group form-group-sm">
                     <label for="lastName" class="col-sm-3 control-label">Last&nbsp;Name</label>
+
                     <div class="col-sm-7">
-                    <input id="lastName"
-                           class="form-control input-sm"
-                           ng-model="user.last"
-                           type="text"
-                           value="{{user.last}}"
-                           placeholder="Last Name"/>
-                        </div>
+                        <input id="lastName"
+                               class="form-control input-sm"
+                               ng-model="user.last"
+                               type="text"
+                               value="{{user.last}}"
+                               placeholder="Last Name"/>
+                    </div>
                 </li>
                 <li class="form-group form-group-sm mg">
                     <label for="email" class="col-sm-3 control-label">email</label>
+
                     <div class="col-sm-7">
-                    <input id="email"
-                           class="form-control input-sm"
-                           ng-model="user.email"
-                           type="text"
-                           value="{{user.email}}"
-                           placeholder="email"/>
-                        </div>
+                        <input id="email"
+                               class="form-control input-sm"
+                               ng-model="user.email"
+                               type="text"
+                               value="{{user.email}}"
+                               placeholder="email"/>
+                    </div>
                 </li>
                 <li class="form-group">
                     <div class="col-sm-7 col-sm-offset-3">
-                        <a ng-click="changePass = !changePass" class="btn btn-link btn-sm pull-right change-password-btn">Change&nbsp;Password</a>
+                        <a ng-click="changePass = !changePass"
+                           class="btn btn-link btn-sm pull-right change-password-btn">Change&nbsp;Password</a>
                         <button type="submit" class="btn btn-primary btn-sm pull-left">Save</button>
                     </div>
                 </li>
@@ -59,6 +70,7 @@
             <ul>
                 <li class="form-group form-group-sm">
                     <label for="oldPassword" class="col-sm-3 control-label">Old&nbsp;Password</label>
+
                     <div class="col-sm-7">
                         <input id="oldPassword"
                                class="form-control input-sm"
@@ -69,6 +81,7 @@
                 </li>
                 <li class="form-group form-group-sm">
                     <label for="newPassword" class="col-sm-3 control-label">New&nbsp;Password</label>
+
                     <div class="col-sm-7">
                         <input id="newPassword"
                                class="form-control input-sm"
@@ -79,6 +92,7 @@
                 </li>
                 <li class="form-group form-group-sm mg">
                     <label for="newPasswordConfirm" class="col-sm-3 control-label">Confirm&nbsp;Password</label>
+
                     <div class="col-sm-7">
                         <input id="newPasswordConfirm"
                                class="form-control input-sm"

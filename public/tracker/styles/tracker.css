@@ -473,6 +473,13 @@ hr {
     background: #e6e6e6;
 }
 
+/*report page*/
+
+.d30 {
+    width: 30px;
+    height: 30px;
+}
+
 
 /*report page*/
 .report-page .p10,
@@ -527,7 +534,20 @@ hr {
 .tag-search .detail-line {
     padding: 0;
 }
-
+.login-social-link {
+    margin-top: 29px;
+    margin-bottom: 10px;
+    vertical-align: text-bottom;
+}
+.login-social-link a {
+    color: #333333 !important;
+    font-size: 20px;
+    margin-left: 7px;
+    opacity: 0.75;
+}
+.login-social-link a:hover {
+    opacity: 1;
+}
 .profile h4 {
     margin-bottom: 30px;
 }

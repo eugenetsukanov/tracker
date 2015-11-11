@@ -26,8 +26,11 @@ module.exports = function (app) {
     var User = require('../../models/user');
 
     var _ = require('lodash');
+    var limit = 60;
 
     app.get('/api/tasks', function (req, res) {
+
+        var page = parseInt(req.query.page) || 0;
 
         var q = {
             parentTaskId: null,
@@ -43,6 +46,8 @@ module.exports = function (app) {
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .sort('-priority date')
+            .skip(page*limit)
+            .limit(limit)
             .exec(function (err, tasks) {
                 if (err) return console.log(err);
                 res.json(tasks);
@@ -151,10 +156,14 @@ module.exports = function (app) {
 
     app.get('/api/tasks/:taskId/tasks', function (req, res) {
 
+        var page = parseInt(req.query.page) || 0;
+
         Task.find({parentTaskId: req.Task._id, archived: {$ne: true}})
             .sort('-priority date')
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
+            .skip(page*limit)
+            .limit(limit)
             .exec(function (err, tasks) {
 
                 if (err) return next(err);
@@ -244,7 +253,7 @@ module.exports = function (app) {
     });
 
     app.delete('/api/tasks/:taskId/files/:fileId', function (req, res, next) {
-        Task.update({_id: req.Task._id}, { $pull: { 'files': {_id: req.params.fileId} } }, function (err) {
+        Task.update({_id: req.Task._id}, {$pull: {'files': {_id: req.params.fileId}}}, function (err) {
             if (err) next(err);
 
             GridFS.removeFile({_id: req.params.fileId}, function (err) {

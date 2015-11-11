@@ -7,5 +7,4 @@ module.exports = function (container) {
     container.register('Host', require('../services/Host'), ['config/host/url']);
     container.register('Cron', require('../services/Cron'));
     container.register('TaskArchivator', require('../services/TaskArchivator'));
-
-};
+}
