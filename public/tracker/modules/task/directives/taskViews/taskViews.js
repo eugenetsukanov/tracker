@@ -66,30 +66,30 @@ angular
                     $scope.activeSortPriority = !$scope.activeSortPriority;
                 };
 
+                $scope.pushTasksToScope = function (tasks) {
+                    $scope.tasks.splice(0);
+                    _.forEach(tasks, function (task) {
+                        $scope.tasks.push(task);
+                    })
+                };
+
                 $scope.sortByDate = function () {
 
                     if ($scope.sortByDateOrder == 1) {
                         var descTasks = SortingService.sortByOrder($scope.tasks, 'updatedAt', 'desc');
-                        $scope.tasks.splice(0);
-                        _.forEach(descTasks, function (task) {
-                            $scope.tasks.push(task);
-                        })
+                        $scope.pushTasksToScope(descTasks);
                     } else if ($scope.sortByDateOrder == 2) {
                         var ascTasks = SortingService.sortByOrder($scope.tasks, 'updatedAt', 'asc');
-                        $scope.tasks.splice(0);
-                        _.forEach(ascTasks, function (aTask) {
-                            $scope.tasks.push(aTask);
-                        })
+                        $scope.pushTasksToScope(ascTasks);
                     } else {
-                        $scope.tasks.splice(0);
-                        _.forEach(aTasks, function (aTask) {
-                            $scope.tasks.push(aTask);
-                        })
+                        $scope.pushTasksToScope(aTasks);
                     }
                 };
 
                 $scope.$watchCollection('tasks', function () {
-                    $scope.sortByDate();
+                    if ($scope.sortByDateOrder !== 0) {
+                        $scope.sortByDate();
+                    }
                 });
 
             },
