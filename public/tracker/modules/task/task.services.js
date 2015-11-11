@@ -39,9 +39,9 @@ angular
 
     .factory('SettingsService', function ($localStorage) {
 
-
         var defaultValues = {
-            metricsDetails: 0
+            metricsDetails: 0,
+            sortByDate: 0
         };
 
         return {
@@ -78,6 +78,37 @@ angular
 
                 SettingsService.setProperty('metricsDetails', metricsDetails);
 
+            }
+        }
+    })
+
+    .factory('SortingService', function (SettingsService) {
+        return {
+
+            getSortingOrder: function (sortBy) {
+                console.log(SettingsService.getProperty(sortBy))
+                return SettingsService.getProperty(sortBy);
+            },
+
+            toggle: function (sortBy) {
+
+                var sortByValue = SettingsService.getProperty(sortBy);
+
+                if (sortByValue < 2) {
+                    sortByValue += 1;
+                } else {
+                    sortByValue = 0;
+                }
+
+                SettingsService.setProperty(sortBy, sortByValue);
+            },
+            sortByOrder: function (instant, values, orders) {
+                if (typeof values === 'string' && typeof orders === 'string') {
+                    return _.sortByOrder(instant, values, [orders]);
+                }
+                if (values.isArray() && orders.isArray()) {
+                    return _.sortByOrder(instant, values, orders);
+                }
             }
         }
     })
@@ -138,37 +169,37 @@ angular
 
         var self = {
 
-            'app.tasks' : {
+            'app.tasks': {
                 title: 'Projects'
             },
-            'app.report' : {
+            'app.report': {
                 title: 'Report'
             },
-            'app.assigned-tasks' : {
+            'app.assigned-tasks': {
                 title: 'My Tasks'
             },
-            'app.tags-find' : {
+            'app.tags-find': {
                 title: 'Search by tags'
             },
-            'app.task-search' : {
+            'app.task-search': {
                 title: 'Search'
             },
-            'app.projects-archive' : {
+            'app.projects-archive': {
                 title: 'Archived Projects'
             },
-            'app.profile' : {
+            'app.profile': {
                 title: 'Profile'
             },
-            'app.login' : {
+            'app.login': {
                 title: 'Login to your Tracker'
             },
-            'app.register' : {
+            'app.register': {
                 title: 'Register'
             },
-            'app.reset-password' : {
+            'app.reset-password': {
                 title: 'Reset Password'
             },
-            'public.change-password' : {
+            'public.change-password': {
                 title: 'Change Password'
             }
 
@@ -193,14 +224,14 @@ angular
             getTitle: function () {
                 return (self.prefix) ? self.prefix + ' | ' + self.title : self.title;
             },
-            
+
             observe: function () {
                 $rootScope.$on('$viewContentLoaded', function () {
                     if (self.getRouteTitle()) {
                         var route = self.getRouteTitle();
                         self.setTitle(route.title, route.prefix);
                     } else {
-                       self.setTitle('Tracker');
+                        self.setTitle('Tracker');
                     }
                 });
             },

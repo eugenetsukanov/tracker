@@ -21,8 +21,19 @@
         <button class="btn btn-default btn-sm btn-metrics"
                 uib-tooltip="Sort By Priority"
                 ng-click="sortByPriority()"
-                ng-class="{'active': active == true }">
+                ng-class="{'active': activeSortPriority == true }"
+                ng-disabled="activeSortDate">
             <i class="fa fa-bolt"></i>
+        </button>
+
+        <button class="btn btn-default btn-sm btn-metrics"
+                uib-tooltip="Sort By Date"
+                ng-click="toggleSortingDate(); sortByDate()">
+            <i class="fa fa-calendar">
+            </i>
+            <i class="fa"
+            ng-class="{'fa-long-arrow-up' : sortByDateOrder == 1,
+            'fa-long-arrow-down' : sortByDateOrder == 2}"></i>
         </button>
     </div>
 
