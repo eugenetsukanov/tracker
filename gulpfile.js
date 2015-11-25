@@ -23,7 +23,7 @@ gulp.task('icons', function() {
 
     if(!opts.minify) return gulp.src([]);
 
-    return gulp.src('./public/lib/components-font-awesome/fonts/**.*')
+    return gulp.src(['./public/lib/components-font-awesome/fonts/**.*', './public/lib/bootstrap/fonts/**.*'])
         .pipe(gulp.dest('./public/dist/fonts'));
 });
 
