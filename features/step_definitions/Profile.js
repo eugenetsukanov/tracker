@@ -68,5 +68,11 @@ module.exports = function () {
         this.iClick('.navbar-default .navbar-nav>li>a:contains("Logout")', callback);
     });
 
-
+    this.Then(/^I click on toaster notification "([^"]*)"$/, function (arg1, callback) {
+        setTimeout(callback, 1000);
+        this.chain
+            .iSee('div.toaster-popup > div#toaster-container > div.toast-info-add:contains("'+arg1+'")')
+            .iClick('.toaster-popup .toast-title', arg1)
+            .then(callback);
+    });
 };

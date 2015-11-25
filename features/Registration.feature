@@ -4,7 +4,7 @@ Feature: Registration
 
     Given Home page
 
-    Then I click register button in nav
+    Then I click register button in navbar
 
     Then I see registration form
 
@@ -30,7 +30,7 @@ Feature: Registration
 
     Given Home page
 
-    Then I click register button in nav
+    Then I click register button in navbar
 
     Then I see registration form
 
@@ -60,7 +60,7 @@ Feature: Registration
 
     Given Home page
 
-    Then I click register button in nav
+    Then I click register button in navbar
 
     Then I see registration form
 

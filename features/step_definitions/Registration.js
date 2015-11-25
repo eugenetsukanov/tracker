@@ -1,6 +1,6 @@
 module.exports = function () {
 
-    this.Then(/^I click register button in nav$/, function (callback) {
+    this.Then(/^I click register button in navbar$/, function (callback) {
         this.chain
             .iSee('.navbar.navbar-default a[ui-sref="app.register"]')
             .iClick('.navbar.navbar-default a[ui-sref="app.register"]')
