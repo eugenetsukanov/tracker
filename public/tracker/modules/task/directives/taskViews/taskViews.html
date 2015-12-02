@@ -17,7 +17,7 @@
                ng-class="{'fa-circle-o' : metricsDetails == 0, 'fa-dot-circle-o' : metricsDetails == 1,'fa-circle' : metricsDetails == 2}">
             </i>
         </button>
-
+        &nbsp;
         <button class="btn btn-default btn-sm btn-metrics"
                 uib-tooltip="Sort By Priority"
                 ng-click="sortByPriority()"
@@ -30,4 +30,5 @@
          ng-include="'tracker/modules/task/directives/taskViews/views/view-'+view.name+'.html'">
     </div>
 </div>
+
 

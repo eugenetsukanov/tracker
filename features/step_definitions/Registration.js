@@ -18,13 +18,6 @@ module.exports = function () {
             .then(callback);
     });
 
-    this.When(/^click on register button$/, function (callback) {
-        this.chain
-            .iSee('.navbar.navbar-default button[type="submit"]')
-            .iClick('.navbar.navbar-default button[type="submit"]')
-            .then(callback);
-    });
-
     this.When(/^I type username "([^"]*)" in reg form$/, function (arg1, callback) {
         this.chain
             .iSee('form[ng-submit="register()"] input[ng-model="username"]')
@@ -44,10 +37,6 @@ module.exports = function () {
             .iSee('form[ng-submit="register()"] button[type="submit"]')
             .iClick('form[ng-submit="register()"] button[type="submit"]')
             .then(callback);
-    });
-
-    this.Then(/^I see notification "([^"]*)"$/, function (arg1, callback) {
-        this.iSee('.toaster-popup .toast-title', callback);
     });
 
 
