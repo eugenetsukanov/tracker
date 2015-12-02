@@ -36,18 +36,52 @@ module.exports = function (app, passport, flash) {
     });
 
     app.post('/api/login', function (req, res, next) {
-            passport.authenticate('local', function(err, user, info) {
+        passport.authenticate('local', function (err, user, info) {
+            if (err) return next(err);
+
+            if (!user) return res.status(403).send(req.flash('loginMessage'));
+
+            req.logIn(user, {failureFlash: true}, function (err) {
                 if (err) return next(err);
+                return res.redirect('/api/users/me');
+            });
+        })(req, res, next);
+    });
 
-                if (!user) return res.status(403).send(req.flash('loginMessage'));
+    //------------------------------------------GOOGLE------------------------------------------
 
-                req.logIn(user, {failureFlash: true}, function(err) {
-                    if (err) return next(err);
-                    return res.redirect('/api/users/me');
-                });
-            })(req, res, next);
+    app.get('/auth/google',
+        passport.authenticate('google', {scope: ['profile', 'email']})
+    );
+
+    app.get('/auth/google/callback', passport.authenticate('google', {
+            successRedirect: '/#/app/users/me',
+            failureRedirect: '/'
+        })
+    );
+
+    //------------------------------------------FACEBOOK------------------------------------------
+
+    app.get('/auth/facebook',
+        passport.authenticate('facebook', {scope: 'email'}));
+
+    app.get('/auth/facebook/callback',
+        passport.authenticate('facebook', {failureRedirect: '/'}),
+        function (req, res) {
+            res.redirect('/#/app/users/me');
         }
     );
+
+    //-------------------------------------------TWITTER-------------------------------------------
+
+    app.get('/auth/twitter',
+        passport.authenticate('twitter'));
+
+    app.get('/auth/twitter/callback',
+        passport.authenticate('twitter', {failureRedirect: '/login'}),
+        function (req, res) {
+            res.redirect('/#/app/users/me');
+        });
 
     app.post('/api/logout', function (req, res) {
         req.logout();
@@ -55,7 +89,6 @@ module.exports = function (app, passport, flash) {
     });
 
     app.post('/api/resetPassword', function (req, res, next) {
-
 
         User.findOne({'email': req.body.email}, function (err, user) {
 
@@ -168,7 +201,6 @@ module.exports = function (app, passport, flash) {
 
     });
 
-
     app.post('/api/users/changePassword', function (req, res, next) {
 
         User.findById(req.user._id, function (err, user) {
@@ -191,4 +223,5 @@ module.exports = function (app, passport, flash) {
     });
 
 
-};
+}
+;

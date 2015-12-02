@@ -1,10 +1,10 @@
 Feature: Registration
 
-  Scenario: Add new user
+  Scenario: Add a new user
 
     Given Home page
 
-    Then I click register button in nav
+    Then I click register button in navbar
 
     Then I see registration form
 
@@ -30,7 +30,7 @@ Feature: Registration
 
     Given Home page
 
-    Then I click register button in nav
+    Then I click register button in navbar
 
     Then I see registration form
 
@@ -39,7 +39,7 @@ Feature: Registration
     When I type password "test" in reg form
     And I click on register button
 
-    Then I see notification "'test' already exist"
+    Then I click on toaster notification "'test' already exist"
     Then I sleep 2
 
     Then I type username "test1" in reg form
@@ -60,7 +60,7 @@ Feature: Registration
 
     Given Home page
 
-    Then I click register button in nav
+    Then I click register button in navbar
 
     Then I see registration form
 
@@ -69,7 +69,7 @@ Feature: Registration
     When I type password "test" in reg form
     And I click on register button
 
-    Then I see notification "'mailtotesthere@gmail.com' already exist"
+    Then I click on toaster notification "'mailtotesthere@gmail.com' already exist"
     Then I sleep 2
 
     Then I type email "test1@mail.com"

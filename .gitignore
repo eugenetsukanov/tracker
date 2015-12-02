@@ -4,10 +4,11 @@
 /node_modules
 /public/lib
 /public/uploads
+/public/dist/
+/public/index.html
 .nodemon*
 *.log
 /app/config/parameters.json
 /chromedriver
 /selenium-server-standalone-*
 .DS_Store
-public/dist/

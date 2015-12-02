@@ -1,6 +1,5 @@
 Feature: Profile
 
-
   Background:
     Given Home page
 
@@ -43,8 +42,8 @@ Feature: Profile
     Then I type "111" in Confirm Password field
 
     Then I click Change button
-
-    Then I sleep 4
+    Then I click on toaster notification "Saved"
+    Then I sleep 7
 
     Then I click Logout button
 

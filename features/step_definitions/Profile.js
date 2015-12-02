@@ -65,8 +65,13 @@ module.exports = function () {
     });
 
     this.Then(/^I click Logout button$/, function (callback) {
-        this.iClick('.navbar-default .navbar-nav>li>a:contains("Logout")', callback);
+        this.iClick('.navbar-nav a:contains("Logout")', callback);
     });
 
-
+    this.Then(/^I click on toaster notification "([^"]*)"$/, function (arg1, callback) {
+        this.chain
+            .iSee('div[ng-repeat="toaster in toasters"] div:contains("' + arg1 + '")')
+            .iClick('.toaster-popup .toast-title')
+            .then(callback);
+    });
 };

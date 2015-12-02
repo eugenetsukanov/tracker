@@ -11,7 +11,23 @@ var UserSchema = new Schema({
         username: {type: String, index: true},
         passwordSalt: String,
         passwordHashed: String
-    }
+    },
+    facebook: {
+        id: String,
+        email: String,
+        token: String
+    },
+    twitter: {
+        id: String,
+        token: String
+    },
+    google: {
+        id: String,
+        email: String,
+        token: String
+    },
+
+    created: {type: Date, default: Date.now}
 
 });
 
