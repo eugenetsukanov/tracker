@@ -9,3 +9,5 @@
 /app/config/parameters.json
 /chromedriver
 /selenium-server-standalone-*
+.DS_Store
+public/dist/
