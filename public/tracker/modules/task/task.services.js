@@ -86,7 +86,6 @@ angular
         return {
 
             getSortingOrder: function (sortBy) {
-                console.log(SettingsService.getProperty(sortBy))
                 return SettingsService.getProperty(sortBy);
             },
 
@@ -102,13 +101,16 @@ angular
 
                 SettingsService.setProperty(sortBy, sortByValue);
             },
-            sortByOrder: function (instant, values, orders) {
-                if (typeof values === 'string' && typeof orders === 'string') {
-                    return _.sortByOrder(instant, values, [orders]);
+            sortByOrder: function (items, fields, orders) {
+                if (!_.isArray(orders)) {
+                    orders = [orders];
                 }
-                if (values.isArray() && orders.isArray()) {
-                    return _.sortByOrder(instant, values, orders);
+
+                if (!_.isArray(fields)) {
+                    fields = [fields];
                 }
+
+                return _.sortByOrder(items, fields, orders);
             }
         }
     })
