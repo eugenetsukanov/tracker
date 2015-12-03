@@ -28,6 +28,11 @@ angular
         $scope.taskId = $stateParams.taskId;
         $scope.tasks = [];
 
+        $scope.reset = function () {
+            $scope.tasks.length = 0;
+            page = 0;
+        };
+
         var loadTasks = function () {
             if ($scope.taskId) {
                 var query = {
@@ -37,7 +42,8 @@ angular
                 };
 
                 Task.query(query, function (tasks) {
-
+                    //@@FIXME
+                    $scope.reset();
                     if (tasks.length) {
                         $scope.tasks = $scope.tasks.concat(tasks);
                         page++;
@@ -61,6 +67,8 @@ angular
                 });
             } else {
                 Task.query({page: page}, function (tasks) {
+                    $scope.reset();
+                    //@@FIXME
                     if (tasks.length) {
                         $scope.tasks = $scope.tasks.concat(tasks);
                         busyScroll = false;
@@ -73,7 +81,7 @@ angular
 
         $scope.scroll = function () {
             return;
-//@@FIXME
+            //@@FIXME
             //if (busyScroll) {
             //    return;
             //} else {
@@ -84,10 +92,7 @@ angular
         };
 
         $scope.init = function () {
-
-            $scope.tasks.length = 0;
-            page = 0;
-
+            //$scope.reset();
             loadTasks();
 
             $scope.newTask = new Task({
@@ -160,7 +165,7 @@ angular
                 $scope.tags = tags;
             });
 
-            if ($scope.search.length){
+            if ($scope.search.length) {
                 $scope.searchQuery();
             }
         };
@@ -195,7 +200,7 @@ angular
                                               RootTask,
                                               TitleService) {
 
-        if($stateParams.taskId) {
+        if ($stateParams.taskId) {
 
             RootTask.get({taskId: $stateParams.taskId}, function (root) {
                 $scope.root = root;
@@ -227,7 +232,6 @@ angular
     .controller('TaskArchiveCtrl', function ($state, $scope, $stateParams, Task, ArchivedProjects, TitleService) {
 
         $scope.init = function () {
-
 
 
             if ($stateParams.taskId) {
