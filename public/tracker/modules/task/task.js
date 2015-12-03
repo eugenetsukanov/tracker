@@ -72,13 +72,14 @@ angular
         };
 
         $scope.scroll = function () {
-
-            if (busyScroll) {
-                return;
-            } else {
-                busyScroll = true;
-                loadTasks();
-            }
+            return;
+//@@FIXME
+            //if (busyScroll) {
+            //    return;
+            //} else {
+            //    busyScroll = true;
+            //    loadTasks();
+            //}
 
         };
 

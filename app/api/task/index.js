@@ -46,8 +46,9 @@ module.exports = function (app) {
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .sort('-priority date')
-            .skip(page*limit)
-            .limit(limit)
+            //@@FIXME
+            //.skip(page*limit)
+            //.limit(limit)
             .exec(function (err, tasks) {
                 if (err) return console.log(err);
                 res.json(tasks);
@@ -162,8 +163,9 @@ module.exports = function (app) {
             .sort('-priority date')
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
-            .skip(page*limit)
-            .limit(limit)
+            //@@FIXME
+            //.skip(page*limit)
+            //.limit(limit)
             .exec(function (err, tasks) {
 
                 if (err) return next(err);
