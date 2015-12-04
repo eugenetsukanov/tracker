@@ -64,5 +64,5 @@ if (app.config.get('fixtures:load')) {
 var server = app.listen(app.config.get('app:port'), function () {
     var host = server.address().address;
     var port = server.address().port;
-    console.log('Tracker app listening at http://%s:%s', host, port)
+    console.log('Tracker app listening at http://%s:%s | env %s', host, port, app.config.get('env'))
 });
