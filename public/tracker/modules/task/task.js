@@ -43,7 +43,7 @@ angular
 
                 Task.query(query, function (tasks) {
                     //@@FIXME
-                    $scope.reset();
+                    //$scope.reset();
                     if (tasks.length) {
                         $scope.tasks = $scope.tasks.concat(tasks);
                         page++;
@@ -67,7 +67,7 @@ angular
                 });
             } else {
                 Task.query({page: page}, function (tasks) {
-                    $scope.reset();
+                    //$scope.reset();
                     //@@FIXME
                     if (tasks.length) {
                         $scope.tasks = $scope.tasks.concat(tasks);
@@ -80,19 +80,18 @@ angular
         };
 
         $scope.scroll = function () {
-            return;
+            //return;
             //@@FIXME
-            //if (busyScroll) {
-            //    return;
-            //} else {
-            //    busyScroll = true;
-            //    loadTasks();
-            //}
-
+            if (busyScroll) {
+                return;
+            } else {
+                busyScroll = true;
+                loadTasks();
+            }
         };
 
         $scope.init = function () {
-            //$scope.reset();
+            $scope.reset();
             loadTasks();
 
             $scope.newTask = new Task({
@@ -116,7 +115,6 @@ angular
             $scope.newTask = task;
 
             TaskEditorModal.show(task, init);
-
         };
 
 

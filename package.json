@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "setup": "npm install && bower install --config.interactive=false --allow-root && gulp",
-    "start.dev": "nodemon --debug=5858 app.js -i node_modules/ -i public/ -i features/",
+    "setup.dev": "npm install && bower install --config.interactive=false --allow-root && gulp dev",
     "start.prod": "NODE_ENV=prod pm2 restart app.js",
-    "start": "npm run setup && npm run start.dev",
+    "start.dev": "npm run setup.dev && nodemon --debug=5858 app.js -i node_modules/ -i public/ -i features/",
     "test": "NODE_ENV=development node_modules/.bin/cucumber.js --format pretty",
     "test.wip": "NODE_ENV=development node_modules/.bin/cucumber.js --format pretty -t @wip"
   },

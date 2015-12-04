@@ -47,8 +47,8 @@ module.exports = function (app) {
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .sort('-priority date')
             //@@FIXME
-            //.skip(page*limit)
-            //.limit(limit)
+            .skip(page*limit)
+            .limit(limit)
             .exec(function (err, tasks) {
                 if (err) return console.log(err);
                 res.json(tasks);
@@ -58,7 +58,7 @@ module.exports = function (app) {
 
     app.get('/api/tasks/archived', function (req, res) {
 
-        Task.find({archived: true})
+        Task.find({parentTaskId: null, archived: true})
             .sort('-priority date')
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
@@ -164,8 +164,8 @@ module.exports = function (app) {
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             //@@FIXME
-            //.skip(page*limit)
-            //.limit(limit)
+            .skip(page*limit)
+            .limit(limit)
             .exec(function (err, tasks) {
 
                 if (err) return next(err);
