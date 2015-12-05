@@ -23,6 +23,10 @@ angular
                     {name: 'Accepted', value: "accepted"}
                 ];
 
+                if ($stateParams.taskId) {
+                    $scope.taskId = $stateParams.taskId;
+                }
+
                 $scope.priorities = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
                 $scope.addTimeList = [

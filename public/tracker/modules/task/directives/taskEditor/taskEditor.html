@@ -1,12 +1,12 @@
 <form ng-submit="save()" id="form">
 
     <div class="row">
-
         <!--left-side-->
         <div ng-class="task.title ? 'col-md-6' : 'col-md-12'">
 
             <div class="form-group">
-                <input ng-model="task.title" type="text" class="form-control" placeholder="Add Task" id="title"/>
+                <input ng-if="taskId" ng-model="task.title" type="text" class="form-control" placeholder="Add Task" id="title"/>
+                <input ng-if="!taskId" ng-model="task.title" type="text" class="form-control" placeholder="Add Project" id="title"/>
             </div>
 
             <div ng-show="task.title">
