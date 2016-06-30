@@ -1,9 +1,7 @@
 var express = require('express');
 
 var app = express();
-app.application = require('./app/config/application');
-app.config = app.application.config;
-app.container = app.application.container;
+require('./app/config/application').wrap(app);
 
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -21,16 +19,14 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.enable('trust proxy');
 app.use(flash());
 
-var MongoSessionStore = require('connect-mongo')(session);
-
 app.set('trust proxy', 1);
 app.use(session({
     secret: app.config.get('session:secret'),
-    cookie: { maxAge: 4*7*24*60*60*1000 }, // 4 weeks
+    cookie: {maxAge: 4 * 7 * 24 * 60 * 60 * 1000}, // 4 weeks
     resave: true,
     saveUninitialized: true,
     rolling: true,
-    store: new MongoSessionStore({ url: app.config.get('mongo:uri') })
+    store: app.container.get('MongoSessionStore')
 }));
 
 app.use(passport.initialize());
@@ -66,3 +62,5 @@ var server = app.listen(app.config.get('app:port'), function () {
     var port = server.address().port;
     console.log('Tracker app listening at http://%s:%s', host, port)
 });
+
+app.container.get('SocketService').create(server);

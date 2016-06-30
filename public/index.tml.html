@@ -32,11 +32,14 @@
   <script src="lib/ngstorage/ngStorage.js"></script>
   <script src="lib/ngInfiniteScroll/build/ng-infinite-scroll.js"></script>
   <script src="lib/angular-loading-bar/build/loading-bar.js"></script>
+  <script src="lib/socket.io-client/socket.io.js"></script>
   <!-- endbuild -->
 
   <!--tracker-->
   <!-- build:js /dist/main.js?rev=@@hash -->
   <script src="tracker/tracker.js"></script>
+
+  <script src="tracker/services/socketService.js"></script>
 
   <script src="tracker/modules/task/directives/taskTree/taskTree.js"></script>
   <script src="tracker/directives/reports/reportTasksUpdated.js"></script>
