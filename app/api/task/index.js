@@ -1,6 +1,7 @@
 module.exports = function (app) {
-
     var GridFS = app.container.get('GridFS');
+    var FormService = app.container.get('FormService');
+    var SocketService = app.container.get('SocketService');
 
     var form = require("express-form"),
         field = form.field;
@@ -47,7 +48,7 @@ module.exports = function (app) {
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .sort('-priority date')
             //@@FIXME
-            .skip(page*limit)
+            .skip(page * limit)
             .limit(limit)
             .exec(function (err, tasks) {
                 if (err) return console.log(err);
@@ -84,7 +85,7 @@ module.exports = function (app) {
     app.get('/api/tasks/:taskId/move', function (req, res, next) {
 
         var excludeArchived = function (tasks) {
-            return _.filter(tasks, function(task) {
+            return _.filter(tasks, function (task) {
                 return task.archived == false;
             });
         };
@@ -164,7 +165,7 @@ module.exports = function (app) {
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             //@@FIXME
-            .skip(page*limit)
+            .skip(page * limit)
             .limit(limit)
             .exec(function (err, tasks) {
 
@@ -203,55 +204,59 @@ module.exports = function (app) {
 
     //________________________________________________________
 
+    app.post('/api/tasks', TaskForm, FormService.validate, function (req, res, next) {
+        req.form.developer = req.form.developer || req.user._id;
 
-    app.post('/api/tasks', TaskForm, function (req, res, next) {
+        var task = new Task(req.form);
+        task.owner = req.user._id;
 
-
-        if (req.form.isValid) {
-
-            req.form.developer = req.form.developer || req.user._id;
-
-            var task = new Task(req.form);
-            task.owner = req.user._id;
-
-            task.save(function (err) {
-                if (err) return next(err);
-                task.updateParent(function (err) {
-                    if (err) return next(err);
-                    res.json(task);
-                });
+        task.save(function (err) {
+            if (err) {
+                return next(err);
+            }
+            task.updateParent(function (err) {
+                if (err) {
+                    return next(err);
+                }
+                res.json(task);
             });
-        }
-        else {
-            res.status(400).json(req.form.errors);
-        }
-
+        });
     });
 
-    app.post('/api/tasks/:taskId/tasks', TaskForm, function (req, res, next) {
+    app.post('/api/tasks/:taskId/tasks', TaskForm, FormService.validate, function (req, res, next) {
+        req.form.developer = req.form.developer || req.user._id;
 
+        var task = new Task(req.form);
 
-        if (req.form.isValid) {
+        task.parentTaskId = req.Task._id;
+        task.owner = req.user._id;
 
-            req.form.developer = req.form.developer || req.user._id;
+        task.save(function (err, task) {
+            if (err) {
+                return next(err);
+            }
 
-            var task = new Task(req.form);
+            task.updateParent(function (err) {
+                if (err) {
+                    return next(err);
+                }
 
-            task.parentTaskId = req.Task._id;
-            task.owner = req.user._id;
+                task.getRoot(function (err, root) {
+                    if (err) {
+                        return next(err);
+                    }
 
-            task.save(function (err, task) {
-                if (err) return next(err);
-                task.updateParent(function (err) {
-                    if (err) return next(err);
-                    res.json(task);
+                    var users = root.team.concat([root.owner]);
+                    _.forEach(users, function (user) {
+                        console.log(user);
+                        var isAuthor = user.toString() === req.user._id.toString();
+                        !isAuthor && SocketService.emitUser(user, 'task.added', {task: task});
+                    });
                 });
-            });
-        }
-        else {
-            res.sendStatus(400);
-        }
 
+                res.json(task);
+            });
+        });
     });
 
     app.delete('/api/tasks/:taskId/files/:fileId', function (req, res, next) {
@@ -267,19 +272,18 @@ module.exports = function (app) {
     });
 
     app.param('taskId', function (req, res, next, taskId) {
-
         Task
             .findById(taskId)
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .exec(function (err, task) {
-
-                if (err) return next(err);
+                if (err) {
+                    return next(err);
+                }
 
                 if (!task) {
                     res.sendStatus(404);
-                }
-                else {
+                } else {
                     task.hasAccess(req.user, function (err, access) {
                         if (access) {
                             req.Task = task;
@@ -290,7 +294,6 @@ module.exports = function (app) {
                     });
                 }
             });
-
     });
 
     app.delete('/api/tasks/:taskId', function (req, res, next) {
@@ -304,59 +307,61 @@ module.exports = function (app) {
         });
     });
 
-    app.put('/api/tasks/:taskId', TaskForm, function (req, res, next) {
-
+    app.put('/api/tasks/:taskId', TaskForm, FormService.validate, function (req, res, next) {
         var task = req.Task;
 
-        if (req.form.isValid) {
-            task.title = req.form.title;
-            task.spenttime = req.form.spenttime;
-            task.status = req.form.status;
-            task.priority = req.form.priority;
-            task.complexity = req.form.complexity;
-            task.parentTaskId = req.body.parentTaskId || null;
-            task.team = req.form.team || [req.user];
-            task.developer = req.form.developer || req.user;
-            task.description = req.form.description;
-            task.files = req.form.files;
-            task.tags = req.form.tags;
-            task.archived = req.form.archived;
+        task.title = req.form.title;
+        task.spenttime = req.form.spenttime;
+        task.status = req.form.status;
+        task.priority = req.form.priority;
+        task.complexity = req.form.complexity;
+        task.parentTaskId = req.body.parentTaskId || null;
+        task.team = req.form.team || [req.user];
+        task.developer = req.form.developer || req.user;
+        task.description = req.form.description;
+        task.files = req.form.files;
+        task.tags = req.form.tags;
+        task.archived = req.form.archived;
 
-            task.save(function (err, task) {
+        task.save(function (err, task) {
+            if (err) return next(err);
+            task.updateParent(function (err) {
                 if (err) return next(err);
-                task.updateParent(function (err) {
-                    if (err) return next(err);
-                    res.json(task);
-                });
+                res.json(task);
             });
-        }
-        else {
-            res.sendStatus(400);
-        }
-
+        });
     });
 
-    app.put('/api/tasks/:taskId/move/:parentTaskId', TaskForm, function (req, res) {
+    app.put('/api/tasks/:taskId/move/:parentTaskId', TaskForm, FormService.validate, function (req, res) {
         var task = req.Task;
         req.Task.getParent(function (err, parent) {
             task.parentTaskId = req.params.parentTaskId;
             task.save(function (err, task) {
-
-                if (err) return next(err);
+                if (err) {
+                    return next(err);
+                }
 
                 task.updateParent(function (err) {
-                    if (err) return next(err);
-
+                    if (err) {
+                        return next(err);
+                    }
 
                     if (parent) {
-
                         parent.updateEstimateTime(function (err) {
-                            if (err) return next(err);
+                            if (err) {
+                                return next(err);
+                            }
+
                             parent.save(function (err) {
-                                if (err) return next(err);
+                                if (err) {
+                                    return next(err);
+                                }
 
                                 parent.updateParentStatus(function (err) {
-                                    if (err) return next(err);
+                                    if (err) {
+                                        return next(err);
+                                    }
+
                                     parent.save(new Function());
                                 });
                             });
@@ -365,11 +370,8 @@ module.exports = function (app) {
                     }
                     res.json(task);
                 });
-
-
             });
         });
-
     });
 
     //_________________________go to current project
@@ -462,5 +464,4 @@ module.exports = function (app) {
         }
 
     });
-
 };
