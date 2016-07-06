@@ -9,4 +9,7 @@ module.exports = function (container) {
     container.register('MongoSessionStore', require('../services/MongoSessionStore'), ['config/mongo/uri']);
     container.register('SocketService', require('../services/SocketService'), ['MongoSessionStore', 'config/session/secret']);
     container.register('FormService', require('../services/FormService'), []);
+
+    container.register('Task', require('../models/task'), []);
+    container.register('TaskService', require('../services/TaskService'), ['Task']);
 };

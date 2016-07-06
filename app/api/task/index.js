@@ -1,6 +1,7 @@
 module.exports = function (app) {
     var GridFS = app.container.get('GridFS');
     var FormService = app.container.get('FormService');
+    var TaskService = app.container.get('TaskService');
 
     var form = require("express-form"),
         field = form.field;
@@ -213,12 +214,22 @@ module.exports = function (app) {
             if (err) {
                 return next(err);
             }
-            task.updateParent(function (err) {
+
+            TaskService.updateParent(task, function (err) {
                 if (err) {
                     return next(err);
                 }
+
                 res.json(task);
             });
+
+
+            //task.updateParent(function (err) {
+            //    if (err) {
+            //        return next(err);
+            //    }
+            //    res.json(task);
+            //});
         });
     });
 
