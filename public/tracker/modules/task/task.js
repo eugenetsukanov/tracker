@@ -117,10 +117,6 @@ angular
 
             TaskEditorModal.show(task, init);
         };
-
-        SocketService.on('task.added', function (data) {
-            $scope.tasks.push(data.task);
-        });
     })
 
     .controller('AssignedTasksCtrl', function ($scope,

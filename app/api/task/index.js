@@ -1,7 +1,6 @@
 module.exports = function (app) {
     var GridFS = app.container.get('GridFS');
     var FormService = app.container.get('FormService');
-    var SocketService = app.container.get('SocketService');
 
     var form = require("express-form"),
         field = form.field;
@@ -240,19 +239,6 @@ module.exports = function (app) {
                 if (err) {
                     return next(err);
                 }
-
-                task.getRoot(function (err, root) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    var users = root.team.concat([root.owner]);
-                    _.forEach(users, function (user) {
-                        console.log(user);
-                        var isAuthor = user.toString() === req.user._id.toString();
-                        !isAuthor && SocketService.emitUser(user, 'task.added', {task: task});
-                    });
-                });
 
                 res.json(task);
             });
