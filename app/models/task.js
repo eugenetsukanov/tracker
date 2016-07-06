@@ -38,7 +38,10 @@ TaskSchema.set('toJSON', {getters: true, virtuals: true});
 TaskSchema.methods = {
     checkSimple: function (next) {
         this.countChildren(function (err, cnt) {
-            if (err) return next(err);
+            if (err) {
+                return next(err);
+            }
+
             next(null, cnt == 0)
         });
     },
@@ -55,90 +58,113 @@ TaskSchema.methods = {
         }
     },
 
-    //updateEstimateTime: function (next) {
-    //
-    //    if (this.simple) {
-    //        return this.calculateSimple(next);
-    //    }
-    //
-    //    this.getChildren(function (err, tasks) {
-    //        if (err) return next(err);
-    //
-    //        var estimatedTime = 0;
-    //
-    //        tasks.forEach(function (task) {
-    //            estimatedTime += task.estimatedTime;
-    //        });
-    //
-    //        this.estimatedTime = estimatedTime;
-    //        this.timeToDo = this.estimatedTime - this.spenttime;
-    //
-    //        next();
-    //    }.bind(this));
-    //},
-    //updateParent: function (next) {
-    //    next = next || new Function;
-    //    if (!this.parentTaskId) return next();
-    //
-    //    this.getParent(function (err, parent) {
-    //        if (err) return next(err);
-    //        if (!parent) return next();
-    //
-    //        if (parent) {
-    //            parent.save(function (err) {
-    //                if (err) return next(err);
-    //
-    //                parent.updateEstimateTime(function (err) {
-    //                    if (err) return next(err);
-    //                    parent.save(function (err) {
-    //                        if (err) return next(err);
-    //
-    //                        parent.updateParentStatus(function (err) {
-    //                            if (err) return next(err);
-    //                            parent.save(next);
-    //                        });
-    //                    });
-    //                });
-    //
-    //            });
-    //
-    //        }
-    //
-    //    }.bind(this));
-    //
-    //},
+    updateEstimateTime: function (next) {
 
-    //updateParentStatus: function (next) {
-    //
-    //    this.getChildren(function (err, tasks) {
-    //        if (err) return next(err);
-    //        if (!tasks.length) return next();
-    //
-    //        var countInProgress = 0;
-    //        var countAccepted = 0;
-    //        var countNew = 0;
-    //
-    //        tasks.forEach(function (task) {
-    //            if (task.status == 'in progress') {
-    //                countInProgress += 1;
-    //            } else if (task.status == 'accepted') {
-    //                countAccepted += 1;
-    //            } else {
-    //                countNew += 1;
-    //            }
-    //        });
-    //
-    //        if ((countInProgress > 0 || (countAccepted > 0 && countAccepted < tasks.length))) {
-    //            this.status = 'in progress';
-    //        } else if (countAccepted == tasks.length) {
-    //            this.status = 'accepted';
-    //        } else {
-    //            this.status = '';
-    //        }
-    //
-    //        next()
-    //    }.bind(this));
-    //},
+        if (this.simple) {
+            return this.calculateSimple(next);
+        }
+
+        this.getChildren(function (err, tasks) {
+            if (err) return next(err);
+
+            var estimatedTime = 0;
+
+            tasks.forEach(function (task) {
+                estimatedTime += task.estimatedTime;
+            });
+
+            this.estimatedTime = estimatedTime;
+            this.timeToDo = this.estimatedTime - this.spenttime;
+
+            next();
+        }.bind(this));
+    },
+    updateParent: function (next) {
+        next = next || new Function;
+        if (!this.parentTaskId) return next();
+
+        this.getParent(function (err, parent) {
+            if (err) return next(err);
+            if (!parent) return next();
+
+            if (parent) {
+                parent.save(function (err) {
+                    if (err) return next(err);
+
+                    parent.updateEstimateTime(function (err) {
+                        if (err) return next(err);
+                        parent.save(function (err) {
+                            if (err) return next(err);
+
+                            parent.updateParentStatus(function (err) {
+                                if (err) return next(err);
+                                parent.save(next);
+                            });
+                        });
+                    });
+
+                });
+
+            }
+
+        }.bind(this));
+
+    },
+
+    updateParentStatus: function (next) {
+
+        this.getChildren(function (err, tasks) {
+            if (err) return next(err);
+            if (!tasks.length) return next();
+
+            var countInProgress = 0;
+            var countAccepted = 0;
+            var countNew = 0;
+
+            tasks.forEach(function (task) {
+                if (task.status == 'in progress') {
+                    countInProgress += 1;
+                } else if (task.status == 'accepted') {
+                    countAccepted += 1;
+                } else {
+                    countNew += 1;
+                }
+            });
+
+            if ((countInProgress > 0 || (countAccepted > 0 && countAccepted < tasks.length))) {
+                this.status = 'in progress';
+            } else if (countAccepted == tasks.length) {
+                this.status = 'accepted';
+            } else {
+                this.status = '';
+            }
+
+            next()
+        }.bind(this));
+    },
+
+    getChildren: function (next) {
+        Task.find({parentTaskId: this})
+            .sort('-updatedAt')
+            .populate('owner', '-local.passwordHashed -local.passwordSalt')
+            .populate('developer', '-local.passwordHashed -local.passwordSalt')
+            .exec(function (err, tasks) {
+                if (err) return next(err);
+                next(null, tasks);
+            })
+    },
+
+    getParent: function (next) {
+        if (this.parentTaskId) {
+            Task.findById(this.parentTaskId, function (err, task) {
+                if (err) return next(err);
+
+                next(null, task);
+            });
+        } else {
+            next(null, null);
+        }
+    },
 
     calculate: function (next) {
 
@@ -201,51 +227,51 @@ TaskSchema.methods = {
 
     },
 
-    //calculateSimple: function (next) {
-    //    if (this.complexity >= 0) {
-    //        var row = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
-    //        var points = row[this.complexity];
-    //        this.points = points;
-    //    } else {
-    //        this.points = 0;
-    //    }
-    //
-    //    if (this.points && this.spenttime && this.isAccepted()) {
-    //        this.velocity = this.points / this.spenttime;
-    //    }
-    //
-    //    next();
-    //},
-
-    preCalculateEstimatedTime: function (task, next) {
-
-        if (task.points && task.parentTaskId) {
-
-            Task.findById(task.parentTaskId, function (err, parent) {
-
-                if (err) return next(err);
-                if (!parent) return next();
-
-                parent.findVelocity(function (err, velocity) {
-                    if (err) return next(err);
-
-                    task.estimatedTime = task.estimatedTime || 0;
-                    task.timeToDo = task.timeToDo || 0;
-                    task.spenttime = task.spenttime || 0;
-
-                    if (velocity) {
-                        task.estimatedTime = task.points / velocity;
-                    }
-
-                    task.timeToDo = task.estimatedTime - task.spenttime;
-
-                    next();
-                });
-            });
+    calculateSimple: function (next) {
+        if (this.complexity >= 0) {
+            var row = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
+            var points = row[this.complexity];
+            this.points = points;
         } else {
-            next();
+            this.points = 0;
         }
+
+        if (this.points && this.spenttime && this.isAccepted()) {
+            this.velocity = this.points / this.spenttime;
+        }
+
+        next();
     },
+
+    //preCalculateEstimatedTime: function (task, next) {
+    //
+    //    if (task.points && task.parentTaskId) {
+    //
+    //        Task.findById(task.parentTaskId, function (err, parent) {
+    //
+    //            if (err) return next(err);
+    //            if (!parent) return next();
+    //
+    //            parent.findVelocity(function (err, velocity) {
+    //                if (err) return next(err);
+    //
+    //                task.estimatedTime = task.estimatedTime || 0;
+    //                task.timeToDo = task.timeToDo || 0;
+    //                task.spenttime = task.spenttime || 0;
+    //
+    //                if (velocity) {
+    //                    task.estimatedTime = task.points / velocity;
+    //                }
+    //
+    //                task.timeToDo = task.estimatedTime - task.spenttime;
+    //
+    //                next();
+    //            });
+    //        });
+    //    } else {
+    //        next();
+    //    }
+    //},
 
     removeChildren: function () {
         this.getChildren(function (err, tasks) {
@@ -254,17 +280,6 @@ TaskSchema.methods = {
             })
         });
     },
-
-    //getChildren: function (next) {
-    //    Task.find({parentTaskId: this})
-    //        .sort('-updatedAt')
-    //        .populate('owner', '-local.passwordHashed -local.passwordSalt')
-    //        .populate('developer', '-local.passwordHashed -local.passwordSalt')
-    //        .exec(function (err, tasks) {
-    //            if (err) return next(err);
-    //            next(null, tasks);
-    //        })
-    //},
 
     deepFind: function (finder, next) {
         this.getChildren(function (err, children) {
@@ -331,17 +346,6 @@ TaskSchema.methods = {
         });
     },
 
-    //getParent: function (next) {
-    //    if (this.parentTaskId) {
-    //        Task.findById(this.parentTaskId, function (err, task) {
-    //            if (err) return next(err);
-    //
-    //            next(null, task);
-    //        });
-    //    } else {
-    //        next(null, null);
-    //    }
-    //},
     getRoot: function (next) {
         if (this.parentTaskId) {
             this.getParent(function (err, parent) {
@@ -430,7 +434,8 @@ TaskSchema.statics.archive = function (query, next) {
 
 TaskSchema.pre('init', function (next, task) {
     this._origin = _.merge({}, task);
-    this.preCalculateEstimatedTime(task, next);
+    //this.preCalculateEstimatedTime(task, next);
+    next();
 });
 
 TaskSchema.pre('save', function (next) {
@@ -438,11 +443,10 @@ TaskSchema.pre('save', function (next) {
     this.calculate(next);
 });
 
-TaskSchema.post('save', function (task) {
-    //task.updateParent();
-    task.connectFiles();
-    task.updateRootTags();
-});
+//TaskSchema.post('save', function (task) {
+//    task.connectFiles();
+//    task.updateRootTags();
+//});
 
 TaskSchema.post('remove', function (task) {
     task.updateParent();
@@ -450,4 +454,6 @@ TaskSchema.post('remove', function (task) {
     task.removeFiles();
 });
 
-module.exports = mongoose.model('Task', TaskSchema);
+var Task = mongoose.model('Task', TaskSchema);
+
+module.exports = Task;

@@ -9,8 +9,7 @@ angular
                                       Task,
                                       TitleService,
                                       RootTask,
-                                      UserService,
-                                      SocketService) {
+                                      UserService) {
 
 
         var busyScroll = true;
@@ -80,16 +79,16 @@ angular
             }
         };
 
-        $scope.scroll = function () {
-            //return;
-            //@@FIXME
-            if (busyScroll) {
-                return;
-            } else {
-                busyScroll = true;
-                loadTasks();
-            }
-        };
+        //$scope.scroll = function () {
+        //    //return;
+        //    //@@FIXME
+        //    if (busyScroll) {
+        //        return;
+        //    } else {
+        //        busyScroll = true;
+        //        loadTasks();
+        //    }
+        //};
 
         $scope.init = function () {
             $scope.reset();

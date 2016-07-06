@@ -8,6 +8,7 @@ module.exports = function (app) {
 
     var async = require('async');
 
+
     var TaskForm = form(
         field("title").trim().required(),
         field("description").trim(),
@@ -141,14 +142,21 @@ module.exports = function (app) {
     });
 
     app.get('/api/tasks/:taskId/team', function (req, res, next) {
-        req.Task.getRoot(function (err, root) {
+        TaskService.getRoot(req.Task, function (err, root) {
+            if (err) {
+                return next(err);
+            }
+
             var team = root.team;
 
             team.push(root.owner);
 
             User.find({_id: {$in: team}}, '-local.passwordHashed -local.passwordSalt')
                 .exec(function (err, users) {
-                    if (err) return next(err);
+                    if (err) {
+                        return next(err);
+                    }
+
                     res.json(users);
                 });
         });
@@ -157,28 +165,15 @@ module.exports = function (app) {
     //________________________________________________________
 
     app.get('/api/tasks/:taskId/tasks', function (req, res) {
+        //var page = parseInt(req.query.page) || 0;
 
-        var page = parseInt(req.query.page) || 0;
+        TaskService.getChildrenByParent(req.Task, function (err, tasks) {
+            if (err) {
+                return next(err);
+            }
 
-        Task.find({parentTaskId: req.Task._id, archived: {$ne: true}})
-            .sort('-priority date')
-            .populate('owner', '-local.passwordHashed -local.passwordSalt')
-            .populate('developer', '-local.passwordHashed -local.passwordSalt')
-            //@@FIXME
-            .skip(page * limit)
-            .limit(limit)
-            .exec(function (err, tasks) {
-
-                if (err) return next(err);
-
-                if (!tasks) {
-                    res.json({});
-                }
-                else {
-                    res.json(tasks);
-                }
-
-            })
+            res.json(tasks);
+        });
     });
 
 
@@ -246,13 +241,21 @@ module.exports = function (app) {
                 return next(err);
             }
 
-            task.updateParent(function (err) {
+            TaskService.updateParent(task, function (err) {
                 if (err) {
                     return next(err);
                 }
 
                 res.json(task);
             });
+
+            //task.updateParent(function (err) {
+            //    if (err) {
+            //        return next(err);
+            //    }
+            //
+            //    res.json(task);
+            //});
         });
     });
 
@@ -374,8 +377,11 @@ module.exports = function (app) {
     //_________________________go to current project
 
     app.get('/api/tasks/:taskId/root', function (req, res, next) {
-        req.Task.getRoot(function (err, root) {
-            if (err) return next(err);
+        TaskService.getRoot(req.Task, function (err, root) {
+            if (err) {
+                return next(err);
+            }
+
             res.json(root);
         });
     });
@@ -388,7 +394,7 @@ module.exports = function (app) {
         query = query.toString().toLowerCase().trim();
 
 
-        req.Task.getRoot(function (err, root) {
+        TaskService.getRoot(req.Task, function (err, root) {
             if (err) return next(err);
             root.deepFind(function (task) {
 
@@ -419,8 +425,11 @@ module.exports = function (app) {
 
     app.get('/api/tasks/:taskId/tags/tagsList', function (req, res, next) {
         //sorting
-        req.Task.getRoot(function (err, root) {
-            if (err) return next(err);
+        TaskService.getRoot(req.Task, function (err, root) {
+            if (err) {
+                return next(err);
+            }
+
             res.json(root.tagsList);
         });
     });
@@ -429,7 +438,7 @@ module.exports = function (app) {
 
         var q = req.query.query || [];
 
-        req.Task.getRoot(function (err, root) {
+        TaskService.getRoot(req.Task, function (err, root) {
             if (err) return next(err);
 
             root.deepFind(function (task) {

@@ -10,6 +10,15 @@ module.exports = function (container) {
     container.register('SocketService', require('../services/SocketService'), ['MongoSessionStore', 'config/session/secret']);
     container.register('FormService', require('../services/FormService'), []);
 
-    container.register('Task', require('../models/task'), []);
-    container.register('TaskService', require('../services/TaskService'), ['Task']);
+    //container.register('Task', require('../models/task'), []);
+    container.register('TaskService', require('../services/TaskService'));
+
+    //container.register('models', function () {
+    //    var mongoose = require('mongoose');
+    //    return {
+    //        get: function (model) {
+    //            return mongoose.model(model);
+    //        }
+    //    };
+    //});
 };
