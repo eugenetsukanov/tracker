@@ -449,11 +449,11 @@ TaskSchema.pre('save', function (next) {
 //    task.updateRootTags();
 //});
 
-TaskSchema.post('remove', function (task) {
-  task.updateParent();
-  task.removeChildren();
-  task.removeFiles();
-});
+//TaskSchema.post('remove', function (task) {
+  //task.updateParent();
+  //task.removeChildren();
+  //task.removeFiles();
+//});
 
 TaskSchema.virtual('velocity').get(function () {
   var result = 0;

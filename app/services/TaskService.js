@@ -1,4 +1,4 @@
-var TaskService = function () {
+var TaskService = function (GridFS) {
     var self = this;
     var _ = require('lodash');
 
@@ -417,6 +417,24 @@ var TaskService = function () {
                 });
             });
         });
+    };
+
+    this.removeChildren = function (task) {
+        self.getChildren(task, function (err, tasks) {
+            if (err) {
+                return console.error('Error during remove children', err);
+            }
+
+            tasks.forEach(function (task) {
+                self.removeFiles(task);
+                task.remove(_.noop);
+            });
+        });
+    };
+
+    this.removeFiles = function (task, next) {
+        next = next || _.noop;
+        GridFS.remove(task.files, next);
     };
 };
 

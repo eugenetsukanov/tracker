@@ -11,7 +11,7 @@ module.exports = function (container) {
     container.register('FormService', require('../services/FormService'), []);
 
     //container.register('Task', require('../models/task'), []);
-    container.register('TaskService', require('../services/TaskService'));
+    container.register('TaskService', require('../services/TaskService'), ['GridFS']);
 
     //container.register('models', function () {
     //    var mongoose = require('mongoose');
