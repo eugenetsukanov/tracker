@@ -308,8 +308,10 @@ module.exports = function (app) {
 
   app.delete('/api/tasks/:taskId', function (req, res, next) {
     req.Task.remove(function (err) {
-      // console.log(req.Task.updatedAt);
-      if (err) return next(err);
+      if (err) {
+          return next(err);
+      }
+
       req.Task.updateParent(function (err) {
         if (err) return next(err);
         res.sendStatus(200);
