@@ -1,6 +1,7 @@
 module.exports = function (app) {
   var GridFS = app.container.get('GridFS');
   var FormService = app.container.get('FormService');
+  var FileService = app.container.get('FileService');
   var TaskService = app.container.get('TaskService');
 
   var Task = require('../../models/task');
@@ -259,6 +260,8 @@ module.exports = function (app) {
         return next(err);
       }
 
+      FileService.connectFiles(_task);
+      
       res.json(_task);
     });
   });
@@ -277,6 +280,8 @@ module.exports = function (app) {
         return next(err);
       }
 
+      FileService.connectFiles(_task);
+      
       TaskService.updateParentByTask(_task, function (err) {
         if (err) {
           return next(err);
@@ -305,7 +310,7 @@ module.exports = function (app) {
         return next(err);
       }
 
-      TaskService.removeFiles(req.Task);
+      FileService.removeFilesByTask(req.Task);
 
       TaskService.removeChildren(req.Task, function (err) {
         if (err) {
@@ -350,7 +355,8 @@ module.exports = function (app) {
           if (err) {
             return next(err);
           }
-
+          
+          FileService.connectFiles(_task);
           TaskService.updateParentByTask(task, function (err) {
             if (err) {
               return next(err);

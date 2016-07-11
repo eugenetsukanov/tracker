@@ -53,14 +53,6 @@ TaskSchema.methods = {
   countChildren: function (next) {
     Task.count({parentTaskId: this._id}, next);
   },
-  removeFiles: function (next) {
-    next = next || new Function();
-    GridFS.remove(this.files, next);
-  },
-  connectFiles: function (next) {
-    next = next || new Function();
-    GridFS.connect(this.files, next);
-  },
   updateRootTags: function (next) {
     next = next || new Function();
 
@@ -104,16 +96,10 @@ TaskSchema.pre('init', function (next, task) {
 TaskSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
-  // this.calculate(next);
 });
 
 //TaskSchema.post('save', function (task) {
-//    task.connectFiles();
 //    task.updateRootTags();
-//});
-
-//TaskSchema.post('remove', function (task) {
-  //task.removeFiles();
 //});
 
 // TODO @@@id: remove velocity virtual field

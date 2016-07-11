@@ -1,4 +1,4 @@
-var TaskService = function (GridFS) {
+var TaskService = function (GridFS, FileService) {
   var self = this;
   var _ = require('lodash');
   var async = require('async');
@@ -190,7 +190,7 @@ var TaskService = function (GridFS) {
           return next(err);
         }
 
-        next(null, _task)
+        next(null, _task);
       });
     });
   };
@@ -446,7 +446,7 @@ var TaskService = function (GridFS) {
       }
 
       async.forEach(tasks, function (task, callback) {
-        self.removeFiles(task);
+        FileService.removeFilesByTask(task);
         task.remove(callback);
       }, function (err) {
         if (err) {
@@ -553,11 +553,6 @@ var TaskService = function (GridFS) {
 
   this.isAccepted = function (task) {
     return task.status == 'accepted';
-  };
-
-  this.removeFiles = function (task, next) {
-    next = next || _.noop;
-    GridFS.remove(task.files, next);
   };
 };
 
