@@ -28,10 +28,8 @@ module.exports = function (app) {
     field("archived").trim()
   );
 
-  app.get('/api/tasks', function (req, res) {
-    var page = parseInt(req.query.page) || 0;
-
-    var q = {
+  app.get('/api/tasks', function (req, res, next) {
+    var query = {
       parentTaskId: null,
       $or: [
         {owner: req.user},
@@ -40,18 +38,13 @@ module.exports = function (app) {
       archived: {$ne: true}
     };
 
-    Task
-      .find(q)
-      .populate('owner', '-local.passwordHashed -local.passwordSalt')
-      .populate('developer', '-local.passwordHashed -local.passwordSalt')
-      .sort('-priority date')
-      //@@FIXME
-      .skip(page * limit)
-      .limit(limit)
-      .exec(function (err, tasks) {
-        if (err) return console.log(err);
-        res.json(tasks);
-      });
+    TaskService.getTasksByQuery(query, function (err, tasks) {
+      if (err) {
+        return next(err);
+      }
+
+      res.json(tasks);
+    });
   });
 
   app.get('/api/tasks/archived', function (req, res, next) {
@@ -217,8 +210,6 @@ module.exports = function (app) {
   //________________________________________________________
 
   app.get('/api/tasks/:taskId/tasks', function (req, res) {
-    //var page = parseInt(req.query.page) || 0;
-
     TaskService.getChildrenByParent(req.Task, function (err, tasks) {
       if (err) {
         return next(err);
@@ -261,7 +252,7 @@ module.exports = function (app) {
 
       FileService.connectFiles(_task);
       TaskService.updateRootTags(_task);
-      
+
       res.json(_task);
     });
   });
@@ -282,7 +273,7 @@ module.exports = function (app) {
 
       FileService.connectFiles(_task);
       TaskService.updateRootTags(_task);
-      
+
       TaskService.updateParentByTask(_task, function (err) {
         if (err) {
           return next(err);
@@ -298,9 +289,9 @@ module.exports = function (app) {
       if (err) {
         return next(err);
       }
-      
+
       FileService.removeFile(req.params.fileId);
-      
+
       res.sendStatus(200);
     });
   });
@@ -356,10 +347,10 @@ module.exports = function (app) {
           if (err) {
             return next(err);
           }
-          
+
           FileService.connectFiles(_task);
           TaskService.updateRootTags(_task);
-          
+
           TaskService.updateParentByTask(task, function (err) {
             if (err) {
               return next(err);
@@ -456,7 +447,7 @@ module.exports = function (app) {
         if (err) {
           return next(err);
         }
-        
+
         res.json(tasks);
       });
     });
@@ -495,7 +486,7 @@ module.exports = function (app) {
         if (err) {
           return next(err);
         }
-        
+
         res.json(tasks);
       });
     });
@@ -507,10 +498,8 @@ module.exports = function (app) {
     if (err) {
       console.error(err);
       res.status(500).send(err.message);
-    }
-    else {
+    } else {
       next();
     }
-
   });
 };

@@ -34,16 +34,6 @@ var TaskSchema = new Schema({
 
 TaskSchema.set('toJSON', {getters: true, virtuals: true});
 
-TaskSchema.statics.archive = function (query, next) {
-  Task.update(query, {$set: {archived: true}}, {multi: true}, function (err) {
-    if (err) {
-      return next(err);
-    }
-
-    next();
-  });
-};
-
 TaskSchema.pre('init', function (next, task) {
   this._origin = _.merge({}, task);
   next();

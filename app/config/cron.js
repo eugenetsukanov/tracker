@@ -15,12 +15,11 @@ module.exports = function (Cron, container) {
     });
 
     Cron.register('0 */1 * * * *', function () {
-
         var TaskArchivator = container.get('TaskArchivator');
         TaskArchivator.archive(function (err) {
-            if (err) console.log(err);
+            if (err) {
+                console.log(err);
+            }
         });
-
     });
-
 };
