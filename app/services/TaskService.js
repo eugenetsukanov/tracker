@@ -458,6 +458,79 @@ var TaskService = function (GridFS) {
     });
   };
 
+  this.deepFindByQuery = function (task, query, next) {
+    self.getChildrenByQuery(task, query, function (err, children) {
+      if (err) {
+        return next(err);
+      }
+      
+      var tasks = [];
+
+      async.each(children, function (task, callback) {
+        tasks.push(task);
+
+        self.deepFindByQuery(task, query, function (err, aTasks) {
+          if (err) {
+            return next(err);
+          }
+          
+          tasks = tasks.concat(aTasks);
+          callback();
+        });
+      }, function (err) {
+        if (err) {
+          return next(err);
+        }
+        
+        next(null, tasks);
+      });
+
+    })
+  };
+
+  this.deepFind = function (task, finder, next) {
+    self.getChildren(task, function (err, children) {
+      if (err) {
+        return next(err);
+      }
+      
+      var tasks = [];
+
+      async.each(children, function (child, callback) {
+        if (finder(child)) {
+          tasks.push(child);
+        }
+
+        self.deepFind(child, finder, function (err, aTasks) {
+          if (err) {
+            return next(err);
+          }
+          
+          tasks = tasks.concat(aTasks);
+          callback();
+        });
+      }, function (err) {
+        if (err) {
+          return next(err);
+        }
+        
+        next(null, tasks);
+      });
+    })
+  };
+
+  this.getChildrenByQuery = function (task, query, next) {
+    var query = _.extend({parentTaskId: task}, query);
+
+    Task.find(query, function (err, tasks) {
+      if (err) {
+        return next(err);
+      }
+
+      next(null, tasks);
+    })
+  };
+  
   this.hasAccess = function (task, user, next) {
     self.getRoot(task, function (err, root) {
       if (err) {

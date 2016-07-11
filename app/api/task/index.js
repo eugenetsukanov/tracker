@@ -428,8 +428,7 @@ module.exports = function (app) {
         return next(err);
       }
 
-      root.deepFind(function (task) {
-
+      TaskService.deepFind(root, function (task) {
         var tags = task.tags || [];
         tags = tags.join(' ');
 
@@ -443,14 +442,15 @@ module.exports = function (app) {
           }
         });
 
-        return (queryArr.length == result) ? true : false;
-
+        return !!(queryArr.length === result);
       }, function (err, tasks) {
-        if (err) return next(err);
+        if (err) {
+          return next(err);
+        }
+        
         res.json(tasks);
       });
     });
-
   });
 
   //___________________________________tags
@@ -467,24 +467,26 @@ module.exports = function (app) {
   });
 
   app.get('/api/tasks/:taskId/tags', function (req, res, next) {
-
     var q = req.query.query || [];
 
     TaskService.getRoot(req.Task, function (err, root) {
-      if (err) return next(err);
+      if (err) {
+        return next(err);
+      }
 
-      root.deepFind(function (task) {
-
+      TaskService.deepFind(root, function (task) {
         var counter = 0;
 
         q.forEach(function (tag, i) {
           counter += (task.tags.indexOf(tag) >= 0) ? 1 : 0;
         });
 
-        return (counter == q.length) ? true : false;
-
+        return !!(counter === q.length);
       }, function (err, tasks) {
-        if (err) return next(err);
+        if (err) {
+          return next(err);
+        }
+        
         res.json(tasks);
       });
     });

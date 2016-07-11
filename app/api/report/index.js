@@ -40,7 +40,6 @@ module.exports = function (app) {
     });
 
     app.get('/api/tasks/:taskId/report/:date', function (req, res, next) {
-
         var date = Date.parse(req.params.date) || Date.now();
 
         var match = {
@@ -50,9 +49,8 @@ module.exports = function (app) {
         var updatedTasks = [];
 
         if (!req.Task) {
-            return res.json(updatedTasks)
+            return res.json(updatedTasks);
         } else {
-
             if (req.query.userId !== '') {
                 if (req.Task.developer._id.toString() == req.query.userId.toString()) {
                     updatedTasks.push(req.Task);
@@ -61,24 +59,21 @@ module.exports = function (app) {
                 updatedTasks.push(req.Task);
             }
 
-
-            req.Task.deepFindByQuery(match, function (err, tasks) {
-                if (err) return next(err);
+            TaskService.deepFindByQuery(req.Task, match, function (err, tasks) {
+                if (err) {
+                  return next(err);
+                }
+              
                 if (req.query.userId !== '') {
-
                     tasks = _.filter(tasks, function (task) {
                         return task.developer.toString() == req.query.userId.toString();
-                    })
+                    });
                 }
 
                 updatedTasks = updatedTasks.concat(tasks);
 
                 res.json(updatedTasks);
-
-
             });
-
         }
-
     });
 };
