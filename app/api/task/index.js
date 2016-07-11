@@ -141,7 +141,7 @@ module.exports = function (app) {
       if (grandParent) {
         tasks.push(grandParent);
 
-        grandParent.getChildren(function (err, children) {
+        TaskService.getChildren(grandParent, function (err, children) {
           if (err) {
             return next(err);
           }
