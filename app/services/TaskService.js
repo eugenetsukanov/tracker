@@ -39,7 +39,6 @@ var TaskService = function (FileService) {
     }
   };
 
-
   this.preCalculateEstimatedTime = function (task, toCalcEstimate, next) {
     if (toCalcEstimate && task.simple) {
       self.findVelocity(task, function (err, velocity) {

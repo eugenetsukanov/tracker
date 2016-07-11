@@ -324,7 +324,10 @@ module.exports = function (app) {
     var task = req.Task;
     var preCalculateEstimate = false;
 
+    req.form.developer = req.form.developer ? req.form.developer : undefined;
+
     _.assign(task, req.form);
+    
     task.parentTaskId = req.body.parentTaskId || null;
     task.team = task.team || [req.user];
     task.developer = task.developer || req.user;
