@@ -1,6 +1,7 @@
 module.exports = function (app) {
 
     var Task = require('../../models/task');
+    var TaskService = app.container.get('TaskService');
     var moment = require('moment');
     var async = require('async');
     var _ = require('lodash');
@@ -23,7 +24,7 @@ module.exports = function (app) {
             .exec(function (err, tasks) {
                 var tasksReport = [];
                 async.each(tasks, function (task, next) {
-                    task.hasAccess(req.user, function (err, access) {
+                  TaskService.hasAccess(task, req.user, function (err, access) {
                         if (access) {
                             tasksReport.push(task);
                             next();
