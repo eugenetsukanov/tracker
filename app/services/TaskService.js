@@ -1,4 +1,4 @@
-var TaskService = function (GridFS, FileService) {
+var TaskService = function (FileService) {
   var self = this;
   var _ = require('lodash');
   var async = require('async');
@@ -253,11 +253,11 @@ var TaskService = function (GridFS, FileService) {
       if (err) {
         return next(err);
       }
-      
+
       if (!parent) {
         return next(null, null);
       }
-      
+
       self.getParent(parent, next);
     });
   };
@@ -458,12 +458,25 @@ var TaskService = function (GridFS, FileService) {
     });
   };
 
+  this.removeFileById = function (task, fileId, next) {
+    var query = {_id: task._id};
+    var update = {$pull: {'files': {_id: fileId}}};
+    
+    Task.update(query, update, function (err) {
+      if (err) {
+        return next(err);
+      }
+      
+      next();
+    });
+  };
+
   this.deepFindByQuery = function (task, query, next) {
     self.getChildrenByQuery(task, query, function (err, children) {
       if (err) {
         return next(err);
       }
-      
+
       var tasks = [];
 
       async.each(children, function (task, callback) {
@@ -473,7 +486,7 @@ var TaskService = function (GridFS, FileService) {
           if (err) {
             return next(err);
           }
-          
+
           tasks = tasks.concat(aTasks);
           callback();
         });
@@ -481,7 +494,7 @@ var TaskService = function (GridFS, FileService) {
         if (err) {
           return next(err);
         }
-        
+
         next(null, tasks);
       });
 
@@ -493,7 +506,7 @@ var TaskService = function (GridFS, FileService) {
       if (err) {
         return next(err);
       }
-      
+
       var tasks = [];
 
       async.each(children, function (child, callback) {
@@ -505,7 +518,7 @@ var TaskService = function (GridFS, FileService) {
           if (err) {
             return next(err);
           }
-          
+
           tasks = tasks.concat(aTasks);
           callback();
         });
@@ -513,7 +526,7 @@ var TaskService = function (GridFS, FileService) {
         if (err) {
           return next(err);
         }
-        
+
         next(null, tasks);
       });
     })
@@ -530,7 +543,40 @@ var TaskService = function (GridFS, FileService) {
       next(null, tasks);
     })
   };
-  
+
+  this.updateRootTags = function (task, next) {
+    next = next || _.noop;
+
+    var glue = '|||';
+    var originTags = task._origin && task._origin.tags || [];
+
+    var areTagsAdded = task.tags.length || originTags.length;
+    var tagsDifference = task.tags.join(glue) !== originTags.join(glue);
+    var tagsModified = areTagsAdded && tagsDifference;
+
+    if (!tagsModified) {
+      return next();
+    }
+
+    self.getRoot(task, function (err, root) {
+      if (err) {
+        return next(err);
+      }
+
+      var tags = root.tagsList || [];
+
+      root.tagsList = _.uniq(tags.concat(task.tags));
+
+      root.save(function (err) {
+        if (err) {
+          return next(err);
+        }
+
+        next();
+      });
+    });
+  };
+
   this.hasAccess = function (task, user, next) {
     self.getRoot(task, function (err, root) {
       if (err) {

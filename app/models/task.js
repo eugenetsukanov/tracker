@@ -1,7 +1,6 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 var _ = require('lodash');
-var async = require('async');
 
 var application = require('../config/application');
 var GridFS = application.get('GridFS');
@@ -35,55 +34,12 @@ var TaskSchema = new Schema({
 
 TaskSchema.set('toJSON', {getters: true, virtuals: true});
 
-TaskSchema.methods = {
-  getRoot: function (next) {
-    if (this.parentTaskId) {
-      this.getParent(function (err, parent) {
-        if (err) return next(err);
-        parent.getRoot(next);
-      });
-    } else {
-      Task.findById(this._id)
-        .sort('-updatedAt')
-        .populate('owner', '-local.passwordHashed -local.passwordSalt')
-        .populate('developer', '-local.passwordHashed -local.passwordSalt')
-        .exec(next);
-    }
-  },
-  countChildren: function (next) {
-    Task.count({parentTaskId: this._id}, next);
-  },
-  updateRootTags: function (next) {
-    next = next || new Function();
-
-    var self = this;
-
-    var originTags = self._origin && self._origin.tags || [];
-
-    var glue = '|||';
-
-    var tagsModified =
-      (self.tags.length || originTags.length)
-      && (self.tags.join(glue) != originTags.join(glue));
-
-    if (!tagsModified) return next();
-
-    this.getRoot(function (err, root) {
-      if (err) return next(err);
-
-      root.tagsList = _.uniq(root.tagsList.concat(self.tags));
-
-      root.save(function (err) {
-        if (err) return next(err);
-        next();
-      });
-    });
-  }
-};
-
 TaskSchema.statics.archive = function (query, next) {
   Task.update(query, {$set: {archived: true}}, {multi: true}, function (err) {
-    if (err) return next(err);
+    if (err) {
+      return next(err);
+    }
+
     next();
   });
 };
@@ -97,10 +53,6 @@ TaskSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
-
-//TaskSchema.post('save', function (task) {
-//    task.updateRootTags();
-//});
 
 // TODO @@@id: remove velocity virtual field
 TaskSchema.virtual('velocity').get(function () {

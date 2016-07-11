@@ -5,6 +5,11 @@ var FileService = function (GridFS) {
     next = next || _.noop;
     GridFS.remove(task.files, next);
   };
+  
+  this.removeFile = function (file, next) {
+    next = next || _.noop;
+    GridFS.removeFile({_id: file}, next);
+  };
 
   this.connectFiles = function (task, next) {
     next = next || _.noop;

@@ -1,5 +1,4 @@
 module.exports = function (app) {
-  var GridFS = app.container.get('GridFS');
   var FormService = app.container.get('FormService');
   var FileService = app.container.get('FileService');
   var TaskService = app.container.get('TaskService');
@@ -261,6 +260,7 @@ module.exports = function (app) {
       }
 
       FileService.connectFiles(_task);
+      TaskService.updateRootTags(_task);
       
       res.json(_task);
     });
@@ -281,6 +281,7 @@ module.exports = function (app) {
       }
 
       FileService.connectFiles(_task);
+      TaskService.updateRootTags(_task);
       
       TaskService.updateParentByTask(_task, function (err) {
         if (err) {
@@ -293,14 +294,14 @@ module.exports = function (app) {
   });
 
   app.delete('/api/tasks/:taskId/files/:fileId', function (req, res, next) {
-    Task.update({_id: req.Task._id}, {$pull: {'files': {_id: req.params.fileId}}}, function (err) {
-      if (err) next(err);
-
-      GridFS.removeFile({_id: req.params.fileId}, function (err) {
-        if (err) next(err);
-
-        res.sendStatus(200);
-      });
+    TaskService.removeFileById(req.Task, req.params.fileId, function (err) {
+      if (err) {
+        return next(err);
+      }
+      
+      FileService.removeFile(req.params.fileId);
+      
+      res.sendStatus(200);
     });
   });
 
@@ -357,6 +358,8 @@ module.exports = function (app) {
           }
           
           FileService.connectFiles(_task);
+          TaskService.updateRootTags(_task);
+          
           TaskService.updateParentByTask(task, function (err) {
             if (err) {
               return next(err);
