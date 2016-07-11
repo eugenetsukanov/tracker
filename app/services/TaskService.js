@@ -1,6 +1,7 @@
 var TaskService = function (GridFS) {
     var self = this;
     var _ = require('lodash');
+    var async = require('async');
 
     var Task = require('../models/task');
 
@@ -103,6 +104,34 @@ var TaskService = function (GridFS) {
                 });
 
                 next(null, result);
+            });
+        });
+    };
+
+    this.prepareTask = function (req) {
+        var task = req.form;
+
+        task.developer = req.form.developer || req.user._id;
+        task.owner = req.user._id;
+        task.parentTaskId = req.Task ? req.Task._id : undefined;
+
+        return task;
+    };
+
+    this.createNewTask = function (taskData, next) {
+        var task = new Task(taskData);
+
+        self.calculate(task, function (err, task) {
+            if (err) {
+                return next(err);
+            }
+
+            task.save(function (err, _task) {
+                if (err) {
+                    return next(err);
+                }
+
+                next(null, _task)
             });
         });
     };
@@ -292,7 +321,10 @@ var TaskService = function (GridFS) {
 
         function updateParentStatus(task, tasks, next) {
             if (!tasks.length) {
-                return next();
+                task.status = '';
+                task.simple = true;
+
+                return next(null, task);
             }
 
             var countInProgress = 0;
@@ -317,7 +349,7 @@ var TaskService = function (GridFS) {
                 task.status = '';
             }
 
-            task.simple = tasks.length ? false : true;
+            task.simple = false;
 
             next(null, task);
         }
@@ -375,7 +407,51 @@ var TaskService = function (GridFS) {
     //   next(null, task);
     // };
 
-    this.updateParent = function (task, next) {
+    this.updateParent = function (parent, next) {
+        next = next || _.noop;
+
+        if (!parent) {
+            return next();
+        }
+
+        self.calculateParent(parent, function (err, updatedParent) {
+            if (err) {
+                return next(err);
+            }
+
+            updatedParent.save(function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                self.updateParentByTask(updatedParent, next);
+            });
+        });
+    };
+
+    this.calculateParent = function (parent, next) {
+        self.getChildren(parent, function (err, children) {
+            if (err) {
+                return next(err);
+            }
+
+            self.calculateComplex(parent, children, function (err, updatedParent) {
+                if (err) {
+                    return next(err);
+                }
+
+                self.updateParentStatus(updatedParent, children, function (err, _updatedParent) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    next(null, _updatedParent);
+                });
+            });
+        });
+    };
+
+    this.updateParentByTask = function (task, next) {
         next = next || _.noop;
 
         if (!task.parentTaskId) {
@@ -391,43 +467,39 @@ var TaskService = function (GridFS) {
                 return next();
             }
 
-            self.getChildren(parent, function (err, children) {
+            self.calculateParent(parent, function (err, updatedParent) {
                 if (err) {
                     return next(err);
                 }
 
-                self.calculateComplex(parent, children, function (err, updatedParent) {
+                updatedParent.save(function (err) {
                     if (err) {
                         return next(err);
                     }
 
-                    self.updateParentStatus(updatedParent, children, function (err, _updatedParent) {
-                        if (err) {
-                            return next(err);
-                        }
-
-                        _updatedParent.save(function (err) {
-                            if (err) {
-                                return next(err);
-                            }
-
-                            self.updateParent(_updatedParent, next);
-                        });
-                    });
+                    self.updateParentByTask(updatedParent, next);
                 });
             });
         });
     };
 
-    this.removeChildren = function (task) {
+    this.removeChildren = function (task, next) {
+        next = next || _.noop;
+
         self.getChildren(task, function (err, tasks) {
             if (err) {
                 return console.error('Error during remove children', err);
             }
 
-            tasks.forEach(function (task) {
+            async.forEach(tasks, function (task, callback) {
                 self.removeFiles(task);
-                task.remove(_.noop);
+                task.remove(callback);
+            }, function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                next();
             });
         });
     };

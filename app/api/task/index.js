@@ -215,81 +215,58 @@ module.exports = function (app) {
 
 
     app.get('/api/tasks/:taskId/archive', function (req, res) {
+        var query = {
+            parentTaskId: req.Task._id,
+            archived: true
+        };
 
-        Task.find({parentTaskId: req.Task._id, archived: true})
-            .sort('-priority date')
-            .populate('owner', '-local.passwordHashed -local.passwordSalt')
-            .populate('developer', '-local.passwordHashed -local.passwordSalt')
-            .exec(function (err, tasks) {
+        TaskService.getTasksByQuery(query, function (err, tasks) {
+            if (err) {
+                return next(err);
+            }
 
-                if (err) return next(err);
-
-                if (!tasks) {
-                    res.json({});
-                }
-                else {
-                    res.json(tasks);
-                }
-
-            })
+            res.json(tasks);
+        });
     });
 
     //________________________________________________________
 
     app.post('/api/tasks', TaskForm, FormService.validate, function (req, res, next) {
-        req.form.developer = req.form.developer || req.user._id;
+        var data = {
+            user: req.user,
+            task: req.form
+        };
 
-        var task = new Task(req.form);
-        task.owner = req.user._id;
+        var taskData = TaskService.prepareTask(data);
 
-        // TODO @@@id: move to TaskService.createNewTask(req.form, next)
-        TaskService.calculate(task, function (err, task) {
+        TaskService.createNewTask(taskData, function (err, _task) {
             if (err) {
                 return next(err);
             }
 
-            task.save(function (err, _task) {
-                if (err) {
-                    return next(err);
-                }
-
-                TaskService.updateParent(_task, function (err) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    res.json(_task);
-                });
-            });
+            res.json(_task);
         });
     });
 
     app.post('/api/tasks/:taskId/tasks', TaskForm, FormService.validate, function (req, res, next) {
-        req.form.developer = req.form.developer || req.user._id;
+        var data = {
+            user: req.user,
+            task: req.form,
+            parentId: req.params.taskId
+        };
+        var taskData = TaskService.prepareTask(data);
 
-        var task = new Task(req.form);
-
-        task.parentTaskId = req.Task._id;
-        task.owner = req.user._id;
-
-        // TODO @@@id: move to TaskService.createNewTask(req.form, next)
-        TaskService.calculate(task, function (err, task) {
+        TaskService.createNewTask(taskData, function (err, _task) {
             if (err) {
                 return next(err);
             }
 
-            task.save(function (err, _task) {
+            TaskService.updateParentByTask(_task, function (err) {
                 if (err) {
                     return next(err);
                 }
 
-                TaskService.updateParent(_task, function (err) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    res.json(_task);
-                });
+                res.json(_task);
             });
         });
     });
@@ -314,14 +291,18 @@ module.exports = function (app) {
 
             TaskService.removeFiles(req.Task);
 
-            TaskService.updateParent(req.Task, function (err) {
+            TaskService.removeChildren(req.Task, function (err) {
                 if (err) {
                     return next(err);
                 }
 
-                TaskService.removeChildren(req.Task);
+                TaskService.updateParentByTask(req.Task, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
 
-                res.sendStatus(200);
+                    res.sendStatus(200);
+                });
             });
         });
     });
@@ -354,7 +335,7 @@ module.exports = function (app) {
                         return next(err);
                     }
 
-                    TaskService.updateParent(task, function (err) {
+                    TaskService.updateParentByTask(task, function (err) {
                         if (err) {
                             return next(err);
                         }
@@ -366,43 +347,43 @@ module.exports = function (app) {
         });
     });
 
-    app.put('/api/tasks/:taskId/move/:parentTaskId', TaskForm, FormService.validate, function (req, res) {
-        var task = req.Task;
-        req.Task.getParent(function (err, parent) {
-            task.parentTaskId = req.params.parentTaskId;
-            task.save(function (err, task) {
+    //@@@ update task info/fields on move
+    //TaskForm, FormService.validate,
+    app.put('/api/tasks/:taskId/move/:parentTaskId', function (req, res) {
+        TaskService.getParent(req.Task, function (err, parent) {
+            if (err) {
+                return next(err);
+            }
+
+            TaskService.getTaskById(req.params.parentTaskId, function (err, newParent) {
                 if (err) {
                     return next(err);
                 }
 
-                task.updateParent(function (err) {
+                if (!newParent) {
+                    return res.sendStatus(404);
+                }
+
+                req.Task.parentTaskId = newParent._id;
+
+                req.Task.save(function (err, task) {
                     if (err) {
                         return next(err);
                     }
 
-                    if (parent) {
-                        parent.updateEstimateTime(function (err) {
+                    TaskService.updateParent(parent, function (err) {
+                        if (err) {
+                            return next(err);
+                        }
+
+                        TaskService.updateParentByTask(task, function (err) {
                             if (err) {
                                 return next(err);
                             }
 
-                            parent.save(function (err) {
-                                if (err) {
-                                    return next(err);
-                                }
-
-                                parent.updateParentStatus(function (err) {
-                                    if (err) {
-                                        return next(err);
-                                    }
-
-                                    parent.save(new Function());
-                                });
-                            });
+                            res.json(task);
                         });
-
-                    }
-                    res.json(task);
+                    });
                 });
             });
         });
