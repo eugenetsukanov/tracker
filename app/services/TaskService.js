@@ -91,12 +91,11 @@ var TaskService = function (FileService) {
         totalSpentTime += task.spenttime;
         totalPoints += task.points;
 
-        if (self.isAccepted(task) && task.points && task.spenttime) {
-          if (task.simple) {
-            velocity.push(task.points / task.spenttime);
-          } else {
-            velocity.push(self.getVelocity(task));
-          }
+        var simpleAcceptedTask = task.simple && self.isAccepted(task);
+        var complexEstimatedTask = !task.simple && task._velocity.length;
+
+        if (simpleAcceptedTask || complexEstimatedTask) {
+          velocity.push(self.getVelocity(task));
         }
       });
 

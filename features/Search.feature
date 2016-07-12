@@ -77,6 +77,7 @@ Feature: Search
     Then I see search form
     When I search "task"
     Then I see task "task 1.2"
+    Then I sleep 1
 
     Then I click on edit button
     Then I see edit form
