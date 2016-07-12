@@ -129,6 +129,20 @@ var TaskService = function (FileService) {
     next(null, task);
   };
 
+  this.calculateComplexEstimate = function (velocity, task, next) {
+    if (task._velocity.length) {
+      task.estimatedTime = task.points / self.getVelocity(task);
+      task.timeToDo = task.estimatedTime - task.spenttime;
+
+      next(null, task);
+    } else {
+      task.estimatedTime = task.points ? task.points / velocity : 0;
+      task.timeToDo = task.estimatedTime - task.spenttime;
+
+      next(null, task);
+    }
+  };
+
   this.getChildrenByParent = function (parent, next) {
     self.findVelocity(parent, function (err, velocity) {
       if (err) {
@@ -157,7 +171,13 @@ var TaskService = function (FileService) {
               result.push(child);
             });
           } else {
-            result.push(child);
+            self.calculateComplexEstimate(velocity, child, function (err, child) {
+              if (err) {
+                return next(err);
+              }
+
+              result.push(child);
+            });
           }
         });
 
@@ -460,12 +480,12 @@ var TaskService = function (FileService) {
   this.removeFileById = function (task, fileId, next) {
     var query = {_id: task._id};
     var update = {$pull: {'files': {_id: fileId}}};
-    
+
     Task.update(query, update, function (err) {
       if (err) {
         return next(err);
       }
-      
+
       next();
     });
   };
