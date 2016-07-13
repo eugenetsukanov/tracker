@@ -601,13 +601,7 @@ var TaskService = function (FileService) {
         return next(err);
       }
 
-      var amIOwner = (root.owner._id.toString() == user._id.toString());
-
-      var sharedToMe = _.find(root.team, function (userId) {
-        return userId.toString() == user._id.toString();
-      });
-
-      if (amIOwner || sharedToMe) {
+      if (self.amIOwner(root, user) || self.isSharedToMe(root.team)) {
         next(null, true);
       } else {
         next(null, false);
@@ -616,7 +610,17 @@ var TaskService = function (FileService) {
   };
 
   this.isAccepted = function (task) {
-    return task.status == 'accepted';
+    return task.status === 'accepted';
+  };
+
+  this.isSharedToMe = function (team) {
+    return _.find(team, function (userId) {
+      return userId.toString() === user._id.toString();
+    });
+  };
+
+  this.amIOwner = function (root, user) {
+    return root.owner._id.toString() === user._id.toString();
   };
 };
 
