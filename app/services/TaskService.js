@@ -21,9 +21,43 @@ var TaskService = function (FileService) {
     return result;
   };
 
+  this.countParentVelocity = function (a, b, c) {
+    if (arguments.length === 2) {
+      var task = a;
+      var next = b;
+
+      self.getChildren(task, function (err, children) {
+        if (err) {
+          return next(err);
+        }
+
+        countVelocity(children, next);
+      });
+    } else {
+      var children = b;
+      var next = c;
+
+      countVelocity(children, next);
+    }
+
+    function countVelocity(children, next) {
+      var result = [];
+
+      _.forEach(children, function (child) {
+        if (child.velocity) {
+          result.push(child.velocity);
+        }
+      });
+
+      var velocity = result.length ? _.sum(result) / result.length : 0;
+
+      next(null, velocity);
+    }
+  };
+
   this.findVelocity = function (task, next) {
-    if (task._velocity && task._velocity.length) {
-      next(null, self.getVelocity(task));
+    if (task.velocity) {
+      next(null, task.velocity);
     } else {
       self.getParent(task, function (err, parent) {
         if (err) {
@@ -82,30 +116,29 @@ var TaskService = function (FileService) {
       calc(task, children, next);
     }
 
-    function calc(task, tasks, next) {
-      var velocity = [];
+    function calc(task, children, next) {
       var totalSpentTime = 0;
       var totalPoints = 0;
 
-      tasks.forEach(function (task) {
-        totalSpentTime += task.spenttime;
-        totalPoints += task.points;
+      children.forEach(function (child) {
+        totalSpentTime += child.spenttime;
+        totalPoints += child.points;
+      });
 
-        var simpleAcceptedTask = task.simple && self.isAccepted(task);
-        var complexEstimatedTask = !task.simple && task._velocity.length;
-
-        if (simpleAcceptedTask || complexEstimatedTask) {
-          velocity.push(self.getVelocity(task));
+      self.countParentVelocity(task, children, function (err, velocity) {
+        if (err) {
+          return next(err);
         }
+
+        task.velocity = velocity;
       });
 
       task.spenttime = totalSpentTime;
       task.points = totalPoints;
-      task._velocity = velocity;
+      //task._velocity = velocity;
 
-      if (task._velocity.length) {
-        var valueOfVelocity = self.getVelocity(task);
-        task.estimatedTime = valueOfVelocity ? task.points / valueOfVelocity : 0;
+      if (task.velocity) {
+        task.estimatedTime = task.points / task.velocity;
         task.timeToDo = task.estimatedTime - task.spenttime;
       }
 
@@ -129,13 +162,13 @@ var TaskService = function (FileService) {
   };
 
   this.calculateComplexEstimate = function (velocity, task, next) {
-    if (task._velocity.length) {
-      task.estimatedTime = task.points / self.getVelocity(task);
+    if (task.velocity) {
+      task.estimatedTime = task.points / task.velocity;
       task.timeToDo = task.estimatedTime - task.spenttime;
 
       next(null, task);
     } else {
-      task.estimatedTime = task.points ? task.points / velocity : 0;
+      task.estimatedTime = task.points / velocity;
       task.timeToDo = task.estimatedTime - task.spenttime;
 
       next(null, task);
@@ -357,7 +390,8 @@ var TaskService = function (FileService) {
     }
 
     if (task.points && task.spenttime && self.isAccepted(task)) {
-      task._velocity.push(task.points / task.spenttime);
+      //task._velocity.push(task.points / task.spenttime);
+      task.velocity = task.points / task.spenttime;
     }
 
     next(null, task);

@@ -72,6 +72,8 @@ module.exports = function (app) {
           return next(err);
         }
 
+          console.log('>>>>>>>>>>> req Task STATUS', task.status);
+
         if (!task) {
           res.sendStatus(404);
         } else {
@@ -92,7 +94,7 @@ module.exports = function (app) {
                   req.Task.estimatedTime = velocity ? req.Task.points / velocity : 0;
                 }
 
-                if (req.Task.estimatedTime !== 0) {
+                if (req.Task.estimatedTime) {
                   req.Task.timeToDo = req.Task.estimatedTime - req.Task.spenttime;
                 } else {
                   req.Task.timeToDo = 0;
@@ -209,7 +211,7 @@ module.exports = function (app) {
 
   //________________________________________________________
 
-  app.get('/api/tasks/:taskId/tasks', function (req, res) {
+  app.get('/api/tasks/:taskId/tasks', function (req, res, next) {
     TaskService.getChildrenByParent(req.Task, function (err, tasks) {
       if (err) {
         return next(err);
@@ -226,7 +228,7 @@ module.exports = function (app) {
       archived: true
     };
 
-    TaskService.getTasksByQuery(query, function (err, tasks) {
+    TaskService.getTasksByQuery(query, function (err, tasks, next) {
       if (err) {
         return next(err);
       }
@@ -322,20 +324,22 @@ module.exports = function (app) {
 
   app.put('/api/tasks/:taskId', TaskForm, FormService.validate, function (req, res, next) {
     var task = req.Task;
+    var oldStatus = _.clone(req.Task.status);
     var preCalculateEstimate = false;
 
     req.form.developer = req.form.developer ? req.form.developer : undefined;
 
     _.assign(task, req.form);
-    
+
     task.parentTaskId = req.body.parentTaskId || null;
     task.team = task.team || [req.user];
     task.developer = task.developer || req.user;
 
-    if (req.Task.status !== 'accepted' && req.form.status === 'accepted') {
+    if (oldStatus !== 'accepted' && req.form.status === 'accepted') {
       preCalculateEstimate = true;
     }
 
+    //@@@ check complexity and calculate points
     TaskService.preCalculateEstimatedTime(task, preCalculateEstimate, function (err, task) {
       if (err) {
         return next(err);

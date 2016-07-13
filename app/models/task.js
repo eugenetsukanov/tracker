@@ -16,7 +16,9 @@ var TaskSchema = new Schema({
   spenttime: {type: Number, default: 0},
   complexity: {type: Number, default: 0},
   points: {type: Number, default: 0},
+  //@@@ del _velocity
   _velocity: [Number],
+  velocity: Number,
   parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
   date: {type: Date, default: Date.now, index: true},
   updatedAt: {type: Date, default: null, index: true},
@@ -44,22 +46,22 @@ TaskSchema.pre('save', function (next) {
   next();
 });
 
-// TODO @@@id: remove velocity virtual field
-TaskSchema.virtual('velocity').get(function () {
-  var result = 0;
-
-  if (this._velocity.length) {
-    var velositySum = 0;
-
-    _.forEach(this._velocity, function (velocity) {
-      velositySum += velocity;
-    });
-
-    result = velositySum / this._velocity.length;
-  }
-
-  return result;
-});
+//// TODO @@@id: remove velocity virtual field
+//TaskSchema.virtual('velocity').get(function () {
+//  var result = 0;
+//
+//  if (this._velocity.length) {
+//    var velositySum = 0;
+//
+//    _.forEach(this._velocity, function (velocity) {
+//      velositySum += velocity;
+//    });
+//
+//    result = velositySum / this._velocity.length;
+//  }
+//
+//  return result;
+//});
 
 var Task = mongoose.model('Task', TaskSchema);
 
