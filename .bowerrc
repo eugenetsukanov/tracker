@@ -1,3 +1,6 @@
 {
-  "directory": "public/lib"
+  "directory": "public/lib",
+  "storage": {
+    "packages" : "/tmp/bower"
+  }
 }

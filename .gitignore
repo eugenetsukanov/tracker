@@ -12,3 +12,5 @@
 /chromedriver
 /selenium-server-standalone-*
 .DS_Store
+/app/config/local.js
+/app/config/local.json

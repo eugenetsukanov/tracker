@@ -6,9 +6,9 @@ module.exports = function (passport) {
         FacebookStrategy = require('passport-facebook').Strategy;
 
     var User = require('./../models/user');
-    var Config = require('./../config/config');
     var application = require('./application');
     var Container = application.container;
+    var Config = Container.get('config').get();
 
     var Host = Container.get('Host');
 

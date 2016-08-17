@@ -24,6 +24,7 @@
     "socket.io-client": "1.4.8"
   },
   "resolutions": {
-    "angular": ">=1.4.8"
+    "angular": ">=1.4.8",
+    "ng-file-upload": "~4.2.1"
   }
 }

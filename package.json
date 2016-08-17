@@ -7,9 +7,12 @@
     "setup": "npm install && bower install --config.interactive=false --allow-root && gulp",
     "setup.dev": "npm install && bower install --config.interactive=false --allow-root && gulp dev",
     "start.prod": "NODE_ENV=prod pm2 restart app.js",
-    "start.dev": "nodemon --debug=5858 app.js -i node_modules/ -i public/ -i features/",
+    "start.dev": "nodemon -e js -e json --delay 200ms -i node_modules/ -i public/ -i features/ -w app.js -w app app.js",
+    "start.dev.debug": "nodemon -e js -e json --delay 200ms -i node_modules/ -i public/ -i features/ -w app.js -w app app.js --debug=5858",
     "test": "NODE_ENV=development node_modules/.bin/cucumber.js --format pretty",
-    "test.wip": "NODE_ENV=development node_modules/.bin/cucumber.js --format pretty -t @wip"
+    "test.wip": "NODE_ENV=development node_modules/.bin/cucumber.js --format pretty -t @wip",
+    "docker.start.dev": "docker-compose up dev",
+    "docker.console": "docker-compose run dev bash"
   },
   "author": "",
   "license": "ISC",
@@ -40,7 +43,7 @@
     "lodash": "^3.10.1",
     "minimist": "^1.2.0",
     "moment": "^2.13.0",
-    "mongoose": "^3.9.7",
+    "mongoose": "4.5.9",
     "multer": "^0.1.8",
     "nodemailer": "^1.11.0",
     "passport": "^0.3.2",
@@ -51,7 +54,7 @@
     "passport-twitter": "^1.0.3",
     "passport.socketio": "git+https://github.com/metacommunications/passport.socketio",
     "plus.application": "^1.1.8",
-    "pow-mongodb-fixtures": "^0.10.0",
+    "pow-mongodb-fixtures": "0.13.0",
     "socket.io": "1.4.8"
   },
   "devDependencies": {
