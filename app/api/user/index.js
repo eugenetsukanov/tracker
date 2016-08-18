@@ -1,5 +1,6 @@
 module.exports = function (app) {
   var TaskService = app.container.get('TaskService');
+  // @@@slava create user service
   var User = require('../../models/user');
 
   app.get('/api/users/:userId', function (req, res, next) {

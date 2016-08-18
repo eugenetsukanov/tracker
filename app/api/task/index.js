@@ -11,6 +11,7 @@ module.exports = function (app) {
   var form = require("express-form"),
     field = form.field;
 
+  // @@@slava remove limit
   var limit = 60;
 
   var TaskForm = form(
@@ -38,6 +39,7 @@ module.exports = function (app) {
       archived: {$ne: true}
     };
 
+    // @@@slava recheck limit inside
     TaskService.getTasksByQuery(query, function (err, tasks) {
       if (err) {
         return next(err);
@@ -63,6 +65,7 @@ module.exports = function (app) {
   });
 
   app.param('taskId', function (req, res, next, taskId) {
+    // @@@slava check access
     Task
       .findById(taskId)
       .populate('owner', '-local.passwordHashed -local.passwordSalt')
@@ -72,6 +75,7 @@ module.exports = function (app) {
           return next(err);
         }
 
+        // @@@slava remove console console.log();
           console.log('>>>>>>>>>>> req Task STATUS', task.status);
 
         if (!task) {
@@ -85,6 +89,7 @@ module.exports = function (app) {
             if (access) {
               req.Task = task;
 
+              // @@@slava move to the service
               TaskService.findVelocity(req.Task, function (err, velocity) {
                 if (err) {
                   return next(err);
@@ -212,6 +217,7 @@ module.exports = function (app) {
   //________________________________________________________
 
   app.get('/api/tasks/:taskId/tasks', function (req, res, next) {
+    // @@@slava rename this
     TaskService.getChildrenByParent(req.Task, function (err, tasks) {
       if (err) {
         return next(err);
@@ -252,6 +258,7 @@ module.exports = function (app) {
         return next(err);
       }
 
+      // @@@slava move to this service
       FileService.connectFiles(_task);
       TaskService.updateRootTags(_task);
 
@@ -273,6 +280,7 @@ module.exports = function (app) {
         return next(err);
       }
 
+      // @@@slava clean up this
       FileService.connectFiles(_task);
       TaskService.updateRootTags(_task);
 
@@ -299,11 +307,13 @@ module.exports = function (app) {
   });
 
   app.delete('/api/tasks/:taskId', function (req, res, next) {
+    // @@@slava move to the service
     req.Task.remove(function (err) {
       if (err) {
         return next(err);
       }
 
+      // @@@slava move to this service
       FileService.removeFilesByTask(req.Task);
 
       TaskService.removeChildren(req.Task, function (err) {
@@ -331,6 +341,7 @@ module.exports = function (app) {
 
     _.assign(task, req.form);
 
+    // @@@slava re-read logic and move to the service
     task.parentTaskId = req.body.parentTaskId || null;
     task.team = task.team || [req.user];
     task.developer = task.developer || req.user;
@@ -373,6 +384,7 @@ module.exports = function (app) {
   //@@@ update task info/fields on move
   //TaskForm, FormService.validate,
   app.put('/api/tasks/:taskId/move/:parentTaskId', function (req, res, next) {
+    // @@@slava move to the service
     TaskService.getParent(req.Task, function (err, parent) {
       if (err) {
         return next(err);
@@ -435,6 +447,7 @@ module.exports = function (app) {
         return next(err);
       }
 
+      // @@@slava check serach
       TaskService.deepFind(root, function (task) {
         var tags = task.tags || [];
         tags = tags.join(' ');
@@ -499,6 +512,7 @@ module.exports = function (app) {
     });
   });
 
+  // @@@slava move to the app level
   //__________________________error log
 
   app.use(function (err, req, res, next) {

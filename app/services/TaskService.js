@@ -3,11 +3,13 @@ var TaskService = function (FileService) {
   var _ = require('lodash');
   var async = require('async');
 
+  // @@@slava use task from container
   var Task = require('../models/task');
 
   this.getVelocity = function (task) {
     var result = 0;
 
+    // @@@slava re-read _velocity logic
     if (task._velocity.length) {
       var velositySum = 0;
 

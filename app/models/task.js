@@ -18,6 +18,7 @@ var TaskSchema = new Schema({
   points: {type: Number, default: 0},
   //@@@ del _velocity
   _velocity: [Number],
+  // @@@slava remove _velocity
   velocity: Number,
   parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
   date: {type: Date, default: Date.now, index: true},
@@ -45,6 +46,9 @@ TaskSchema.pre('save', function (next) {
   this.updatedAt = Date.now();
   next();
 });
+
+// @@@slava remove this
+// @@@slava check @@@ todos
 
 //// TODO @@@id: remove velocity virtual field
 //TaskSchema.virtual('velocity').get(function () {

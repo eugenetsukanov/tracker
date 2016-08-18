@@ -23,6 +23,7 @@ module.exports = function (app) {
       .sort('-updatedAt')
       .exec(function (err, tasks) {
         if (err) {
+          // @@@slava add next
           return next(err);
         }
 

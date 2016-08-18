@@ -10,6 +10,9 @@ module.exports = function (container) {
     container.register('SocketService', require('../services/SocketService'), ['MongoSessionStore', 'config/session/secret']);
     container.register('FormService', require('../services/FormService'), []);
 
+    // @@@slava make domain models in the container
+    // @@@slava re-connect models in the controllers/services
+    
     //container.register('Task', require('../models/task'), []);
     container.register('FileService', require('../services/FileService'), ['GridFS']);
     container.register('TaskService', require('../services/TaskService'), ['FileService']);
