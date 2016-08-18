@@ -1,7 +1,6 @@
 module.exports = function (app) {
   var TaskService = app.container.get('TaskService');
-  // @@@slava create user service
-  var User = require('../../models/user');
+  var User = app.container.get('User');
 
   app.get('/api/users/:userId', function (req, res, next) {
     User.findById(req.params.userId, '-local.passwordHashed -local.passwordSalt', function (err, user) {

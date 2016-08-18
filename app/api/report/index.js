@@ -1,6 +1,7 @@
 module.exports = function (app) {
 
-  var Task = require('../../models/task');
+  var Task = app.container.get('Task');
+
   var TaskService = app.container.get('TaskService');
   var moment = require('moment');
   var async = require('async');
@@ -16,10 +17,10 @@ module.exports = function (app) {
 
   app.get('/api/tasks/report/:date', function (req, res) {
     var date = Date.parse(req.params.date);
-   
+
     Task.find({
-        updatedAt: {$gte: getStartDate(date), $lte: getEndDate(date)}
-      })
+      updatedAt: {$gte: getStartDate(date), $lte: getEndDate(date)}
+    })
       .sort('-updatedAt')
       .exec(function (err, tasks) {
         if (err) {

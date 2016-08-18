@@ -1,10 +1,13 @@
 var Mongoose = function (config) {
 
-    var mongoose = require('mongoose');
-    mongoose.set('debug', config.debug);
-    mongoose.connect(config.uri);
+  // @@@slava solve issues with promises
+  var options = {promiseLibrary: require('bluebird')};
 
-    return mongoose;
+  var mongoose = require('mongoose');
+  mongoose.set('debug', config.debug);
+  mongoose.connect(config.uri, options);
+
+  return mongoose;
 };
 
 module.exports = Mongoose;

@@ -5,11 +5,12 @@ module.exports = function (passport) {
         TwitterStrategy = require('passport-twitter').Strategy,
         FacebookStrategy = require('passport-facebook').Strategy;
 
-    var User = require('./../models/user');
+    // @@@slava organised passport
     var application = require('./application');
     var Container = application.container;
-    var Config = Container.get('config').get();
 
+    var Config = Container.get('config').get();
+    var User = Container.get('User');
     var Host = Container.get('Host');
 
     passport.serializeUser(function (user, done) {

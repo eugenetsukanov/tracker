@@ -3,8 +3,8 @@ module.exports = function (app, passport, flash) {
     var Tokenizer = app.container.get('Tokenizer');
     var Mailer = app.container.get('Mailer');
     var Host = app.container.get('Host');
+    var User = app.container.get('User');
 
-    var User = require('../../models/user');
     var form = require("express-form"),
         field = form.field;
 

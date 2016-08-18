@@ -1,51 +1,48 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var _ = require('lodash');
+module.exports = function (mongoose) {
+  var Schema = mongoose.Schema;
+  var _ = require('lodash');
 
-var application = require('../config/application');
-var GridFS = application.get('GridFS');
+  var FileSchema = require('./file.schema');
 
-var FileSchema = require('./file.schema');
+  var TaskSchema = new Schema({
+    title: String,
+    description: String,
+    user: String,
+    priority: {type: Number, default: 5, index: true},
+    status: String,
+    spenttime: {type: Number, default: 0},
+    complexity: {type: Number, default: 0},
+    points: {type: Number, default: 0},
+    //@@@ del _velocity
+    _velocity: [Number],
+    // @@@slava remove _velocity
+    velocity: Number,
+    parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
+    date: {type: Date, default: Date.now, index: true},
+    updatedAt: {type: Date, default: null, index: true},
+    simple: {type: Boolean, default: true},
+    estimatedTime: {type: Number, default: 0},
+    timeToDo: {type: Number, default: 0},
+    owner: {type: Schema.Types.ObjectId, ref: "User"},
+    developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
+    team: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
+    files: [FileSchema],
+    tags: [String],
+    tagsList: [String],
+    archived: {type: Boolean, default: false}
+  });
 
-var TaskSchema = new Schema({
-  title: String,
-  description: String,
-  user: String,
-  priority: {type: Number, default: 5, index: true},
-  status: String,
-  spenttime: {type: Number, default: 0},
-  complexity: {type: Number, default: 0},
-  points: {type: Number, default: 0},
-  //@@@ del _velocity
-  _velocity: [Number],
-  // @@@slava remove _velocity
-  velocity: Number,
-  parentTaskId: {type: Schema.Types.ObjectId, ref: "Task", default: null},
-  date: {type: Date, default: Date.now, index: true},
-  updatedAt: {type: Date, default: null, index: true},
-  simple: {type: Boolean, default: true},
-  estimatedTime: {type: Number, default: 0},
-  timeToDo: {type: Number, default: 0},
-  owner: {type: Schema.Types.ObjectId, ref: "User"},
-  developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
-  team: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
-  files: [FileSchema],
-  tags: [String],
-  tagsList: [String],
-  archived: {type: Boolean, default: false}
-});
+  TaskSchema.set('toJSON', {getters: true, virtuals: true});
 
-TaskSchema.set('toJSON', {getters: true, virtuals: true});
+  TaskSchema.pre('init', function (next, task) {
+    this._origin = _.merge({}, task);
+    next();
+  });
 
-TaskSchema.pre('init', function (next, task) {
-  this._origin = _.merge({}, task);
-  next();
-});
-
-TaskSchema.pre('save', function (next) {
-  this.updatedAt = Date.now();
-  next();
-});
+  TaskSchema.pre('save', function (next) {
+    this.updatedAt = Date.now();
+    next();
+  });
 
 // @@@slava remove this
 // @@@slava check @@@ todos
@@ -67,6 +64,7 @@ TaskSchema.pre('save', function (next) {
 //  return result;
 //});
 
-var Task = mongoose.model('Task', TaskSchema);
+  var Task = mongoose.model('Task', TaskSchema);
 
-module.exports = Task;
+  return Task;
+};

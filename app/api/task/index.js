@@ -2,9 +2,8 @@ module.exports = function (app) {
   var FormService = app.container.get('FormService');
   var FileService = app.container.get('FileService');
   var TaskService = app.container.get('TaskService');
-
-  var Task = require('../../models/task');
-  var User = require('../../models/user');
+  var Task = app.container.get('Task');
+  var User = app.container.get('User');
 
   var async = require('async');
   var _ = require('lodash');
@@ -39,7 +38,6 @@ module.exports = function (app) {
       archived: {$ne: true}
     };
 
-    // @@@slava recheck limit inside
     TaskService.getTasksByQuery(query, function (err, tasks) {
       if (err) {
         return next(err);
@@ -65,7 +63,6 @@ module.exports = function (app) {
   });
 
   app.param('taskId', function (req, res, next, taskId) {
-    // @@@slava check access
     Task
       .findById(taskId)
       .populate('owner', '-local.passwordHashed -local.passwordSalt')
@@ -74,9 +71,6 @@ module.exports = function (app) {
         if (err) {
           return next(err);
         }
-
-        // @@@slava remove console console.log();
-          console.log('>>>>>>>>>>> req Task STATUS', task.status);
 
         if (!task) {
           res.sendStatus(404);

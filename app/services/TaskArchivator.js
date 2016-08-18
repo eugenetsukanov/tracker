@@ -1,5 +1,4 @@
-module.exports = function () {
-  var Task = require('../models/task');
+module.exports = function (Task) {
   var moment = require('moment');
 
   this.archive = function (next) {

@@ -1,75 +1,77 @@
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
-var crypto = require("crypto");
+module.exports = function (mongoose) {
+  var Schema = mongoose.Schema;
+  var crypto = require("crypto");
 
-var UserSchema = new Schema({
+  var UserSchema = new Schema({
 
     first: String,
     last: String,
     email: String,
     local: {
-        username: {type: String, index: true},
-        passwordSalt: String,
-        passwordHashed: String
+      username: {type: String, index: true},
+      passwordSalt: String,
+      passwordHashed: String
     },
     facebook: {
-        id: String,
-        email: String,
-        token: String
+      id: String,
+      email: String,
+      token: String
     },
     twitter: {
-        id: String,
-        token: String
+      id: String,
+      token: String
     },
     google: {
-        id: String,
-        email: String,
-        token: String
+      id: String,
+      email: String,
+      token: String
     },
 
     created: {type: Date, default: Date.now}
 
-});
+  });
 
-UserSchema.set('toJSON', {getters: true, virtuals: true});
+  UserSchema.set('toJSON', {getters: true, virtuals: true});
 
-function hash(data) {
+  function hash(data) {
     return crypto
-        .createHash("sha256")
-        .update(data)
-        .digest("hex");
-}
+      .createHash("sha256")
+      .update(data)
+      .digest("hex");
+  }
 
-UserSchema.methods = {
+  UserSchema.methods = {
 
     validPassword: function (password) {
-        return this.local.passwordHashed === hash(this.local.passwordSalt + password);
+      return this.local.passwordHashed === hash(this.local.passwordSalt + password);
     },
     setPassword: function (password) {
-        var salt = 'key-' + Math.random() + ' ' + Math.random() + new Date();
-        this.local.passwordSalt = hash(salt);
-        this.local.passwordHashed = hash(this.local.passwordSalt + password);
+      var salt = 'key-' + Math.random() + ' ' + Math.random() + new Date();
+      this.local.passwordSalt = hash(salt);
+      this.local.passwordHashed = hash(this.local.passwordSalt + password);
 
     }
 
-};
+  };
 
 
-UserSchema.virtual('local.password').set(function (password) {
+  UserSchema.virtual('local.password').set(function (password) {
     this.setPassword(password);
-});
+  });
 
-UserSchema.virtual('name').get(function () {
+  UserSchema.virtual('name').get(function () {
     var name = '';
 
     if (this.first || this.last) {
-        name += this.first ? this.first : '';
-        name += this.last ? ' ' + this.last : '';
+      name += this.first ? this.first : '';
+      name += this.last ? ' ' + this.last : '';
     } else {
-        name = this.local.username;
+      name = this.local.username;
     }
 
     return name;
-});
+  });
 
-module.exports = mongoose.model('User', UserSchema);
+  var User = mongoose.model('User', UserSchema);
+  return User;
+}
