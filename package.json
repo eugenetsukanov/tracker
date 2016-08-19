@@ -11,7 +11,7 @@
     "start.dev.debug": "nodemon -e js -e json --delay 200ms -i node_modules/ -i public/ -i features/ -w app.js -w app app.js --debug=5858",
     "test": "NODE_ENV=development node_modules/.bin/cucumber.js --format pretty",
     "test.wip": "NODE_ENV=development node_modules/.bin/cucumber.js --format pretty -t @wip",
-    "docker.dev": "nodemon -e js -e json -i public/ -i features/ -x 'docker-compose kill dev && docker-compose rm --force dev && docker-compose up dev'",
+    "docker.dev": "nodemon -i public/ -i features/ -x 'docker-compose kill dev && docker-compose rm --force dev && docker-compose up dev'",
     "docker.console": "docker-compose run --rm dev bash",
     "docker.stop": "docker-compose stop"
   },

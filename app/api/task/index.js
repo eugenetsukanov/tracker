@@ -217,7 +217,8 @@ module.exports = function (app) {
     app.post('/api/tasks', TaskForm, FormService.validate, function (req, res, next) {
         TaskService.createTask(req.user, req.form, function (err, task) {
             if (err) return next(err);
-            Task.getEstimatedTask(task, function (err, task) {
+            
+            TaskService.getEstimatedTask(task, function (err, task) {
                 if (err) return next(err);
                 res.json(task);
             });
@@ -225,40 +226,14 @@ module.exports = function (app) {
     });
 
     app.post('/api/tasks/:taskId/tasks', TaskForm, FormService.validate, function (req, res, next) {
-
         var task = _.merge({}, req.form, {parentTaskId: req.params.taskId});
-        
+
         TaskService.createTask(req.user, task, function (err, task) {
             if (err) return next(err);
-            Task.getEstimatedTask(task, function (err, task) {
+
+            TaskService.getEstimatedTask(task, function (err, task) {
                 if (err) return next(err);
                 res.json(task);
-            });
-        });
-        
-        var data = {
-            user: req.user,
-            task: req.form,
-            parentTaskId: req.params.taskId
-        };
-
-        var taskData = TaskService.prepareTask(data);
-
-        TaskService.createNewTask(taskData, function (err, _task) {
-            if (err) {
-                return next(err);
-            }
-
-            // @@@slava clean up this
-            FileService.connectFiles(_task);
-            TaskService.updateRootTags(_task);
-
-            TaskService.updateParentByTask(_task, function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                res.json(_task);
             });
         });
     });
@@ -479,17 +454,5 @@ module.exports = function (app) {
                 res.json(tasks);
             });
         });
-    });
-
-    // @@@slava move to the app level
-    //__________________________error log
-
-    app.use(function (err, req, res, next) {
-        if (err) {
-            console.error(err);
-            res.status(500).send(err.message);
-        } else {
-            next();
-        }
     });
 };

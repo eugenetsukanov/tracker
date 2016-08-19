@@ -684,7 +684,7 @@ var TaskService = function (Task, FileService, UserService) {
     this.createTask = function (user, task, next) {
         task.developer = task.developer || UserService.getUserId(user);
         task.owner = UserService.getUserId(user);
-        task.parentTaskId = task.parentTaskId ? parentTaskId : undefined;
+        task.parentTaskId = task.parentTaskId ? task.parentTaskId : undefined;
 
         task = new Task(task);
 
@@ -706,7 +706,7 @@ var TaskService = function (Task, FileService, UserService) {
                     }
 
                     // @@@slava notify parents
-                    next(task);
+                    next(null, task);
                 });
             });
         });
