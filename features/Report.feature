@@ -60,6 +60,7 @@ Feature: Report
 
     And I click on save button
 
+    Then I sleep 1
     Then I click on task link "project 1.1"
 
     And I am on "project 1.1" page
