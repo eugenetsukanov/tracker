@@ -8,7 +8,7 @@ module.exports = function () {
     this.Then(/^I tag task with "([^"]*)"$/, function (arg1, callback) {
         this.chain
             .iType('form input[placeholder="Add Tags..."]', arg1)
-            .iClick('form div a span:contains("' +arg1+ '")')
+            .iClick('form div span:contains("' +arg1+ '")')
             .then(callback);
     });
 

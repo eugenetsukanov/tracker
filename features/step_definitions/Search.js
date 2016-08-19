@@ -48,7 +48,7 @@ module.exports = function () {
     this.Then(/^I tag this task with "([^"]*)"$/, function (arg1, callback) {
         this.chain
             .iType('.modal-box .ui-select-container input:last', arg1)
-            .iClick('.modal-box .ui-select-container a:contains("' +arg1+ '")')
+            .iClick('.modal-box .ui-select-container span:contains("' +arg1+ '")')
             .then(callback);
     });
 
