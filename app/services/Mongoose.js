@@ -1,6 +1,6 @@
 var Mongoose = function (config) {
 
-  // @@@slava solve issues with promises
+  // @@@ solve issues with promises
   var options = {promiseLibrary: require('bluebird')};
 
   var mongoose = require('mongoose');

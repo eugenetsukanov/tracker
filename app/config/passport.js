@@ -5,7 +5,7 @@ module.exports = function (passport) {
         TwitterStrategy = require('passport-twitter').Strategy,
         FacebookStrategy = require('passport-facebook').Strategy;
 
-    // @@@slava organised passport
+    // @@@ organise passport
     var application = require('./application');
     var Container = application.container;
 

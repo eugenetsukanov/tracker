@@ -172,7 +172,7 @@ module.exports = function (app) {
 
             team.push(root.owner);
 
-            // @@@slava move to the service
+            // @@ move to user service the service
             User.find({_id: {$in: team}}, '-local.passwordHashed -local.passwordSalt')
                 .exec(function (err, users) {
                     if (err) {
@@ -252,55 +252,33 @@ module.exports = function (app) {
     app.put('/api/tasks/:taskId', TaskForm, FormService.validate, function (req, res, next) {
         var taskData = _.merge({parentTaskId: req.body.parentTaskId || null}, req.form);
 
-        // @@@slava check access to parentTaskId
-        TaskService.updateTask(req.user, req.Task, taskData, function (err, task) {
-            if (err) return next(err);
-            res.json(task);
-        });
+        if (taskData.parentTaskId) {
+            /// @@@ re-think and refactor
+            TaskService.getTaskById(taskData.parentTaskId, function (err, parent) {
+                TaskService.hasAccess(parent, req.user, function (err, access) {
+                    if (err) return next(err);
+                    if (!access) return res.sendStatus(403);
+
+                    TaskService.updateTask(req.user, req.Task, taskData, function (err, task) {
+                        if (err) return next(err);
+                        res.json(task);
+                    });
+                });
+            });
+        } else {
+            TaskService.updateTask(req.user, req.Task, taskData, function (err, task) {
+                if (err) return next(err);
+                res.json(task);
+            });
+        }
     });
 
     //@@@ update task info/fields on move
     //TaskForm, FormService.validate,
     app.put('/api/tasks/:taskId/move/:parentTaskId', function (req, res, next) {
-        // TaskService.moveTask(task, parent)
-        
-        // @@@slava move to the service
-        TaskService.getParent(req.Task, function (err, parent) {
-            if (err) {
-                return next(err);
-            }
-
-            TaskService.getTaskById(req.params.parentTaskId, function (err, newParent) {
-                if (err) {
-                    return next(err);
-                }
-
-                if (!newParent) {
-                    return res.sendStatus(404);
-                }
-
-                req.Task.parentTaskId = newParent._id;
-
-                req.Task.save(function (err, task) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    TaskService.updateParent(parent, function (err) {
-                        if (err) {
-                            return next(err);
-                        }
-
-                        TaskService.updateParentByTask(task, function (err) {
-                            if (err) {
-                                return next(err);
-                            }
-
-                            res.json(task);
-                        });
-                    });
-                });
-            });
+        TaskService.moveTask(req.Task, req.params.parentTaskId, function (err, task) {
+            if (err) return next(err);
+            res.json(task);
         });
     });
 
@@ -327,7 +305,6 @@ module.exports = function (app) {
                 return next(err);
             }
 
-            // @@@slava check serach
             TaskService.deepFind(root, function (task) {
                 var tags = task.tags || [];
                 tags = tags.join(' ');

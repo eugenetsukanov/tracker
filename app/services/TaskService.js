@@ -465,7 +465,6 @@ var TaskService = function (Task, FileService, UserService) {
 
         task.parentTaskId = taskData.parentTaskId || null;
 
-        // @@@slava check team
         task.team = task.team || [user];
 
         task.developer = task.developer || user;
@@ -503,11 +502,9 @@ var TaskService = function (Task, FileService, UserService) {
     this.removeChildren = function (task, next) {
         next = next || _.noop;
 
-        // @@@slava make remove children recursive
         self.getChildren(task, function (err, tasks) {
             if (err) return next(err);
 
-            // @@@slava check update parent
             async.each(tasks, function (task, next) {
                 self.removeTaskStuff(task);
 
@@ -515,11 +512,7 @@ var TaskService = function (Task, FileService, UserService) {
                     if (err) return next(err);
                     self.removeChildren(task, next);
                 });
-            }, function (err) {
-                if (err) return next(err);
-                // @@@slava move to removeTask
-                self.updateParentByTask(task, next);
-            });
+            }, next);
         });
     };
 
@@ -539,6 +532,50 @@ var TaskService = function (Task, FileService, UserService) {
                 self.updateParentByTask(task, next);
             });
         });
+    };
+
+    this.moveTask = function (task, newParent, next) {
+        self.getTaskById(task, function (err, task) {
+            if (err) return next(err);
+            if (!task) return next(new Error('No task'));
+
+            self.getParent(task, function (err, parent) {
+                if (err) {
+                    return next(err);
+                }
+
+                self.getTaskById(newParent, function (err, newParent) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    if (!newParent) return next(new Error('No new parent'));
+
+                    task.parentTaskId = newParent;
+
+                    task.save(function (err, task) {
+                        if (err) {
+                            return next(err);
+                        }
+
+                        self.updateParent(parent, function (err) {
+                            if (err) {
+                                return next(err);
+                            }
+
+                            self.updateParent(newParent, function (err) {
+                                if (err) {
+                                    return next(err);
+                                }
+
+                                next(null, task);
+                            });
+                        });
+                    });
+                });
+            });
+        });
+
     };
 
     this.getSiblings = function (task, next) {
