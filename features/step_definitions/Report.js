@@ -20,7 +20,7 @@ module.exports = function () {
     this.Then(/^I share this task on user "([^"]*)"$/, function (arg1, callback) {
         this.chain
             .iClick("div[ng-model='task.team'] input")
-            .iClick('form div a span:contains("' +arg1+ '")')
+            .iClick('form div span:contains("' +arg1+ '")')
             .then(callback);
     });
 
