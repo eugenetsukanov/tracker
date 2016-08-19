@@ -566,6 +566,8 @@ var TaskService = function (Task, FileService, UserService) {
     this.getEstimatedTaskById = function (task, next) {
         self.getTaskById(task, function (err, task) {
             if (err) return next(err);
+            if (!task) return next();
+
             self.getEstimatedTask(task, next);
         });
     };
