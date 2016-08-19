@@ -32,6 +32,12 @@ module.exports = function (mongoose) {
     archived: {type: Boolean, default: false}
   });
 
+  TaskSchema.methods = {
+    isAccepted: function () {
+      return this.status === 'accepted';
+    }
+  };
+
   TaskSchema.set('toJSON', {getters: true, virtuals: true});
 
   TaskSchema.pre('init', function (next, task) {

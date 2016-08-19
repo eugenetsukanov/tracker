@@ -2,6 +2,7 @@ var TaskService = function (Task, FileService, UserService) {
     var self = this;
     var _ = require('lodash');
     var async = require('async');
+    var pointLine = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
 
     this.getVelocity = function (task) {
         var result = 0;
@@ -88,10 +89,10 @@ var TaskService = function (Task, FileService, UserService) {
     };
 
     this.calculate = function (task, next) {
-        if (!task.simple) {
-            self.calculateComplex(task, next);
-        } else {
+        if (task.simple) {
             self.calculateSimple(task, next);
+        } else {
+            self.calculateComplex(task, next);
         }
     };
 
@@ -174,7 +175,7 @@ var TaskService = function (Task, FileService, UserService) {
         }
     };
 
-    this.getChildrenByParent = function (parent, next) {
+    this.getEstimatedChildren = function (parent, next) {
         self.findVelocity(parent, function (err, velocity) {
             if (err) {
                 return next(err);
@@ -288,11 +289,12 @@ var TaskService = function (Task, FileService, UserService) {
         }
     };
 
-    this.getTaskById = function (task, next) {
-        var taskId = task._id ? task._id : task;
+    this.getTaskId = function (task) {
+        return task._id ? task._id : task;
+    };
 
-        Task.findById(taskId)
-            .sort('-updatedAt')
+    this.getTaskById = function (task, next) {
+        Task.findById(this.getTaskId(task))
             .populate('owner', '-local.passwordHashed -local.passwordSalt')
             .populate('developer', '-local.passwordHashed -local.passwordSalt')
             .exec(next);
@@ -369,7 +371,7 @@ var TaskService = function (Task, FileService, UserService) {
     };
 
     this.getChildren = function (task, next) {
-        var taskId = task._id ? task._id : task;
+        var taskId = self.getTaskId(task);
 
         self.getTasksByQuery({parentTaskId: taskId}, function (err, tasks) {
             if (err) {
@@ -382,14 +384,12 @@ var TaskService = function (Task, FileService, UserService) {
 
     this.calculateSimple = function (task, next) {
         if (task.complexity >= 0) {
-            var row = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
-            task.points = row[task.complexity];
+            task.points = pointLine[task.complexity] || 0;
         } else {
             task.points = 0;
         }
 
-        if (task.points && task.spenttime && self.isAccepted(task)) {
-            //task._velocity.push(task.points / task.spenttime);
+        if (self.isAccepted(task) && task.points && task.spenttime) {
             task.velocity = task.points / task.spenttime;
         }
 
@@ -397,16 +397,8 @@ var TaskService = function (Task, FileService, UserService) {
     };
 
     this.getParent = function (task, next) {
-        var parentTaskId = task.parentTaskId;
-
-        if (parentTaskId) {
-            Task.findById(parentTaskId, function (err, task) {
-                if (err) {
-                    return next(err);
-                }
-
-                next(null, task);
-            });
+        if (task.parentTaskId) {
+            Task.findById(task.parentTaskId, next);
         } else {
             next();
         }
@@ -492,20 +484,12 @@ var TaskService = function (Task, FileService, UserService) {
         next = next || _.noop;
 
         self.getChildren(task, function (err, tasks) {
-            if (err) {
-                return console.error('Error during remove children', err);
-            }
+            if (err) return next(err);
 
-            async.forEach(tasks, function (task, callback) {
-                FileService.removeFilesByTask(task);
+            async.each(tasks, function (task, callback) {
+                FileService.removeFiles(task.files);
                 task.remove(callback);
-            }, function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                next();
-            });
+            }, next);
         });
     };
 
@@ -643,7 +627,7 @@ var TaskService = function (Task, FileService, UserService) {
     };
 
     this.isAccepted = function (task) {
-        return task.status === 'accepted';
+        return task.isAccepted();
     };
 
     this.isSharedToMe = function (team, user) {
@@ -656,6 +640,77 @@ var TaskService = function (Task, FileService, UserService) {
     this.amIOwner = function (root, user) {
         return root.owner._id.toString() === user._id.toString();
     };
+
+    this.estimateTask = function (velocity, task) {
+        if (task.isAccepted()) {
+            task.estimatedTime = velocity ? task.points / velocity : 0;
+        }
+
+        if (task.estimatedTime) {
+            task.timeToDo = task.estimatedTime - task.spenttime;
+        } else {
+            task.timeToDo = 0;
+        }
+
+        return task;
+    };
+
+    this.getEstimatedTask = function (task, next) {
+        self.findVelocity(task, function (err, velocity) {
+            if (err) {
+                return next(err);
+            }
+
+            next(null, self.estimateTask(velocity, task));
+        });
+    };
+
+    this.getEstimatedTasksByQuery = function (query, next) {
+        self.getTasksByQuery(query, function (err, tasks) {
+            if (err) return next(err);
+            async.map(tasks, function (task, next) {
+                self.getEstimatedTask(task, next);
+            }, next);
+        });
+    };
+
+    this.getEstimatedTaskById = function (task, next) {
+        self.getTaskById(task, function (err, task) {
+            if (err) return next(err);
+            self.getEstimatedTask(task, next);
+        });
+    };
+
+    this.createTask = function (user, task, next) {
+        task.developer = task.developer || UserService.getUserId(user);
+        task.owner = UserService.getUserId(user);
+        task.parentTaskId = task.parentTaskId ? parentTaskId : undefined;
+
+        task = new Task(task);
+
+        self.calculate(task, function (err, task) {
+            if (err) {
+                return next(err);
+            }
+
+            task.save(function (err) {
+                if (err) return next(err);
+
+                FileService.connectFiles(task.files);
+                self.updateRootTags(task);
+
+                // @@@slava check this method
+                self.updateParentByTask(task, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    // @@@slava notify parents
+                    next(task);
+                });
+            });
+        });
+    }
 };
 
 module.exports = TaskService;

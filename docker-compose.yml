@@ -18,7 +18,7 @@ dev:
     - mongo
   volumes:
     - ./:/project
-  command: npm run start.dev
+  command: node app.js
   environment:
     NODE_ENV: 'dev'
   ports:

@@ -15,7 +15,7 @@ module.exports = function (app) {
     return moment(date).endOf('day').toDate();
   };
 
-  app.get('/api/tasks/report/:date', function (req, res) {
+  app.get('/api/tasks/report/:date', function (req, res, next) {
     var date = Date.parse(req.params.date);
 
     Task.find({
@@ -24,7 +24,6 @@ module.exports = function (app) {
       .sort('-updatedAt')
       .exec(function (err, tasks) {
         if (err) {
-          // @@@slava add next
           return next(err);
         }
 
