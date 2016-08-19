@@ -7,7 +7,7 @@ module.exports = function (app) {
 
     var async = require('async');
     var _ = require('lodash');
-    
+
     var form = require("express-form"),
         field = form.field;
 
@@ -217,11 +217,7 @@ module.exports = function (app) {
     app.post('/api/tasks', TaskForm, FormService.validate, function (req, res, next) {
         TaskService.createTask(req.user, req.form, function (err, task) {
             if (err) return next(err);
-            
-            TaskService.getEstimatedTask(task, function (err, task) {
-                if (err) return next(err);
-                res.json(task);
-            });
+            res.json(task);
         });
     });
 
@@ -230,11 +226,7 @@ module.exports = function (app) {
 
         TaskService.createTask(req.user, task, function (err, task) {
             if (err) return next(err);
-
-            TaskService.getEstimatedTask(task, function (err, task) {
-                if (err) return next(err);
-                res.json(task);
-            });
+            res.json(task);
         });
     });
 
@@ -251,83 +243,27 @@ module.exports = function (app) {
     });
 
     app.delete('/api/tasks/:taskId', function (req, res, next) {
-        // @@@slava move to the service
-        req.Task.remove(function (err) {
-            if (err) {
-                return next(err);
-            }
-
-            // @@@slava move to this service
-            FileService.removeFiles(req.Task.files);
-
-            TaskService.removeChildren(req.Task, function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                TaskService.updateParentByTask(req.Task, function (err) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    res.sendStatus(200);
-                });
-            });
+        TaskService.removeTask(req.Task, function (err) {
+            if (err) return next(err);
+            res.sendStatus(200);
         });
     });
 
     app.put('/api/tasks/:taskId', TaskForm, FormService.validate, function (req, res, next) {
-        var task = req.Task;
-        var oldStatus = _.clone(req.Task.status);
-        var preCalculateEstimate = false;
+        var taskData = _.merge({parentTaskId: req.body.parentTaskId || null}, req.form);
 
-        req.form.developer = req.form.developer ? req.form.developer : undefined;
-
-        _.assign(task, req.form);
-
-        // @@@slava re-read logic and move to the service
-        task.parentTaskId = req.body.parentTaskId || null;
-        task.team = task.team || [req.user];
-        task.developer = task.developer || req.user;
-
-        if (oldStatus !== 'accepted' && req.form.status === 'accepted') {
-            preCalculateEstimate = true;
-        }
-
-        //@@@ check complexity and calculate points
-        TaskService.preCalculateEstimatedTime(task, preCalculateEstimate, function (err, task) {
-            if (err) {
-                return next(err);
-            }
-
-            TaskService.calculate(task, function (err, _task) {
-                if (err) {
-                    return next(err);
-                }
-
-                _task.save(function (err, task) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    FileService.connectFiles(_task);
-                    TaskService.updateRootTags(_task);
-
-                    TaskService.updateParentByTask(task, function (err) {
-                        if (err) {
-                            return next(err);
-                        }
-
-                        res.json(task);
-                    });
-                });
-            });
+        // @@@slava check access to parentTaskId
+        TaskService.updateTask(req.user, req.Task, taskData, function (err, task) {
+            if (err) return next(err);
+            res.json(task);
         });
     });
 
     //@@@ update task info/fields on move
     //TaskForm, FormService.validate,
     app.put('/api/tasks/:taskId/move/:parentTaskId', function (req, res, next) {
+        // TaskService.moveTask(task, parent)
+        
         // @@@slava move to the service
         TaskService.getParent(req.Task, function (err, parent) {
             if (err) {

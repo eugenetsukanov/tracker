@@ -4,7 +4,43 @@ var TaskService = function (Task, FileService, UserService) {
     var async = require('async');
     var pointLine = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
 
-    this.countVelocityByChildren = function (children, next) {
+
+    this.calculate = function (task, next) {
+        if (task.simple) {
+            self.calculateSimple(task, next);
+        } else {
+            self.calculateComplex(task, next);
+        }
+    };
+
+    this.calculateSimple = function (task, next) {
+        if (task.complexity >= 0) {
+            task.points = pointLine[task.complexity] || 0;
+        } else {
+            task.points = 0;
+        }
+
+        if (self.isAccepted(task) && task.points && task.spenttime) {
+            task.velocity = task.points / task.spenttime;
+        } else {
+            task.velocity = 0;
+        }
+
+        next(null, task);
+    };
+
+
+    this.calculateComplex = function (task, next) {
+        self.getChildren(task, function (err, children) {
+            if (err) {
+                return next(err);
+            }
+
+            self.calculateComplexByChildren(task, children, next);
+        });
+    };
+
+    this.getVelocityByChildren = function (children, next) {
         var velocity = 0;
         var items = 0;
 
@@ -37,41 +73,16 @@ var TaskService = function (Task, FileService, UserService) {
         }
     };
 
-    this.preCalculateEstimatedTime = function (task, toCalcEstimate, next) {
-        if (toCalcEstimate && task.simple) {
-            self.findVelocity(task, function (err, velocity) {
-                if (err) {
-                    return next(err);
-                }
-
-                task.estimatedTime = velocity ? task.points / velocity : 0;
-                next(null, task);
-            });
-        } else {
-            next(null, task);
-        }
-    };
-
-    this.calculate = function (task, next) {
+    this.estimateTask = function (velocity, task, next) {
         if (task.simple) {
-            self.calculateSimple(task, next);
+            self.estimateSimpleTask(velocity, task, next);
         } else {
-            self.calculateComplex(task, next);
+            self.estimateComplexTask(velocity, task, next);
         }
     };
 
-    this.calculateComplex = function (task, next) {
-        self.getChildren(task, function (err, children) {
-            if (err) {
-                return next(err);
-            }
-
-            self.calculateComplexByChildren(task, children, next);
-        });
-    };
-
-    this.calculateSimpleEstimate = function (velocity, task, next) {
-        if (!self.isAccepted(task) && velocity) {
+    this.estimateSimpleTask = function (velocity, task, next) {
+        if (velocity) {
             task.estimatedTime = task.points / velocity;
         }
 
@@ -85,7 +96,7 @@ var TaskService = function (Task, FileService, UserService) {
         next(null, task);
     };
 
-    this.calculateComplexEstimate = function (velocity, task, next) {
+    this.estimateComplexTask = function (velocity, task, next) {
         if (task.velocity) {
             task.estimatedTime = task.points / task.velocity;
             task.timeToDo = task.estimatedTime - task.spenttime;
@@ -99,14 +110,14 @@ var TaskService = function (Task, FileService, UserService) {
         }
     };
 
-    this.getEstimatedChildren = function (parent, next) {
-        self.findVelocity(parent, function (err, velocity) {
+    this.getEstimatedChildren = function (task, next) {
+        self.findVelocity(task, function (err, velocity) {
             if (err) {
                 return next(err);
             }
 
             var query = {
-                parentTaskId: parent._id,
+                parentTaskId: task,
                 archived: {$ne: true}
             };
 
@@ -115,29 +126,417 @@ var TaskService = function (Task, FileService, UserService) {
                     return next(err);
                 }
 
-                var result = [];
+                async.map(children, function (child, next) {
+                    self.estimateTask(velocity, child, next);
+                }, next);
+            });
+        });
+    };
 
-                children.forEach(function (child) {
-                    if (child.simple) {
-                        self.calculateSimpleEstimate(velocity, child, function (err, child) {
-                            if (err) {
-                                return next(err);
-                            }
+    this.updateParentStatus = function (task, children, next) {
+        if (task.simple) {
+            return next(null, task);
+        }
 
-                            result.push(child);
-                        });
-                    } else {
-                        self.calculateComplexEstimate(velocity, child, function (err, child) {
-                            if (err) {
-                                return next(err);
-                            }
+        var countAccepted = 0;
+        var countNew = 0;
 
-                            result.push(child);
-                        });
+        children.forEach(function (task) {
+            if (task.status === '') {
+                countNew++;
+            } else if (task.status == 'accepted') {
+                countAccepted++;
+            }
+        });
+
+        if (children.length === countAccepted) {
+            task.status = 'accepted';
+        } else if (children.length === countNew) {
+            task.status = '';
+        } else {
+            // next one
+            task.status = 'in progress';
+        }
+
+        next(null, task);
+    };
+
+    this.updateParent = function (parent, next) {
+        next = next || _.noop;
+
+        if (!parent) {
+            return next();
+        }
+
+        self.calculateParent(parent, function (err, parent) {
+            if (err) {
+                return next(err);
+            }
+
+            parent.save(function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                self.updateParentByTask(parent, next);
+            });
+        });
+    };
+
+
+    this.updateParentByTask = function (task, next) {
+        next = next || _.noop;
+
+        if (!task.parentTaskId) {
+            return next();
+        }
+
+        self.getParent(task, function (err, parent) {
+            if (err) {
+                return next(err);
+            }
+
+            if (!parent) {
+                return next();
+            }
+
+            self.updateParent(parent, next);
+        });
+    };
+
+
+    this.calculateComplexByChildren = function (task, children, next) {
+        var totalSpentTime = 0;
+        var totalPoints = 0;
+
+        children.forEach(function (child) {
+            totalSpentTime += child.spenttime;
+            totalPoints += child.points;
+        });
+
+        task.spenttime = totalSpentTime;
+        task.points = totalPoints;
+
+        self.getVelocityByChildren(children, function (err, velocity) {
+            if (err) {
+                return next(err);
+            }
+
+            task.velocity = velocity;
+
+            if (task.velocity) {
+                task.estimatedTime = task.points / task.velocity;
+                task.timeToDo = task.estimatedTime - task.spenttime;
+            }
+
+            next(null, task);
+        });
+    };
+
+    this.calculateParent = function (parent, next) {
+        self.getChildren(parent, function (err, children) {
+            if (err) {
+                return next(err);
+            }
+
+            parent.simple = children.length == 0;
+
+            self.calculateComplexByChildren(parent, children, function (err, parent) {
+                if (err) {
+                    return next(err);
+                }
+
+                self.updateParentStatus(parent, children, function (err, parent) {
+                    if (err) {
+                        return next(err);
                     }
-                });
 
-                next(null, result);
+                    next(null, parent);
+                });
+            });
+        });
+    };
+
+
+    this.deepFindByQuery = function (task, query, next) {
+        self.getChildrenByQuery(task, query, function (err, children) {
+            if (err) {
+                return next(err);
+            }
+
+            var tasks = [];
+
+            async.each(children, function (task, callback) {
+                tasks.push(task);
+
+                self.deepFindByQuery(task, query, function (err, aTasks) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    tasks = tasks.concat(aTasks);
+                    callback();
+                });
+            }, function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                next(null, tasks);
+            });
+
+        })
+    };
+
+    this.deepFind = function (task, finder, next) {
+        self.getChildren(task, function (err, children) {
+            if (err) {
+                return next(err);
+            }
+
+            var tasks = [];
+
+            async.each(children, function (child, callback) {
+                if (finder(child)) {
+                    tasks.push(child);
+                }
+
+                self.deepFind(child, finder, function (err, aTasks) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    tasks = tasks.concat(aTasks);
+                    callback();
+                });
+            }, function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                next(null, tasks);
+            });
+        })
+    };
+
+
+    this.removeFileById = function (task, fileId, next) {
+        var query = {_id: task._id};
+        var update = {$pull: {'files': {_id: fileId}}};
+
+        Task.update(query, update, function (err) {
+            if (err) {
+                return next(err);
+            }
+
+            next();
+        });
+    };
+
+    this.getChildrenByQuery = function (task, query, next) {
+        query = _.extend({parentTaskId: task}, query);
+
+        Task.find(query, function (err, tasks) {
+            if (err) {
+                return next(err);
+            }
+
+            next(null, tasks);
+        });
+    };
+
+    this.updateRootTags = function (task, next) {
+        next = next || _.noop;
+
+        var glue = '|||';
+        var originTags = task._origin && task._origin.tags || [];
+
+        var areTagsAdded = task.tags.length || originTags.length;
+        var tagsDifference = task.tags.join(glue) !== originTags.join(glue);
+        var tagsModified = areTagsAdded && tagsDifference;
+
+        if (!tagsModified) {
+            return next();
+        }
+
+        self.getRoot(task, function (err, root) {
+            if (err) {
+                return next(err);
+            }
+
+            var tags = root.tagsList || [];
+
+            root.tagsList = _.uniq(tags.concat(task.tags));
+
+            root.save(next);
+        });
+    };
+
+    this.hasAccess = function (task, user, next) {
+        self.getRoot(task, function (err, root) {
+            if (err) {
+                return next(err);
+            }
+
+            if (self.amIOwner(root, user) || self.isSharedToMe(root, user)) {
+                next(null, true);
+            } else {
+                next(null, false);
+            }
+        });
+    };
+
+    this.isAccepted = function (task) {
+        return task.isAccepted();
+    };
+
+    this.isSharedToMe = function (task, user) {
+        return _.find(task.team || [], function (userId) {
+            return user._id.toString() === userId.toString();
+        });
+    };
+
+    this.amIOwner = function (root, user) {
+        return root.owner._id.toString() === user._id.toString();
+    };
+
+    this.getEstimatedTask = function (task, next) {
+        self.findVelocity(task, function (err, velocity) {
+            if (err) {
+                return next(err);
+            }
+
+            self.estimateTask(velocity, task, next);
+        });
+    };
+
+    this.getEstimatedTasksByQuery = function (query, next) {
+        self.getTasksByQuery(query, function (err, tasks) {
+            if (err) return next(err);
+            async.map(tasks, function (task, next) {
+                self.getEstimatedTask(task, next);
+            }, next);
+        });
+    };
+
+    this.getEstimatedTaskById = function (task, next) {
+        self.getTaskById(task, function (err, task) {
+            if (err) return next(err);
+            if (!task) return next();
+
+            self.getEstimatedTask(task, next);
+        });
+    };
+
+    this.createTask = function (user, task, next) {
+        task.developer = task.developer || UserService.getUserId(user);
+        task.owner = UserService.getUserId(user);
+        task.parentTaskId = task.parentTaskId ? task.parentTaskId : undefined;
+
+        task = new Task(task);
+
+        self.calculate(task, function (err, task) {
+            if (err) {
+                return next(err);
+            }
+
+            task.save(function (err) {
+                if (err) return next(err);
+
+                FileService.connectFiles(task.files);
+                self.updateRootTags(task);
+
+                self.updateParentByTask(task, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    // @@@slava notify parents
+                    self.getEstimatedTask(task, next);
+                });
+            });
+        });
+    };
+
+    this.updateTask = function (user, task, taskData, next) {
+        taskData.developer = taskData.developer ? taskData.developer : undefined;
+
+        _.assign(task, taskData);
+
+        task.parentTaskId = taskData.parentTaskId || null;
+
+        // @@@slava check team
+        task.team = task.team || [user];
+
+        task.developer = task.developer || user;
+
+        self.calculate(task, function (err, task) {
+            if (err) {
+                return next(err);
+            }
+
+            task.save(function (err, task) {
+                if (err) {
+                    return next(err);
+                }
+
+                FileService.connectFiles(task);
+                self.updateRootTags(task);
+
+                self.updateParentByTask(task, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    self.getEstimatedTask(task, next);
+                });
+            });
+        });
+    };
+
+
+    this.removeTaskStuff = function (task, next) {
+        next = next || _.noop;
+        FileService.removeFiles(task.files, next);
+    };
+
+    this.removeChildren = function (task, next) {
+        next = next || _.noop;
+
+        // @@@slava make remove children recursive
+        self.getChildren(task, function (err, tasks) {
+            if (err) return next(err);
+
+            // @@@slava check update parent
+            async.each(tasks, function (task, next) {
+                self.removeTaskStuff(task);
+
+                task.remove(function (err) {
+                    if (err) return next(err);
+                    self.removeChildren(task, next);
+                });
+            }, function (err) {
+                if (err) return next(err);
+                // @@@slava move to removeTask
+                self.updateParentByTask(task, next);
+            });
+        });
+    };
+
+    this.removeTask = function (user, task, next) {
+        task.remove(function (err) {
+            if (err) {
+                return next(err);
+            }
+
+            self.removeTaskStuff(task);
+
+            self.removeChildren(task, function (err) {
+                if (err) {
+                    return next(err);
+                }
+
+                self.updateParentByTask(task, next);
             });
         });
     };
@@ -216,35 +615,6 @@ var TaskService = function (Task, FileService, UserService) {
         });
     };
 
-    this.updateParentStatus = function (task, children, next) {
-        task.simple = !children.length;
-
-        if (task.simple) {
-            return next(null, task);
-        }
-
-        var countAccepted = 0;
-        var countNew = 0;
-
-        children.forEach(function (task) {
-            if (task.status === '') {
-                countNew++;
-            } else if (task.status == 'accepted') {
-                countAccepted++;
-            }
-        });
-
-        if (children.length === countAccepted) {
-            task.status = 'accepted';
-        } else if (children.length === countNew) {
-            task.status = '';
-        } else {
-            // next one
-            task.status = 'in progress';
-        }
-
-        next(null, task);
-    };
 
     this.getChildren = function (task, next) {
         var taskId = self.getTaskId(task);
@@ -258,20 +628,6 @@ var TaskService = function (Task, FileService, UserService) {
         });
     };
 
-    this.calculateSimple = function (task, next) {
-        if (task.complexity >= 0) {
-            task.points = pointLine[task.complexity] || 0;
-        } else {
-            task.points = 0;
-        }
-
-        if (self.isAccepted(task) && task.points && task.spenttime) {
-            task.velocity = task.points / task.spenttime;
-        }
-
-        next(null, task);
-    };
-
     this.getParent = function (task, next) {
         if (task.parentTaskId) {
             Task.findById(task.parentTaskId, next);
@@ -280,333 +636,6 @@ var TaskService = function (Task, FileService, UserService) {
         }
     };
 
-    this.updateParent = function (parent, next) {
-        next = next || _.noop;
-
-        if (!parent) {
-            return next();
-        }
-
-        self.calculateParent(parent, function (err, parent) {
-            if (err) {
-                return next(err);
-            }
-
-            parent.save(function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                self.updateParentByTask(parent, next);
-            });
-        });
-    };
-
-
-    this.updateParentByTask = function (task, next) {
-        next = next || _.noop;
-
-        if (!task.parentTaskId) {
-            return next();
-        }
-
-        self.getParent(task, function (err, parent) {
-            if (err) {
-                return next(err);
-            }
-
-            if (!parent) {
-                return next();
-            }
-
-            self.updateParent(parent, next);
-        });
-    };
-
-
-    this.calculateComplexByChildren = function (task, children, next) {
-        var totalSpentTime = 0;
-        var totalPoints = 0;
-
-        children.forEach(function (child) {
-            totalSpentTime += child.spenttime;
-            totalPoints += child.points;
-        });
-
-        task.spenttime = totalSpentTime;
-        task.points = totalPoints;
-
-        self.countVelocityByChildren(children, function (err, velocity) {
-            if (err) {
-                return next(err);
-            }
-
-            task.velocity = velocity;
-
-            if (task.velocity) {
-                task.estimatedTime = task.points / task.velocity;
-                task.timeToDo = task.estimatedTime - task.spenttime;
-            }
-
-            next(null, task);
-        });
-    };
-
-    this.calculateParent = function (parent, next) {
-        self.getChildren(parent, function (err, children) {
-            if (err) {
-                return next(err);
-            }
-
-            self.calculateComplexByChildren(parent, children, function (err, parent) {
-                if (err) {
-                    return next(err);
-                }
-
-                self.updateParentStatus(parent, children, function (err, parent) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    next(null, parent);
-                });
-            });
-        });
-    };
-
-    this.removeChildren = function (task, next) {
-        next = next || _.noop;
-
-        self.getChildren(task, function (err, tasks) {
-            if (err) return next(err);
-
-            // @@@slava check update parent
-            async.each(tasks, function (task, callback) {
-                FileService.removeFiles(task.files);
-                task.remove(callback);
-            }, next);
-        });
-    };
-
-    this.removeFileById = function (task, fileId, next) {
-        var query = {_id: task._id};
-        var update = {$pull: {'files': {_id: fileId}}};
-
-        Task.update(query, update, function (err) {
-            if (err) {
-                return next(err);
-            }
-
-            next();
-        });
-    };
-
-    this.deepFindByQuery = function (task, query, next) {
-        self.getChildrenByQuery(task, query, function (err, children) {
-            if (err) {
-                return next(err);
-            }
-
-            var tasks = [];
-
-            async.each(children, function (task, callback) {
-                tasks.push(task);
-
-                self.deepFindByQuery(task, query, function (err, aTasks) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    tasks = tasks.concat(aTasks);
-                    callback();
-                });
-            }, function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                next(null, tasks);
-            });
-
-        })
-    };
-
-    this.deepFind = function (task, finder, next) {
-        self.getChildren(task, function (err, children) {
-            if (err) {
-                return next(err);
-            }
-
-            var tasks = [];
-
-            async.each(children, function (child, callback) {
-                if (finder(child)) {
-                    tasks.push(child);
-                }
-
-                self.deepFind(child, finder, function (err, aTasks) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    tasks = tasks.concat(aTasks);
-                    callback();
-                });
-            }, function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                next(null, tasks);
-            });
-        })
-    };
-
-    this.getChildrenByQuery = function (task, query, next) {
-        var query = _.extend({parentTaskId: task}, query);
-
-        Task.find(query, function (err, tasks) {
-            if (err) {
-                return next(err);
-            }
-
-            next(null, tasks);
-        })
-    };
-
-    this.updateRootTags = function (task, next) {
-        next = next || _.noop;
-
-        var glue = '|||';
-        var originTags = task._origin && task._origin.tags || [];
-
-        var areTagsAdded = task.tags.length || originTags.length;
-        var tagsDifference = task.tags.join(glue) !== originTags.join(glue);
-        var tagsModified = areTagsAdded && tagsDifference;
-
-        if (!tagsModified) {
-            return next();
-        }
-
-        self.getRoot(task, function (err, root) {
-            if (err) {
-                return next(err);
-            }
-
-            var tags = root.tagsList || [];
-
-            root.tagsList = _.uniq(tags.concat(task.tags));
-
-            root.save(function (err) {
-                if (err) {
-                    return next(err);
-                }
-
-                next();
-            });
-        });
-    };
-
-    this.hasAccess = function (task, user, next) {
-        self.getRoot(task, function (err, root) {
-            if (err) {
-                return next(err);
-            }
-
-            if (self.amIOwner(root, user) || self.isSharedToMe(root.team, user)) {
-                next(null, true);
-            } else {
-                next(null, false);
-            }
-        });
-    };
-
-    this.isAccepted = function (task) {
-        return task.isAccepted();
-    };
-
-    this.isSharedToMe = function (team, user) {
-        return _.find(team, function (userId) {
-            return user._id.toString() === userId.toString();
-        });
-    };
-
-    this.amIOwner = function (root, user) {
-        return root.owner._id.toString() === user._id.toString();
-    };
-
-    // @@@slava check for duplicates
-    this.estimateTask = function (velocity, task) {
-        if (task.isAccepted()) {
-            task.estimatedTime = velocity ? task.points / velocity : 0;
-        }
-
-        if (task.estimatedTime) {
-            task.timeToDo = task.estimatedTime - task.spenttime;
-        } else {
-            task.timeToDo = 0;
-        }
-
-        return task;
-    };
-
-    this.getEstimatedTask = function (task, next) {
-        self.findVelocity(task, function (err, velocity) {
-            if (err) {
-                return next(err);
-            }
-
-            next(null, self.estimateTask(velocity, task));
-        });
-    };
-
-    this.getEstimatedTasksByQuery = function (query, next) {
-        self.getTasksByQuery(query, function (err, tasks) {
-            if (err) return next(err);
-            async.map(tasks, function (task, next) {
-                self.getEstimatedTask(task, next);
-            }, next);
-        });
-    };
-
-    this.getEstimatedTaskById = function (task, next) {
-        self.getTaskById(task, function (err, task) {
-            if (err) return next(err);
-            if (!task) return next();
-
-            self.getEstimatedTask(task, next);
-        });
-    };
-
-    this.createTask = function (user, task, next) {
-        task.developer = task.developer || UserService.getUserId(user);
-        task.owner = UserService.getUserId(user);
-        task.parentTaskId = task.parentTaskId ? task.parentTaskId : undefined;
-
-        task = new Task(task);
-
-        self.calculate(task, function (err, task) {
-            if (err) {
-                return next(err);
-            }
-
-            task.save(function (err) {
-                if (err) return next(err);
-
-                FileService.connectFiles(task.files);
-                self.updateRootTags(task);
-
-                self.updateParentByTask(task, function (err) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    // @@@slava notify parents
-                    next(null, task);
-                });
-            });
-        });
-    }
 };
 
 module.exports = TaskService;
