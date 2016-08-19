@@ -13,6 +13,7 @@
     "test.wip": "NODE_ENV=development node_modules/.bin/cucumber.js --format pretty -t @wip",
     "docker.dev": "nodemon -i public/ -i features/ -x 'docker-compose kill dev && docker-compose rm --force dev && docker-compose up dev'",
     "docker.console": "docker-compose run --rm dev bash",
+    "docker.test": "docker-compose run --rm dev npm test",
     "docker.stop": "docker-compose stop"
   },
   "author": "",
