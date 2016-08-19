@@ -172,6 +172,8 @@ var TaskService = function (Task, FileService, UserService) {
     };
 
     this.getRoot = function (task, next) {
+        if (!task) return next(new Error('No task to get root'));
+
         if (task.parentTaskId) {
             self.getParent(task, function (err, parent) {
                 if (err) {
@@ -181,7 +183,11 @@ var TaskService = function (Task, FileService, UserService) {
                 self.getRoot(parent, next);
             });
         } else {
-            self.getTaskById(task, next);
+            self.getTaskById(task, function (err, root) {
+                if (err) return next(err);
+                if (!root) return next(new Error('No root'));
+                next(null, root);
+            });
         }
     };
 
