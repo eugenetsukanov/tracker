@@ -3,8 +3,10 @@ FROM ubuntu:precise
 RUN mkdir /project
 WORKDIR /project
 
+RUN echo "version 1.0.1"
+
 RUN apt-get update
-RUN apt-get install -y build-essential python-software-properties git
+RUN apt-get install -y build-essential git
 
 # node.js
 RUN add-apt-repository -y ppa:chris-lea/node.js
