@@ -7,7 +7,7 @@ app:
     - ./:/project
   command: forever app.js -l app.log
   environment:
-    NODE_ENV: 'production'
+    NODE_ENV: 'prod'
   ports:
     - "5000:5000"
 
