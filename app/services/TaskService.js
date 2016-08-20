@@ -1,4 +1,4 @@
-var TaskService = function (Task, FileService, UserService) {
+var TaskService = function (Task, FileService, UserService, SocketService) {
     var self = this;
     var _ = require('lodash');
     var async = require('async');
@@ -173,13 +173,46 @@ var TaskService = function (Task, FileService, UserService) {
                 return next(err);
             }
 
+            var wasModified = parent.isModified();
             parent.save(function (err) {
                 if (err) {
                     return next(err);
                 }
 
-                self.updateParentByTask(parent, next);
+                self.updateParentByTask(parent, function (err) {
+                    if (err) return next(err);
+                    wasModified && self.notifyUsers(parent, 'task.save');
+                    next();
+                });
             });
+        });
+    };
+
+    this.getTeam = function (task, next) {
+        self.getRoot(task, function (err, root) {
+            if (err) {
+                return next(err);
+            }
+
+            var team = root.team;
+            team.push(root.owner);
+
+            UserService.getUsers(team, next);
+        });
+    };
+
+    this.notifyUsers = function (task, event, next) {
+        next = next || _.noop;
+
+        var taskId = self.getTaskId(task).toString();
+        var parentId = self.getTaskId(task.parentTaskId).toString();
+
+        this.getTeam(task, function (err, users) {
+            if (err) return next(err);
+            users.forEach(function (user) {
+                SocketService.emitUser(UserService.getUserId(user), event, {task: taskId, parent: parentId});
+            });
+            next();
         });
     };
 
@@ -368,7 +401,11 @@ var TaskService = function (Task, FileService, UserService) {
 
             root.tagsList = _.uniq(tags.concat(task.tags));
 
-            root.save(next);
+            var wasModified = root.isModified();
+            root.save(function (err) {
+                if (err) return next(err);
+                wasModified && self.notifyUsers(root, 'task.save');
+            });
         });
     };
 
@@ -451,8 +488,11 @@ var TaskService = function (Task, FileService, UserService) {
                         return next(err);
                     }
 
-                    // @@@slava notify parents
-                    self.getEstimatedTask(task, next);
+                    self.getEstimatedTask(task, function (err, task) {
+                        if (err) return next(err);
+                        self.notifyUsers(task, 'task.save');
+                        next(null, task);
+                    });
                 });
             });
         });
@@ -474,6 +514,7 @@ var TaskService = function (Task, FileService, UserService) {
                 return next(err);
             }
 
+            var wasModified = task.isModified();
             task.save(function (err, task) {
                 if (err) {
                     return next(err);
@@ -487,7 +528,11 @@ var TaskService = function (Task, FileService, UserService) {
                         return next(err);
                     }
 
-                    self.getEstimatedTask(task, next);
+                    self.getEstimatedTask(task, function (err, task) {
+                        if (err) return next(err);
+                        wasModified && self.notifyUsers(task, 'task.save');
+                        next(null, task);
+                    });
                 });
             });
         });
@@ -508,6 +553,7 @@ var TaskService = function (Task, FileService, UserService) {
             async.each(tasks, function (task, next) {
                 self.removeTaskStuff(task);
 
+                self.notifyUsers(task, 'task.remove');
                 task.remove(function (err) {
                     if (err) return next(err);
                     self.removeChildren(task, next);
@@ -517,19 +563,25 @@ var TaskService = function (Task, FileService, UserService) {
     };
 
     this.removeTask = function (user, task, next) {
-        task.remove(function (err) {
-            if (err) {
-                return next(err);
-            }
-
-            self.removeTaskStuff(task);
-
-            self.removeChildren(task, function (err) {
+        self.notifyUsers(task, 'task.remove', function (err) {
+            if (err) return next(err);
+            task.remove(function (err) {
                 if (err) {
                     return next(err);
                 }
 
-                self.updateParentByTask(task, next);
+                self.removeTaskStuff(task);
+
+                self.removeChildren(task, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    self.updateParentByTask(task, function (err) {
+                        if (err) return next(err);
+                        next();
+                    });
+                });
             });
         });
     };
@@ -567,6 +619,8 @@ var TaskService = function (Task, FileService, UserService) {
                                 if (err) {
                                     return next(err);
                                 }
+
+                                self.notifyUsers(task, 'task.save');
 
                                 next(null, task);
                             });
@@ -628,7 +682,8 @@ var TaskService = function (Task, FileService, UserService) {
     };
 
     this.getTaskId = function (task) {
-        return task._id ? task._id : task;
+        if (!task) return '';
+        return task._id ? task._id : task || '';
     };
 
     this.getTaskById = function (task, next) {

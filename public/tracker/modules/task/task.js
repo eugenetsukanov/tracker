@@ -9,11 +9,8 @@ angular
                                       Task,
                                       TitleService,
                                       RootTask,
-                                      UserService) {
-
-
-        var busyScroll = true;
-        var page = 0;
+                                      UserService,
+                                      SocketService) {
 
         $scope.report = {
             title: 'Report',
@@ -28,27 +25,46 @@ angular
         $scope.taskId = $stateParams.taskId;
         $scope.tasks = [];
 
-        $scope.reset = function () {
-            $scope.tasks.length = 0;
-            page = 0;
+        var socketSync = function (data) {
+            var task = _.find($scope.tasks, function (aTask) {
+                return aTask._id === data.task
+            });
+
+            if ($scope.task && $scope.task._id == data.parent) {
+                loadTasks();
+            } else if ($scope.task && $scope.task._id == data.task) {
+                loadTasks();
+            } else if (!$scope.taskId && !data.parent) {
+                loadTasks();
+            }
+
+            return task;
         };
+
+        SocketService.scopeOn($scope, 'task.save', function (data) {
+            var task = socketSync(data);
+
+            if (task) {
+                task.$get();
+            }
+        });
+
+        SocketService.scopeOn($scope, 'task.remove', function (data) {
+            var task = socketSync(data);
+            if (task) {
+                loadTasks();
+            }
+        });
 
         var loadTasks = function () {
             if ($scope.taskId) {
                 var query = {
                     taskId: $scope.taskId,
-                    nested: 'tasks',
-                    page: page
+                    nested: 'tasks'
                 };
 
                 Task.query(query, function (tasks) {
-                    //@@FIXME
-                    //$scope.reset();
-                    if (tasks.length) {
-                        $scope.tasks = $scope.tasks.concat(tasks);
-                        page++;
-                    }
-                    busyScroll = false;
+                    $scope.tasks = tasks;
 
                     Task.get({taskId: $scope.taskId}, function (task) {
 
@@ -66,32 +82,13 @@ angular
                     $state.go('app.tasks');
                 });
             } else {
-                Task.query({page: page}, function (tasks) {
-                    //$scope.reset();
-                    //@@FIXME
-                    if (tasks.length) {
-                        $scope.tasks = $scope.tasks.concat(tasks);
-                        busyScroll = false;
-                        page++;
-                    }
-
+                Task.query({}, function (tasks) {
+                    $scope.tasks = tasks;
                 });
             }
         };
 
-        //$scope.scroll = function () {
-        //    //return;
-        //    //@@FIXME
-        //    if (busyScroll) {
-        //        return;
-        //    } else {
-        //        busyScroll = true;
-        //        loadTasks();
-        //    }
-        //};
-
         $scope.init = function () {
-            $scope.reset();
             loadTasks();
 
             $scope.newTask = new Task({
@@ -103,7 +100,6 @@ angular
                 files: [],
                 team: []
             });
-
         };
 
         var init = $scope.init;

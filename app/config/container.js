@@ -9,7 +9,7 @@ module.exports = function (container) {
 
   // services
   container.register('FileService', require('../services/FileService'), ['GridFS']);
-  container.register('TaskService', require('../services/TaskService'), ['Task', 'FileService', 'UserService']);
+  container.register('TaskService', require('../services/TaskService'), ['Task', 'FileService', 'UserService', 'SocketService']);
   container.register('UserService', require('../services/UserService'), ['User']);
 
   container.register('GridFS', require('../services/GridFS'), ['config/mongo/uri']);

@@ -163,24 +163,11 @@ module.exports = function (app) {
     });
 
     app.get('/api/tasks/:taskId/team', function (req, res, next) {
-        TaskService.getRoot(req.Task, function (err, root) {
+        TaskService.getTeam(req.Task, function (err, users) {
             if (err) {
                 return next(err);
             }
-
-            var team = root.team;
-
-            team.push(root.owner);
-
-            // @@ move to user service the service
-            User.find({_id: {$in: team}}, '-local.passwordHashed -local.passwordSalt')
-                .exec(function (err, users) {
-                    if (err) {
-                        return next(err);
-                    }
-
-                    res.json(users);
-                });
+            res.json(users);
         });
     });
 
