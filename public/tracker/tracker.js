@@ -2,7 +2,7 @@ angular
     .module('Tracker',
     ['ui.router', 'toaster', 'ngAnimate', 'ngResource', 'ui.bootstrap',
         'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize', 'ngStorage',
-        'angular-loading-bar', 'infinite-scroll', 'SocketService'])
+        'angular-loading-bar', 'infinite-scroll', 'SocketService','as.sortable', 'dndLists'])
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider) {
 
@@ -119,6 +119,11 @@ angular
                 url: "/change-password/:token",
                 controller: "resetPasswordCtrl",
                 templateUrl: "tracker/modules/auth/views/change-password.html"
+            })
+            .state('app.DND', {
+                url: "/dnd",
+                templateUrl: "tracker/POCDnD/DND.html",
+                controller: 'SimpleDemoCtrl'
             })
         ;
 

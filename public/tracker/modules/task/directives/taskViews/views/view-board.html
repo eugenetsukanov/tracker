@@ -1,36 +1,51 @@
 <div class="row board-view" ng-init="taskOptions = {hideStatus: true}">
 
-    <div class="col-md-4">
+    <div class="col-md-4"
+         dnd-list="tasksList[0].new"
+         dnd-drop="dropCallback(event, index, item, external, '')"
+         dnd-type="new">
         <h3>New</h3>
 
-        <div ng-repeat="task in tasks | byStatus : ''"
+        <div ng-repeat="task in tasksList[0].new"
              task-panel task="task"
              metrics-details="metricsDetails"
              task-on-edit="edit"
-             task-options="taskOptions"></div>
-
+             task-options="taskOptions"
+             dnd-draggable="task"
+             dnd-moved="tasksList[0].new.splice($index, 1)"
+             dnd-effect-allowed="move"></div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-4"
+         dnd-list="tasksList[1].inProgress"
+         dnd-drop="dropCallback(event, index, item, external, 'in progress')"
+         dnd-type="inProgress">
         <h3>In progress</h3>
 
-        <div ng-repeat="task in tasks | byStatus: 'in progress'"
+        <div ng-repeat="task in tasksList[1].inProgress"
              task-panel task="task"
              metrics-details="metricsDetails"
              task-on-edit="edit"
-             task-options="taskOptions"></div>
+             task-options="taskOptions"
+             dnd-draggable="task"
+             dnd-moved="tasksList[1].inProgress.splice($index, 1)"
+             dnd-effect-allowed="move"></div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-4"
+         dnd-list="tasksList[2].accepted"
+         dnd-drop="dropCallback(event, index, item, external, 'accepted')"
+         dnd-type="accepted">
         <h3>Accepted</h3>
 
-        <div ng-repeat="task in tasks | byStatus: 'accepted'"
+        <div ng-repeat="task in tasksList[2].accepted"
              task-panel task="task"
              metrics-details="metricsDetails"
              task-on-edit="edit"
-             task-options="taskOptions"></div>
+             task-options="taskOptions"
+             dnd-draggable="task"
+             dnd-moved="tasksList[2].accepted.splice($index, 1)"
+             dnd-effect-allowed="move"></div>
     </div>
 
 </div>
-
-

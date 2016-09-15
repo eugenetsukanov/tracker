@@ -5,7 +5,8 @@ angular
             restrict: 'A',
             templateUrl: 'tracker/modules/task/directives/taskViews/taskViews.html',
             controller: function ($scope, TaskEditorModal, MetricsService,
-                                  SortingService) {
+                                  SortingService, Task) {
+
                 $scope.activeSortPriority = false;
 
                 var aTasks = [];
@@ -91,6 +92,51 @@ angular
                         $scope.sortByDate();
                     }
                 });
+
+                $scope.tasksList = [
+                    {"new": []},
+                    {"inProgress": []},
+                    {"accepted": []}
+                ];
+
+                _.forEach($scope.tasks, function (task) {
+                    console.log("tasks",$scope.tasks);
+                    console.log("task",task);
+
+                    if (task.status === '') {
+                        console.log('task1',task);
+                        $scope.tasksList[0].new.push(task)
+                    }
+                    if (task.status === 'in progress') {
+                        console.log('task2',task);
+                        $scope.tasksList[1].inProgress.push(task)
+                    }
+                    if (task.status === 'accepted') {
+                        console.log('task3 ',task);
+                        $scope.tasksList[2].accepted.push(task)
+                    }
+                });
+                console.log($scope.tasksList);
+
+
+                $scope.dropCallback = function (event, index, item, external, type) {
+                    console.log("type", type);
+                    if (item.status !== type) {
+                        item.status = type;
+                        var task = new Task(item);
+                        task.$update({taskId:item._id},function (){
+                            console.log('task was saved');
+                        });
+                    }
+
+                    console.log("222222", item);
+                    return item;
+                };
+
+                $scope.$watch('tasksList', function (tasksList) {
+                    $scope.modelAsJson = angular.toJson(tasksList, true);
+                }, true);
+
 
             },
             scope: {
