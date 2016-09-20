@@ -34,23 +34,18 @@ angular
 
                     var task = new Task(child);
 
-                    task.$update({taskId: task._id}, function () {
-                        console.log('hi');
-                        updateParentTask(parent)
-                    });
-                    console.log('task', task);
-                    return task;
+                        task.$update({taskId: task._id}, function () {
+                            updateParentTask(parent)
+                        });
                 }
 
                 function updateParentTask(parent) {
-                    console.log('$scope.tasksList', $scope.tasksList);
                     parent.children.splice(0, 1);
                 }
 
                 function updateNestedTask() {
 
                     _.forEach($scope.tasksList, function (o) {
-
                         var parentTask = _.find(o.tasks, function (task) {
                             return task.children.length > 0
                         });
@@ -65,9 +60,10 @@ angular
                 var nestedTask = null;
 
                 $scope.dropCallbackOfTask = function (event, index, item, external, type) {
-                    console.log('taskitem', item);
+                    if(item._id === type){
+                        return false;
+                    }
                     nestedTask = item;
-
                     return item;
                 };
 

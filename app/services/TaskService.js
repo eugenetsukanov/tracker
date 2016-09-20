@@ -103,7 +103,7 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
 
             return next(null, task);
         } else {
-            task.estimatedTime = task.points / velocity;
+            task.estimatedTime = velocity ? task.points / velocity : 0;
             task.timeToDo = task.estimatedTime - task.spenttime;
 
             return next(null, task);

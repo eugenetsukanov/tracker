@@ -6,7 +6,7 @@
 
         <div ng-repeat="task in list.tasks"
              dnd-list="task.children"
-             dnd-drop="dropCallbackOfTask(event, index, item, external, type)"
+             dnd-drop="dropCallbackOfTask(event, index, item, external, task._id)"
              task-panel task="task"
              metrics-details="metricsDetails"
              task-on-edit="edit"
