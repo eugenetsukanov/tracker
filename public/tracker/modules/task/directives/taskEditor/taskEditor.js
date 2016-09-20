@@ -117,10 +117,10 @@ angular
                         //update
                         $scope.task.$update().then(init).then($scope.onComplete);
                     }
-
                 };
 
                 $scope.delete = function (task) {
+                    console.log('task', task);
                     //delete itself
                     if ($stateParams.taskId == task._id) {
                         var parentTaskId = task.parentTaskId || null;

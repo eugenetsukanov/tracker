@@ -1,0 +1,18 @@
+<div>
+    <div class="col-md-4"
+         dnd-list="list.tasks"
+         dnd-drop="dropCallbackByStatus(event, index, item, external, list.status)">
+        <h3>{{list.name}}</h3>
+
+        <div ng-repeat="task in list.tasks"
+             dnd-list="task.children"
+             dnd-drop="dropCallbackOfTask(event, index, item, external, type)"
+             task-panel task="task"
+             metrics-details="metricsDetails"
+             task-on-edit="edit"
+             task-options="taskOptions"
+             dnd-draggable="task"
+             dnd-moved="list.tasks.splice($index, 1)"
+             dnd-effect-allowed="move"></div>
+    </div>
+</div>

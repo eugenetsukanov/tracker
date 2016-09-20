@@ -2,7 +2,7 @@ angular
     .module('Tracker',
     ['ui.router', 'toaster', 'ngAnimate', 'ngResource', 'ui.bootstrap',
         'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize', 'ngStorage',
-        'angular-loading-bar', 'infinite-scroll', 'SocketService','as.sortable', 'dndLists'])
+        'angular-loading-bar', 'infinite-scroll', 'SocketService', 'dndLists'])
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider) {
 
