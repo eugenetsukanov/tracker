@@ -9,8 +9,6 @@ angular
 
                 $scope.dropCallbackByStatus = function (event, index, item, external, type) {
 
-                    console.log('type', type);
-
                     if (item.simple !== true) {
                         return false;
                     }

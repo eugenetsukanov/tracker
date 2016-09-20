@@ -111,7 +111,6 @@ angular
                             arr.push(list);
 
                             _.forEach($scope.tasks, function (task) {
-                                task.children = [];
 
                                 if (task.status === arr[i].status) {
                                     arr[i].tasks.push(task)
