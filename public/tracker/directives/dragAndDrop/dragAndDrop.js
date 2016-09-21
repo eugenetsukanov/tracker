@@ -18,9 +18,7 @@ angular
                         item.status = type;
                         var task = new Task(item);
 
-                        task.$update({taskId: item._id}, function () {
-                            console.log('task was saved');
-                        });
+                        task.$update({taskId: item._id});
                         return task
                     }
                     return item;
@@ -40,11 +38,11 @@ angular
                     return item;
                 };
 
-
-                $scope.$watch('tasksList', function (tasksList) {
-                    $scope.modelAsJson = angular.toJson(tasksList, true);
-
-                }, true);
+                //
+                // $scope.$watch('tasksList', function (tasksList) {
+                //     $scope.modelAsJson = angular.toJson(tasksList, true);
+                //
+                // }, true);
 
 
             }

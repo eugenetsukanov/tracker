@@ -97,16 +97,15 @@ angular
                     });
 
                     $scope.tasksList = [];
+                    var statuses = [
+                        {name: 'New', status: ''},
+                        {name: 'In progress', status: 'in progress'},
+                        {name: 'Accepted', status: 'accepted'}];
 
                     function mappingTasks() {
                         var arr = [];
-                        var statuses = [
-                            {name: 'New', status: ''},
-                            {name: 'In progress', status: 'in progress'},
-                            {name: 'Accepted', status: 'accepted'}];
 
                         _.forEach(statuses, function (st, i) {
-                            console.log('st', st);
                             var list = {status: st.status, name: st.name, tasks: []};
                             arr.push(list);
 
@@ -116,12 +115,9 @@ angular
                                     arr[i].tasks.push(task)
                                 }
                             });
-                        });
-                        console.log('list', arr);
+                        });;
                         return arr;
                     }
-
-                    $scope.tasksList = mappingTasks();
                 }
                 ,
                 scope: {
