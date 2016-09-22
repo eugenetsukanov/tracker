@@ -106,16 +106,17 @@ angular
                         var arr = [];
 
                         _.forEach(statuses, function (st, i) {
-                            var list = {status: st.status, name: st.name, tasks: []};
+                            var list = {status: st.status, name: st.name, tasks: [], selected: null};
                             arr.push(list);
 
                             _.forEach($scope.tasks, function (task) {
+                                task.children = [];
 
                                 if (task.status === arr[i].status) {
                                     arr[i].tasks.push(task)
                                 }
                             });
-                        });;
+                        });
                         return arr;
                     }
                 }
