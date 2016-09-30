@@ -832,53 +832,38 @@ hr {
     background: #000000;
 }
 
-div [dnd-list],
-div [dnd-list] > div {
-    position: relative;
-}
+/*div [dnd-list],*/
+/*div [dnd-list] > div {*/
+    /*position: relative;*/
+/*}*/
 
-/*.dndPlaceholder {*/
+/*div [dnd-list] .dndPlaceholder {*/
     /*background-color: #ddd;*/
     /*min-height: 52px;*/
     /*margin-top: 12px;*/
-    /*border-radius: 5px;*/
-    /*display: block;*/
-    /*position: relative;*/
-/*}*/
-/*.highlighter {*/
-    /*background-color: red;*/
-    /*min-height: 32px;*/
-    /*margin-top: 12px;*/
+    /*margin-bottom: 17px;*/
     /*border-radius: 5px;*/
     /*display: block;*/
     /*position: relative;*/
 /*}*/
 
-div [dnd-list] .dndPlaceholder {
-    background-color: #ddd;
-    min-height: 52px;
-    margin-top: 12px;
-    margin-bottom: 17px;
-    border-radius: 5px;
-    display: block;
-    position: relative;
-}
-
-div [dnd-list] .dndDragover .dndPlaceholder {
-    min-height: 0px;
-    opacity: 1;
-}
-
-/*div [dnd-list] .task.over {*/
-    /*border: 2px dashed #000;*/
+/*div [dnd-list] .task .dndPlaceholder {*/
+    /*display: none;*/
 /*}*/
-div [dnd-list].dndDraggingSource{
-    min-height: 0px;
-    opacity: 0;
-}
 
-/*div [dnd-list] .dragstart {*/
-    /*opacity: 0.4;*/
-
+ /*[dnd-list] .dndDragover.task .panel-title {*/
+    /*!*min-height: 0px;*!*/
+    /*border: solid 1px red;*/
+    /*!*opacity: 0;*!*/
 /*}*/
+
+/*!*div [dnd-list] .task.over {*!*/
+    /*!*border: 2px dashed #000;*!*/
+/*!*}*!*/
+/*div [dnd-list].dndDraggingSource{*/
+    /*display: none;*/
+    /*!*min-height: 0px;*!*/
+    /*!*opacity: 0;*!*/
+/*}*/
+
 

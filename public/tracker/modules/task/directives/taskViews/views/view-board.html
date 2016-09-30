@@ -1,5 +1,55 @@
 <div class="row board-view" ng-init="taskOptions = {hideStatus: true}">
-    <div ng-repeat="list in tasksList">
-        <div drag-and-drop list ="list" ></div>
+    <div class="col-sm-4" ng-repeat="list in tasksList" ui-tree="treeOptions">
+        <h3>{{list.name}}</h3>
+        <div ui-tree-nodes ng-model="list.tasks">
+            <div ng-repeat="task in list.tasks "
+                 ui-tree-node
+                 ui-tree-handle>
+                <div ui-tree-nodes
+                     ng-model="task.tasks"
+                     style="border: 1px solid red;">
+                    <div task-panel
+                         task="task"
+                         metrics-details="metricsDetails"
+                         task-on-edit="edit"
+                         task-options="taskOptions">
+                        <!--<div ng-repeat="item in list.nodes "-->
+                             <!--ui-tree-node>-->
+                        <!--</div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
+
+<!--<script type="text/ng-template" id="tasks_renderer.html">-->
+    <!--<div ui-tree-node>-->
+        <!--<div ui-tree-nodes ng-model="task.tasks" style="border: 1px solid red;">-->
+            <!--<div task-panel task="task"-->
+                 <!--metrics-details="metricsDetails"-->
+                 <!--task-on-edit="edit"-->
+                 <!--task-options="taskOptions">-->
+            <!--</div>-->
+        <!--</div>-->
+    <!--</div>-->
+<!--</script>-->
+
+<style>
+
+    .angular-ui-tree-placeholder {
+        background: #f0f9ff;
+        border: 2px dashed #bed2db;
+        -webkit-box-sizing: border-box;
+        -moz-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    .angular-ui-tree-empty {
+        display: none;
+    /important;
+    }
+
+
+</style>
+

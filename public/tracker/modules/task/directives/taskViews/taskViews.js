@@ -5,7 +5,7 @@ angular
                 restrict: 'A',
                 templateUrl: 'tracker/modules/task/directives/taskViews/taskViews.html',
                 controller: function ($scope, TaskEditorModal, MetricsService,
-                                      SortingService) {
+                                      SortingService, Task) {
 
                     $scope.activeSortPriority = false;
 
@@ -93,6 +93,7 @@ angular
                         }
 
                         $scope.tasksList = mappingTasks();
+                        console.log($scope.tasksList);
 
                     });
 
@@ -106,11 +107,11 @@ angular
                         var arr = [];
 
                         _.forEach(statuses, function (st, i) {
-                            var list = {status: st.status, name: st.name, tasks: [], selected: null};
+                            var list = {status: st.status, name: st.name, tasks: []};
                             arr.push(list);
 
                             _.forEach($scope.tasks, function (task) {
-                                task.children = [];
+                                task.tasks = [];
 
                                 if (task.status === arr[i].status) {
                                     arr[i].tasks.push(task)
@@ -119,6 +120,58 @@ angular
                         });
                         return arr;
                     }
+
+                    $scope.treeOptions = {
+                        dropped: function (event) {
+                            console.log(event);
+                            console.log('obj', event.source.nodeScope.$modelValue);
+                            console.log("parentOfnastedTask", event.dest.nodesScope.$parent.$modelValue);
+                            console.log("newStatusArr", event.dest.nodesScope.$modelValue);
+
+                            var task = event.source.nodeScope.$modelValue;
+                            var destArr = event.dest.nodesScope.$modelValue;
+                            var index = event.dest.index;
+                            var parentObj = event.dest.nodesScope.$parent.$modelValue;
+
+                            if(parentObj){
+                                if(task._id === parentObj._id){
+                                    return false;
+                                }
+                                task.parentTaskId = parentObj._id;
+                                delete task.tasks;
+
+                                var updatedTask = new Task(task);
+                                updatedTask.$update({taskId: updatedTask._id});
+
+                                return true;
+                            }
+
+                            _.forEach($scope.tasksList, function (list) {
+                                if (list.tasks[index] === destArr[index]) {
+                                    console.log(list.status);
+                                    task.status = list.status;
+                                    delete task.tasks;
+                                    var updatedTask = new Task(task);
+
+                                    updatedTask.$update({taskId: updatedTask._id});
+                                    return true;
+                                }
+
+                            });
+
+                            return true;
+                        },
+                        beforeDrag: function(sourceNodeScope) {
+                            var task = sourceNodeScope.$modelValue;
+
+                            if (task.simple !== true) {
+                                return false;
+                            }
+
+                            return true;
+                        }
+                    }
+
                 }
                 ,
                 scope: {
