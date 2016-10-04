@@ -93,8 +93,6 @@ angular
                         }
 
                         $scope.tasksList = mappingTasks();
-                        console.log($scope.tasksList);
-
                     });
 
                     $scope.tasksList = [];
@@ -106,72 +104,49 @@ angular
                     function mappingTasks() {
                         var arr = [];
 
-                        _.forEach(statuses, function (st, i) {
+                        _.forEach(statuses, function (st) {
                             var list = {status: st.status, name: st.name, tasks: []};
-                            arr.push(list);
 
-                            _.forEach($scope.tasks, function (task) {
+                            list.tasks = _.filter($scope.tasks, function (task) {
                                 task.tasks = [];
-
-                                if (task.status === arr[i].status) {
-                                    arr[i].tasks.push(task)
-                                }
+                                return task.status === list.status;
                             });
+
+                            arr.push(list);
                         });
                         return arr;
                     }
 
+                    function updateTask(task) {
+                        var updatedTask = new Task(task);
+                        updatedTask.$update({taskId: updatedTask._id},function (){
+                            return true;
+                        });
+                    }
+
                     $scope.treeOptions = {
                         dropped: function (event) {
-                            console.log(event);
-                            console.log('obj', event.source.nodeScope.$modelValue);
-                            console.log("parentOfnastedTask", event.dest.nodesScope.$parent.$modelValue);
-                            console.log("newStatusArr", event.dest.nodesScope.$modelValue);
-
                             var task = event.source.nodeScope.$modelValue;
-                            var destArr = event.dest.nodesScope.$modelValue;
-                            var index = event.dest.index;
-                            var parentObj = event.dest.nodesScope.$parent.$modelValue;
+                            var parentObj = event.dest.nodesScope.$parent.$parent.task;
 
-                            if(parentObj){
-                                if(task._id === parentObj._id){
+                            if (parentObj) {
+                                if (task._id === parentObj._id) {
                                     return false;
                                 }
                                 task.parentTaskId = parentObj._id;
                                 delete task.tasks;
+                                updateTask(task);
 
-                                var updatedTask = new Task(task);
-                                updatedTask.$update({taskId: updatedTask._id});
+                            } else {
+                                var newStatus = event.dest.nodesScope.$parent.list.status;
 
-                                return true;
+                                task.status = newStatus;
+                                delete task.tasks;
+                                updateTask(task);
+
                             }
-
-                            _.forEach($scope.tasksList, function (list) {
-                                if (list.tasks[index] === destArr[index]) {
-                                    console.log(list.status);
-                                    task.status = list.status;
-                                    delete task.tasks;
-                                    var updatedTask = new Task(task);
-
-                                    updatedTask.$update({taskId: updatedTask._id});
-                                    return true;
-                                }
-
-                            });
-
-                            return true;
-                        },
-                        beforeDrag: function(sourceNodeScope) {
-                            var task = sourceNodeScope.$modelValue;
-
-                            if (task.simple !== true) {
-                                return false;
-                            }
-
-                            return true;
                         }
-                    }
-
+                    };
                 }
                 ,
                 scope: {

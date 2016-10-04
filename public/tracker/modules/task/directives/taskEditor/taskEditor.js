@@ -120,7 +120,6 @@ angular
                 };
 
                 $scope.delete = function (task) {
-                    console.log('task', task);
                     //delete itself
                     if ($stateParams.taskId == task._id) {
                         var parentTaskId = task.parentTaskId || null;

@@ -3,9 +3,9 @@ angular
     .module('Tracker',
     ['ui.router', 'toaster', 'ngAnimate', 'ngResource', 'ui.bootstrap',
         'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize', 'ngStorage',
-        'angular-loading-bar', 'infinite-scroll', 'SocketService', 'dndLists','ngDraggable','ui.tree',angularDragula(angular)])
+        'angular-loading-bar', 'infinite-scroll', 'SocketService','ui.tree'])
 
-    .config(function ($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider) {
+    .config(function ($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider,treeConfig) {
 
         $httpProvider.interceptors.push('HttpInterceptor');
 
@@ -120,11 +120,6 @@ angular
                 url: "/change-password/:token",
                 controller: "resetPasswordCtrl",
                 templateUrl: "tracker/modules/auth/views/change-password.html"
-            })
-            .state('app.DND', {
-                url: "/dnd",
-                templateUrl: "tracker/POCDnD/DND.html",
-                controller: 'SimpleDemoCtrl'
             })
         ;
 
