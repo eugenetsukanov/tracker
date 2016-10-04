@@ -97,15 +97,15 @@ angular
 
                     $scope.tasksList = [];
                     var statuses = [
-                        {name: 'New', status: ''},
-                        {name: 'In progress', status: 'in progress'},
-                        {name: 'Accepted', status: 'accepted'}];
+                        {name: 'New', value: ''},
+                        {name: 'In progress', value: 'in progress'},
+                        {name: 'Accepted', value: 'accepted'}];
 
                     function mappingTasks() {
                         var arr = [];
 
                         _.forEach(statuses, function (st) {
-                            var list = {status: st.status, name: st.name, tasks: []};
+                            var list = {status: st.value, name: st.name, tasks: []};
 
                             list.tasks = _.filter($scope.tasks, function (task) {
                                 task.tasks = [];
