@@ -92,7 +92,7 @@ angular
                             $scope.sortByDate();
                         }
 
-                        $scope.tasksList = mappingTasks();
+                        $scope.tasksList = getTaskLists();
                     });
 
                     $scope.tasksList = [];
@@ -101,52 +101,123 @@ angular
                         {name: 'In progress', value: 'in progress'},
                         {name: 'Accepted', value: 'accepted'}];
 
-                    function mappingTasks() {
-                        var arr = [];
+                    function getTaskLists() {
+                        var taskLists = [];
 
-                        _.forEach(statuses, function (st) {
-                            var list = {status: st.value, name: st.name, tasks: []};
+                        _.forEach(statuses, function (status) {
+                            var list = {status: status.value, name: status.name, tasks: []};
 
                             list.tasks = _.filter($scope.tasks, function (task) {
                                 task.tasks = [];
                                 return task.status === list.status;
                             });
 
-                            arr.push(list);
+                            taskLists.push(list);
                         });
-                        return arr;
+                        return taskLists;
                     }
 
-                    function updateTask(task) {
-                        var updatedTask = new Task(task);
-                        updatedTask.$update({taskId: updatedTask._id},function (){
-                            return true;
-                        });
-                    }
+                    var task = {};
+                    var destinationTask = {};
+                    var destinationListBoard = {};
+                    var destinationListList = {};
 
                     $scope.treeOptions = {
-                        dropped: function (event) {
-                            var task = event.source.nodeScope.$modelValue;
-                            var parentObj = event.dest.nodesScope.$parent.$parent.task;
+                        accept: function (sourceNodeScope, destNodesScope) {
+                            var task = sourceNodeScope.$modelValue;
+                            var destinationTask = destNodesScope.$parent.$parent.task;
 
-                            if (parentObj) {
-                                if (task._id === parentObj._id) {
+                            if ($scope.view.name === 'board' && !task.simple) {
+                                var destinationListBoard = destNodesScope.$parent.list;
+
+                                if (destinationListBoard || destinationTask.status === 'accepted') {
                                     return false;
                                 }
-                                task.parentTaskId = parentObj._id;
-                                delete task.tasks;
-                                updateTask(task);
+                            }
+                            if ($scope.view.name === 'list' && !task.simple) {
+                                var destinationListList = destNodesScope.$parent.$parent.$parent.tasks;
 
-                            } else {
-                                var newStatus = event.dest.nodesScope.$parent.list.status;
+                                if (( destinationTask && destinationTask.status === 'accepted') || (!destinationTask && destinationListList)) {
+                                    return false;
+                                }
+                            }
 
-                                task.status = newStatus;
+                            return true;
+                        },
+                        dropped: function (event) {
+                            var task = event.source.nodeScope.$modelValue;
+                            var destinationTask = event.dest.nodesScope.$parent.$parent.task;
+                            var newIndex = event.dest.index;
+                            var destinationArr = event.dest.nodesScope.$modelValue;
+
+                            if (destinationTask) {
+                                if (task._id === destinationTask._id) {
+                                    return false;
+                                }
+                                task.parentTaskId = destinationTask._id;
                                 delete task.tasks;
                                 updateTask(task);
 
                             }
+                            if ( $scope.view.name === 'board') {
+                                var destinationListBoard = event.dest.nodesScope.$parent.list;
+                                updatedTask = getNewDataForTask(task,destinationListBoard);
+                                updateTask(updatedTask);
+                            }
+                            if ($scope.view.name === 'list') {
+                                updatedTask = getNewDataForTask(task);
+                                updateTask(updatedTask);
+                            }
                         }
                     };
+
+                    function updateTask(task) {
+                        var updatedTask = new Task(task);
+                        updatedTask.$update({taskId: updatedTask._id}, function () {
+                            return true;
+                        });
+                    }
+
+                    function getNewDataForTask(task,destinationList) {
+                        if (destinationList) {
+                            task.status = destinationList.status;
+                        }
+
+                        var priority = getNewPriority(newIndex, destinationArr);
+
+                        task.priority = priority;
+                        delete task.tasks;
+                        return task;
+                    }
+
+                    function getNewPriority(index, arr) {
+                        var siblingUp = arr[index - 1];
+                        var siblingDown = arr[index + 1];
+                        var siblingUpPriority = siblingUp ? siblingUp.priority : undefined;
+                        var siblingDownPriority = siblingDown ? siblingDown.priority : undefined;
+                        var oldPriority = arr[index].priority;
+
+                        return newPriority = calculationPriority(siblingUpPriority, siblingDownPriority, oldPriority);
+
+                    }
+
+                    function calculationPriority(siblingUpPriority, siblingDownPriority, oldPriority) {
+
+                        if (!siblingUpPriority) {
+                            if (!siblingDownPriority) {
+                                return newPriority = oldPriority;
+                            }
+
+                            return newPriority = siblingDownPriority === 10 ? siblingDownPriority : ( siblingDownPriority + 1);
+                        }
+
+                        if (!siblingDownPriority) {
+                            return newPriority = siblingUpPriority === 0 ? siblingUpPriority : (siblingUpPriority - 1);
+                        }
+
+                        return newPriority = Math.round((siblingUpPriority + siblingDownPriority) / 2);
+                    }
+
                 }
                 ,
                 scope: {

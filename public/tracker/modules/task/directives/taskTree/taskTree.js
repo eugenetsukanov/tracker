@@ -27,7 +27,7 @@ angular
                                 myScope.metricsDetails = toggler;
                             });
 
-                            var $el = $compile("<task-tree task='task' task-on-edit='edit' metrics-details='metricsDetails'></task-tree>")(myScope);
+                            var $el = $compile("<task-tree task='task' ui-tree-node task-on-edit='edit' metrics-details='metricsDetails'></task-tree>")(myScope);
                             element.append($el);
 
                         });
