@@ -119,25 +119,27 @@ angular
 
                     var task = {};
                     var destinationTask = {};
-                    var destinationListBoard = {};
-                    var destinationListList = {};
+                    var destinationListForBoard = {};
+                    var destinationListForList = {};
+                    var destinationArr = [];
+                    var newIndex = null;
 
                     $scope.treeOptions = {
                         accept: function (sourceNodeScope, destNodesScope) {
-                            var task = sourceNodeScope.$modelValue;
-                            var destinationTask = destNodesScope.$parent.$parent.task;
+                            task = sourceNodeScope.$modelValue;
+                            destinationTask = destNodesScope.$parent.$parent.task;
 
                             if ($scope.view.name === 'board' && !task.simple) {
-                                var destinationListBoard = destNodesScope.$parent.list;
+                                destinationListForBoard = destNodesScope.$parent.list;
 
-                                if (destinationListBoard || destinationTask.status === 'accepted') {
+                                if (destinationListForBoard || destinationTask.status === 'accepted') {
                                     return false;
                                 }
                             }
                             if ($scope.view.name === 'list' && !task.simple) {
-                                var destinationListList = destNodesScope.$parent.$parent.$parent.tasks;
+                                destinationListForList = destNodesScope.$parent.$parent.$parent.tasks;
 
-                                if (( destinationTask && destinationTask.status === 'accepted') || (!destinationTask && destinationListList)) {
+                                if (( destinationTask && destinationTask.status === 'accepted') || (!destinationTask && destinationListForList)) {
                                     return false;
                                 }
                             }
@@ -145,10 +147,10 @@ angular
                             return true;
                         },
                         dropped: function (event) {
-                            var task = event.source.nodeScope.$modelValue;
-                            var destinationTask = event.dest.nodesScope.$parent.$parent.task;
-                            var newIndex = event.dest.index;
-                            var destinationArr = event.dest.nodesScope.$modelValue;
+                            task = event.source.nodeScope.$modelValue;
+                            destinationTask = event.dest.nodesScope.$parent.$parent.task;
+                            newIndex = event.dest.index;
+                            destinationArr = event.dest.nodesScope.$modelValue;
 
                             if (destinationTask) {
                                 if (task._id === destinationTask._id) {
@@ -159,9 +161,9 @@ angular
                                 updateTask(task);
 
                             }
-                            if ( $scope.view.name === 'board') {
-                                var destinationListBoard = event.dest.nodesScope.$parent.list;
-                                updatedTask = getNewDataForTask(task,destinationListBoard);
+                            if ($scope.view.name === 'board') {
+                                destinationListForBoard = event.dest.nodesScope.$parent.list;
+                                updatedTask = getNewDataForTask(task, destinationListForBoard);
                                 updateTask(updatedTask);
                             }
                             if ($scope.view.name === 'list') {
@@ -178,7 +180,7 @@ angular
                         });
                     }
 
-                    function getNewDataForTask(task,destinationList) {
+                    function getNewDataForTask(task, destinationList) {
                         if (destinationList) {
                             task.status = destinationList.status;
                         }
