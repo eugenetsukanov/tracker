@@ -104,11 +104,14 @@ angular
                     function getTaskLists() {
                         var taskLists = [];
 
+                        _.each($scope.tasks, function (task) {
+                            task.tasks = [];
+                        });
+
                         _.forEach(statuses, function (status) {
                             var list = {status: status.value, name: status.name, tasks: []};
 
                             list.tasks = _.filter($scope.tasks, function (task) {
-                                task.tasks = [];
                                 return task.status === list.status;
                             });
 
@@ -117,27 +120,20 @@ angular
                         return taskLists;
                     }
 
-                    var task = {};
-                    var destinationTask = {};
-                    var destinationListForBoard = {};
-                    var destinationListForList = {};
-                    var destinationArr = [];
-                    var newIndex = null;
-
                     $scope.treeOptions = {
                         accept: function (sourceNodeScope, destNodesScope) {
-                            task = sourceNodeScope.$modelValue;
-                            destinationTask = destNodesScope.$parent.$parent.task;
+                            var task = sourceNodeScope.$modelValue;
+                            var destinationTask = destNodesScope.$parent.$parent.task;
 
                             if ($scope.view.name === 'board' && !task.simple) {
-                                destinationListForBoard = destNodesScope.$parent.list;
+                                var destinationListForBoard = destNodesScope.$parent.list;
 
                                 if (destinationListForBoard || destinationTask.status === 'accepted') {
                                     return false;
                                 }
                             }
                             if ($scope.view.name === 'list' && !task.simple) {
-                                destinationListForList = destNodesScope.$parent.$parent.$parent.tasks;
+                                var destinationListForList = destNodesScope.$parent.$parent.$parent.tasks;
 
                                 if (( destinationTask && destinationTask.status === 'accepted') || (!destinationTask && destinationListForList)) {
                                     return false;
@@ -147,10 +143,9 @@ angular
                             return true;
                         },
                         dropped: function (event) {
-                            task = event.source.nodeScope.$modelValue;
-                            destinationTask = event.dest.nodesScope.$parent.$parent.task;
-                            newIndex = event.dest.index;
-                            destinationArr = event.dest.nodesScope.$modelValue;
+                            var updatedTask;
+                            var task = event.source.nodeScope.$modelValue;
+                            var destinationTask = event.dest.nodesScope.$parent.$parent.task;
 
                             if (destinationTask) {
                                 if (task._id === destinationTask._id) {
@@ -162,12 +157,11 @@ angular
 
                             }
                             if ($scope.view.name === 'board') {
-                                destinationListForBoard = event.dest.nodesScope.$parent.list;
-                                updatedTask = getNewDataForTask(task, destinationListForBoard);
+                                updatedTask = getNewDataForTask(event, task);
                                 updateTask(updatedTask);
                             }
                             if ($scope.view.name === 'list') {
-                                updatedTask = getNewDataForTask(task);
+                                updatedTask = getNewDataForTask(event, task);
                                 updateTask(updatedTask);
                             }
                         }
@@ -180,14 +174,15 @@ angular
                         });
                     }
 
-                    function getNewDataForTask(task, destinationList) {
-                        if (destinationList) {
-                            task.status = destinationList.status;
+                    function getNewDataForTask(event, task) {
+                        var newIndex = event.dest.index;
+                        var destinationArr = event.dest.nodesScope.$modelValue;
+
+                        if (event.dest.nodesScope.$parent.list) {
+                            task.status = event.dest.nodesScope.$parent.list.status;
                         }
 
-                        var priority = getNewPriority(newIndex, destinationArr);
-
-                        task.priority = priority;
+                        task.priority = getNewPriority(newIndex, destinationArr);
                         delete task.tasks;
                         return task;
                     }
@@ -199,7 +194,7 @@ angular
                         var siblingDownPriority = siblingDown ? siblingDown.priority : undefined;
                         var oldPriority = arr[index].priority;
 
-                        return newPriority = calculationPriority(siblingUpPriority, siblingDownPriority, oldPriority);
+                        return calculationPriority(siblingUpPriority, siblingDownPriority, oldPriority);
 
                     }
 
@@ -207,17 +202,17 @@ angular
 
                         if (!siblingUpPriority) {
                             if (!siblingDownPriority) {
-                                return newPriority = oldPriority;
+                                return oldPriority;
                             }
 
-                            return newPriority = siblingDownPriority === 10 ? siblingDownPriority : ( siblingDownPriority + 1);
+                            return siblingDownPriority === 10 ? siblingDownPriority : ( siblingDownPriority + 1);
                         }
 
                         if (!siblingDownPriority) {
-                            return newPriority = siblingUpPriority === 0 ? siblingUpPriority : (siblingUpPriority - 1);
+                            return siblingUpPriority === 0 ? siblingUpPriority : (siblingUpPriority - 1);
                         }
 
-                        return newPriority = Math.round((siblingUpPriority + siblingDownPriority) / 2);
+                        return Math.round((siblingUpPriority + siblingDownPriority) / 2);
                     }
 
                 }
