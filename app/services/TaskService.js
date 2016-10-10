@@ -138,7 +138,7 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
     };
 
     this.autoUpdateTaskStatus = function (task, next) {
-        if (task.status === ''&& task.spenttime) {
+        if (task.status === '' && task.spenttime) {
             task.status = 'in progress';
         }
 
