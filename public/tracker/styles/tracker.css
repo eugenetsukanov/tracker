@@ -839,7 +839,7 @@ hr {
 
 .tasks-list {
     padding: 1em 0;
-    min-height: 20em;
+    min-height: 2em;
 }
 
 .angular-ui-tree-placeholder {
@@ -863,4 +863,7 @@ hr {
     opacity: .8;
 }
 
+.angular-ui-tree-empty {
+    height: 50px;
+}
 
