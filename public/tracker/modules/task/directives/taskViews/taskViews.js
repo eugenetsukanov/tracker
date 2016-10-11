@@ -176,20 +176,20 @@ angular
 
                     function getNewDataForTask(event, task) {
                         var newIndex = event.dest.index;
-                        var destinationArr = event.dest.nodesScope.$modelValue;
+                        var destinations = event.dest.nodesScope.$modelValue;
 
                         if (event.dest.nodesScope.$parent.list) {
                             task.status = event.dest.nodesScope.$parent.list.status;
                         }
 
-                        task.priority = getNewPriority(newIndex, destinationArr);
+                        task.priority = getNewPriority(newIndex, destinations);
                         delete task.tasks;
                         return task;
                     }
 
-                    function getNewPriority(index, arr) {
-                        var siblingUp = arr[index - 1];
-                        var siblingDown = arr[index + 1];
+                    function getNewPriority(index, destinationTasks) {
+                        var siblingUp = destinationTasks[index - 1];
+                        var siblingDown = destinationTasks[index + 1];
                         var siblingUpPriority = siblingUp ? siblingUp.priority : undefined;
                         var siblingDownPriority = siblingDown ? siblingDown.priority : undefined;
                         var oldPriority = arr[index].priority;

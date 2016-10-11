@@ -5,7 +5,7 @@ angular
         'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize', 'ngStorage',
         'angular-loading-bar', 'infinite-scroll', 'SocketService','ui.tree'])
 
-    .config(function ($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider,treeConfig) {
+    .config(function ($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider) {
 
         $httpProvider.interceptors.push('HttpInterceptor');
 
