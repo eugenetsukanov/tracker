@@ -24,4 +24,14 @@ angular.module('Tracker')
             }
         }
     })
+    .filter('momentValueToTime', function () {
+        return function (duration) {
+
+            if (isNaN(duration)) return '';
+
+            var duration = moment.duration(duration*60, 'm');
+
+            return moment.utc(duration.asMilliseconds()).format('HH:mm');
+        }
+    })
 ;

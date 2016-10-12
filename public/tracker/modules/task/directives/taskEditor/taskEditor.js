@@ -32,15 +32,17 @@ angular
                 $scope.addTimeList = [
                     {
                         name: '5m',
-                        value: 0.1
+                        value: 0.083
                     },
                     {
                         name: '15m',
                         value: 0.25
+
                     },
                     {
                         name: '30m',
                         value: 0.5
+
                     },
                     {
                         name: '1h',
@@ -86,7 +88,6 @@ angular
                     $scope.tasksForMove = [];
 
                 };
-
 
                 $scope.onComplete = function () {
                     if ($scope.taskOnComplete) {
@@ -165,9 +166,9 @@ angular
 
                         spenttime = parseInt(Math.ceil(spenttime * 100)) / 100;
                         $scope.task.spenttime = spenttime;
+
                     }
                 };
-
 
                 $scope.deleteFile = function (file) {
 
