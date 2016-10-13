@@ -32,7 +32,7 @@ angular
                 $scope.addTimeList = [
                     {
                         name: '5m',
-                        value: 0.083
+                        value: 0.085
                     },
                     {
                         name: '15m',
@@ -53,6 +53,8 @@ angular
                 $scope.complexities = TaskComplexity;
 
                 $scope.users = UserService.getUsers();
+
+                var oldSpenttime;
 
                 $scope.$watch('task', function (task) {
 
@@ -86,6 +88,7 @@ angular
                     }
 
                     $scope.tasksForMove = [];
+                    oldSpenttime = $scope.task.spenttime;
 
                 };
 
@@ -159,15 +162,31 @@ angular
                     }).then(init).then($scope.onComplete);
                 };
 
+                var flag = 0;
                 $scope.addTime = function (time) {
                     if ($scope.task) {
                         var spenttime = parseFloat($scope.task.spenttime || 0);
                         spenttime += time.value;
 
-                        spenttime = parseInt(Math.ceil(spenttime * 100)) / 100;
+                        if (time.name === '5m') {
+                            flag ++;
+
+                            if (flag === 3) {
+                                spenttime = parseInt(spenttime * 100) / 100;
+                                flag = 0;
+
+                            }else{
+                                spenttime = parseInt(spenttime * 1000) / 1000;
+                            }
+                        }
+
                         $scope.task.spenttime = spenttime;
 
                     }
+                };
+
+                $scope.reset = function () {
+                    $scope.task.spenttime = oldSpenttime;
                 };
 
                 $scope.deleteFile = function (file) {
