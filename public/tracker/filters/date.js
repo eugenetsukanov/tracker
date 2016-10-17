@@ -24,14 +24,29 @@ angular.module('Tracker')
             }
         }
     })
-    .filter('momentValueToTime', function () {
+    .filter('humanizeTime', function () {
         return function (duration) {
 
             if (isNaN(duration)) return '';
 
-            var duration = moment.duration(duration*60, 'm');
+            var duration = moment.duration(duration * 60, 'm');
 
-            return moment.utc(duration.asMilliseconds()).format('HH:mm');
+            var result = '';
+
+            if (duration.get('years')) {
+                var years = duration.get('years') > 1 ? ' years ' : 'year';
+                result += duration.get('years') + ' years ';
+            }
+
+            if (duration.get('days')) {
+                var days = duration.get('days') > 1 ? ' days ' : ' day ';
+                result += duration.get('days') + days;
+
+            }
+
+            result += moment.utc(duration.asMilliseconds()).format('HH:mm');
+            return result;
+
         }
     })
 ;

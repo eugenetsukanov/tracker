@@ -89,17 +89,16 @@
             <div class="form-group clearfix" ng-show="task.title" ng-if="task.simple">
                 <i class="fa fa-clock-o fa-md vcenter pull-left" uib-tooltip="Spent time"></i>
 
-                <div class=" w-xs pull-left input-sm text-center" id="spentTime" >
-                    <strong>{{task.spenttime | momentValueToTime}}</strong></div>
+                <div class=" pull-left input-sm text-center spent-time" >
+                    <strong>{{task.spenttime | humanizeTime}}</strong>
+                </div>
+
+                <div class="pull-left input-sm text-left added-spent-time">+{{addedSpentTime| humanizeTime}}</div>
 
                 <div class="btn-group m-l-sm pull-left">
                     <label ng-click="addTime(time)" ng-repeat="time in addTimeList" class="btn btn-default btn-sm">+{{time.name}}</label>
+                    <label ng-click="reset()" class="btn btn-default btn-sm ">reset</label>
                 </div>
-                <div class="btn-group m-l-sm pull-left">
-                    <label ng-click="reset()" class="btn btn-default btn-sm ">Reset</label>
-                </div>
-
-                <!--<a class="btn btn-danger btn-sm pull-right" ng-click="reset()">Reset</a>-->
 
             </div>
 

@@ -37,12 +37,10 @@ angular
                     {
                         name: '15m',
                         value: 0.25
-
                     },
                     {
                         name: '30m',
                         value: 0.5
-
                     },
                     {
                         name: '1h',
@@ -88,7 +86,10 @@ angular
                     }
 
                     $scope.tasksForMove = [];
+
+                    $scope.hours = parseInt($scope.task.spenttime);
                     oldSpenttime = $scope.task.spenttime;
+                    $scope.addedSpentTime = 0;
 
                 };
 
@@ -168,6 +169,8 @@ angular
                         var spenttime = parseFloat($scope.task.spenttime || 0);
                         spenttime += time.value;
 
+                        $scope.addedSpentTime = spenttime - oldSpenttime;
+
                         if (time.name === '5m') {
                             flag ++;
 
@@ -187,6 +190,8 @@ angular
 
                 $scope.reset = function () {
                     $scope.task.spenttime = oldSpenttime;
+                    $scope.addedSpentTime = 0;
+
                 };
 
                 $scope.deleteFile = function (file) {
