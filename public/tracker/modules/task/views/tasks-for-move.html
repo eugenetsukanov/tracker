@@ -1,10 +1,17 @@
 <hr/>
 <div class="col-md-5 move-view">
+        <div class="form-group">
+            <input type="text"
+                   class="form-control"
+                   ng-model="search.title"
+                   placeholder="Search"/>
+        </div>
     <ul class="list-group">
-        <li class="list-group-item" ng-repeat="task in tasksForMove"
+        <li class="list-group-item" ng-repeat="task in tasksForMove | filter:search"
             ng-click="move(task)"><a href="">
             {{task.title}}
         </a>
         </li>
     </ul>
 </div>
+
