@@ -605,7 +605,18 @@ hr {
 .panel-default>.panel-heading {
     border-bottom: none;
 }
+/*task Editor*/
+.added-spent-time {
+    padding-left: 0;
+    padding-right: 10px;
+    color: green;
+    display: inline-block;
+    min-width: 38px;
+}
 
+.spent-time {
+    padding-left: 0;
+}
 
 /* #toast-container */
 .toaster-popup #toast-container > div {
