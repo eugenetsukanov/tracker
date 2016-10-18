@@ -35,7 +35,7 @@ angular.module('Tracker')
 
             if (duration.get('years')) {
                 var years = duration.get('years') > 1 ? ' years ' : 'year';
-                result += duration.get('years') + ' years ';
+                result += duration.get('years') + years ;
             }
 
             if (duration.get('days')) {
