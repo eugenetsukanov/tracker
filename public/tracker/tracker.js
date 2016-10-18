@@ -1,8 +1,9 @@
+
 angular
     .module('Tracker',
     ['ui.router', 'toaster', 'ngAnimate', 'ngResource', 'ui.bootstrap',
         'ngFileUpload', 'monospaced.elastic', 'ui.select', 'ngSanitize', 'ngStorage',
-        'angular-loading-bar', 'infinite-scroll', 'SocketService'])
+        'angular-loading-bar', 'infinite-scroll', 'SocketService','ui.tree'])
 
     .config(function ($stateProvider, $urlRouterProvider, $httpProvider, cfpLoadingBarProvider) {
 

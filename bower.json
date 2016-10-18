@@ -8,7 +8,6 @@
     "angular-ui-router": "~0.2.13",
     "angular-resource": "~1.3.15",
     "angular-bootstrap": "~0.14.3",
-    "components-font-awesome": "~4.3.0",
     "moment": "~2.10.2",
     "ng-file-upload": "~4.2.1",
     "ng-file-upload-shim": "~4.2.1",
@@ -21,7 +20,9 @@
     "ngInfiniteScroll": "~1.2.1",
     "angular-loading-bar": "~0.8.0",
     "angular-animate": "~1.4.8",
-    "socket.io-client": "1.4.8"
+    "socket.io-client": "1.4.8",
+    "components-font-awesome": "^4.6.3",
+    "angular-ui-tree": "^2.22.1"
   },
   "resolutions": {
     "angular": ">=1.4.8",
