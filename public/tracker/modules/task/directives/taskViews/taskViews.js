@@ -123,17 +123,17 @@ angular
                     $scope.treeOptions = {
                         accept: function (sourceNodeScope, destNodesScope) {
                             var task = sourceNodeScope.$modelValue;
-                            var destinationTask = destNodesScope.$parent.$parent.task;
+                            var destinationTask = getDestinationTask(destNodesScope);
 
                             if ($scope.view.name === 'board' && !task.simple) {
-                                var destinationListForBoard = destNodesScope.$parent.list;
+                                var destinationListForBoard = getDestinationList(destNodesScope);
 
                                 if (destinationListForBoard || destinationTask.status === 'accepted') {
                                     return false;
                                 }
                             }
                             if ($scope.view.name === 'list' && !task.simple) {
-                                var destinationListForList = destNodesScope.$parent.$parent.$parent.tasks;
+                                var destinationListForList = getDestinationTasks(destNodesScope);
 
                                 if (( destinationTask && destinationTask.status === 'accepted') || (!destinationTask && destinationListForList)) {
                                     return false;
@@ -145,7 +145,7 @@ angular
                         dropped: function (event) {
                             var updatedTask;
                             var task = event.source.nodeScope.$modelValue;
-                            var destinationTask = event.dest.nodesScope.$parent.$parent.task;
+                            var destinationTask =  getDestinationTask(event.dest.nodesScope);
 
                             if (destinationTask) {
                                 if (task._id === destinationTask._id) {
@@ -167,6 +167,18 @@ angular
                         }
                     };
 
+                    function getDestinationTask(scope){
+                           return scope.$parent.$parent.task;
+                    }
+
+                    function getDestinationTasks(scope){
+                            return  scope.$parent.$parent.$parent.tasks;
+                    }
+
+                    function getDestinationList(scope){
+                            return  scope.$parent.list;
+                    }
+
                     function updateTask(task) {
                         var updatedTask = new Task(task);
                         updatedTask.$update({taskId: updatedTask._id}, function () {
@@ -177,9 +189,10 @@ angular
                     function getNewDataForTask(event, task) {
                         var newIndex = event.dest.index;
                         var destinations = event.dest.nodesScope.$modelValue;
+                        var destinationList = getDestinationList(event.dest.nodesScope);
 
-                        if (event.dest.nodesScope.$parent.list) {
-                            task.status = event.dest.nodesScope.$parent.list.status;
+                        if (destinationList) {
+                            task.status = destinationList.status;
                         }
 
                         task.priority = getNewPriority(newIndex, destinations);
@@ -192,7 +205,7 @@ angular
                         var siblingDown = destinationTasks[index + 1];
                         var siblingUpPriority = siblingUp ? siblingUp.priority : undefined;
                         var siblingDownPriority = siblingDown ? siblingDown.priority : undefined;
-                        var oldPriority = arr[index].priority;
+                        var oldPriority = destinationTasks[index].priority;
 
                         return calculationPriority(siblingUpPriority, siblingDownPriority, oldPriority);
 
