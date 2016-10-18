@@ -64,8 +64,11 @@ angular
                 $scope.$watch('task.complexity', function (complexity) {
                     console.log('complexity', complexity);
                     if($scope.task._id && $scope.task.simple){
-'$scope.task', $scope.task.complexity
+                        console.log('$scope.task1', $scope.task.complexity);
+
                         $scope.task.complexity = complexity;
+                        console.log('$scope.task2', $scope.task.complexity);
+
                         var updatedTask = new Metrics($scope.task);
                         console.log('updatedTask', updatedTask);
 
