@@ -88,6 +88,30 @@ module.exports = function (app) {
         res.json(req.Task);
     });
 
+    app.put('/api/tasks/:taskId/metrics', function (req, res, next) {
+        console.log('req', req.body);
+        TaskService.calculateSimple(req.body.task, function (err, task) {
+            if (err) {
+                return next(err);
+            }
+            TaskService.findVelocity(task, function (err, velocity) {
+                if (err) {
+                    return next(err);
+                }
+                console.log('velocity', velocity);
+                TaskService.estimateSimpleTask(velocity, req.Task, function (err, task) {
+                    if (err) {
+                        return next(err);
+                    }
+                    console.log('task', task);
+                    res.json(task);
+                });
+            });
+        })
+
+    });
+
+
     //________________________________________________________
 
     app.get('/api/tasks/:taskId/move', function (req, res, next) {

@@ -29,6 +29,7 @@
             </div>
 
         </div>
+        <pre>{{task|json}}</pre>
 
         <!--right-side-->
         <div class="col-md-6 tech-info" ng-show="task.title">
@@ -60,6 +61,11 @@
                             ><i class="fa"
                                 ng-class="task.archived == true ? 'fa-check-square-o' : 'fa-square-o' "></i>&nbsp;Archived</label>
                 </div>
+                <div ng-if="task.simple" class="pull-right">
+                    <i class="fa fa-clock-o" uib-tooltip="Time"></i>&nbsp;<span uib-tooltip="Estimated">{{task.estimatedTime| round}}</span>
+                    / <span uib-tooltip="Spent">{{task.spenttime| round}}</span>
+                    / <span uib-tooltip="TODO" ng-class="{'warning-text' : (task.timeToDo|round) < 0}">{{task.timeToDo| round}}</span>
+                </div>
 
             </div>
 
@@ -85,6 +91,8 @@
             </div>
 
             <hr ng-if="task.simple" class="mg"/>
+            <div class="form-group clearfix" ng-show="task.title" ng-if="task.simple">
+            </div>
 
             <div class="form-group clearfix" ng-show="task.title" ng-if="task.simple">
                 <i class="fa fa-clock-o fa-md vcenter pull-left" uib-tooltip="Spent time"></i>

@@ -15,7 +15,8 @@ angular
                                   Team,
                                   toaster,
                                   TaskFile,
-                                  TagsList) {
+                                  TagsList,
+                                  Metrics) {
 
                 $scope.statuses = [
                     {name: 'New', value: ""},
@@ -57,6 +58,22 @@ angular
                     if (task) {
                         init();
                     }
+
+                });
+
+                $scope.$watch('task.complexity', function (complexity) {
+                    console.log('complexity', complexity);
+                    if($scope.task._id && $scope.task.simple){
+'$scope.task', $scope.task.complexity
+                        $scope.task.complexity = complexity;
+                        var updatedTask = new Metrics($scope.task);
+                        console.log('updatedTask', updatedTask);
+
+                        updatedTask.$update({taskId:$scope.task._id }, function (task){
+                            console.log('task', task);
+                        });
+                    }
+
 
                 });
 
