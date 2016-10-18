@@ -145,7 +145,7 @@ angular
                         dropped: function (event) {
                             var updatedTask;
                             var task = event.source.nodeScope.$modelValue;
-                            var destinationTask =  getDestinationTask(event.dest.nodesScope);
+                            var destinationTask = getDestinationTask(event.dest.nodesScope);
 
                             if (destinationTask) {
                                 if (task._id === destinationTask._id) {
@@ -156,27 +156,24 @@ angular
                                 updateTask(task);
 
                             }
-                            if ($scope.view.name === 'board') {
-                                updatedTask = getNewDataForTask(event, task);
-                                updateTask(updatedTask);
-                            }
-                            if ($scope.view.name === 'list') {
+
+                            if ($scope.view.name === 'board' || $scope.view.name === 'list') {
                                 updatedTask = getNewDataForTask(event, task);
                                 updateTask(updatedTask);
                             }
                         }
                     };
 
-                    function getDestinationTask(scope){
-                           return scope.$parent.$parent.task;
+                    function getDestinationTask(scope) {
+                        return scope.$parent.$parent.task;
                     }
 
-                    function getDestinationTasks(scope){
-                            return  scope.$parent.$parent.$parent.tasks;
+                    function getDestinationTasks(scope) {
+                        return scope.$parent.$parent.$parent.tasks;
                     }
 
-                    function getDestinationList(scope){
-                            return  scope.$parent.list;
+                    function getDestinationList(scope) {
+                        return scope.$parent.list;
                     }
 
                     function updateTask(task) {
