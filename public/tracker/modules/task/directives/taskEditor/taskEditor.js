@@ -32,7 +32,7 @@ angular
                 $scope.addTimeList = [
                     {
                         name: '5m',
-                        value: 0.1
+                        value: 0.085
                     },
                     {
                         name: '15m',
@@ -51,6 +51,8 @@ angular
                 $scope.complexities = TaskComplexity;
 
                 $scope.users = UserService.getUsers();
+
+                var oldSpenttime;
 
                 $scope.$watch('task', function (task) {
 
@@ -85,8 +87,11 @@ angular
 
                     $scope.tasksForMove = [];
 
-                };
+                    $scope.hours = parseInt($scope.task.spenttime);
+                    oldSpenttime = $scope.task.spenttime;
+                    $scope.addedSpentTime = 0;
 
+                };
 
                 $scope.onComplete = function () {
                     if ($scope.taskOnComplete) {
@@ -157,16 +162,36 @@ angular
                     }).then(init).then($scope.onComplete);
                 };
 
+                var flag = 0;
                 $scope.addTime = function (time) {
                     if ($scope.task) {
                         var spenttime = parseFloat($scope.task.spenttime || 0);
                         spenttime += time.value;
 
-                        spenttime = parseInt(Math.ceil(spenttime * 100)) / 100;
+                        $scope.addedSpentTime = spenttime - oldSpenttime;
+
+                        if (time.name === '5m') {
+                            flag ++;
+
+                            if (flag === 3) {
+                                spenttime = parseInt(spenttime * 100) / 100;
+                                flag = 0;
+
+                            }else{
+                                spenttime = parseInt(spenttime * 1000) / 1000;
+                            }
+                        }
+
                         $scope.task.spenttime = spenttime;
+
                     }
                 };
 
+                $scope.reset = function () {
+                    $scope.task.spenttime = oldSpenttime;
+                    $scope.addedSpentTime = 0;
+
+                };
 
                 $scope.deleteFile = function (file) {
 
