@@ -16,7 +16,7 @@ angular
                                   toaster,
                                   TaskFile,
                                   TagsList,
-                                  Metrics) {
+                                  TaskMetrics) {
 
                 $scope.statuses = [
                     {name: 'New', value: ""},
@@ -54,37 +54,31 @@ angular
                 $scope.users = UserService.getUsers();
 
                 $scope.$watch('task', function (task) {
-
                     if (task) {
                         init();
                     }
-
                 });
 
-                $scope.$watch('task.complexity', function (complexity) {
-                    console.log('complexity', complexity);
-                    if($scope.task._id && $scope.task.simple){
-                        console.log('$scope.task1', $scope.task.complexity);
-
-                        $scope.task.complexity = complexity;
-                        console.log('$scope.task2', $scope.task.complexity);
-
-                        var updatedTask = new Metrics($scope.task);
-                        console.log('updatedTask', updatedTask);
-
-                        updatedTask.$update({taskId:$scope.task._id }, function (task){
-                            console.log('task', task);
-                        });
+                $scope.$watch('task.complexity + task.spenttime', function () {
+                    if($scope.task._id && $scope.task.simple && $scope.task.complexity){
+                        getTaskMetrics();
                     }
-
-
                 });
+
+                function getTaskMetrics(){
+                    var updatedTask = new TaskMetrics($scope.task);
+
+                    updatedTask.$save(function (task){
+                        $scope.task.estimatedTime = task.estimatedTime;
+                        $scope.task.spenttime = task.spenttime;
+                        $scope.task.timeToDo = task.timeToDo;
+                    });
+                }
 
                 var init = function () {
 
                     $scope.tagsList = [];
                     if ($scope.task._id || $scope.task.parentTaskId) {
-
 
                         var id = $scope.task._id || $scope.task.parentTaskId;
 
