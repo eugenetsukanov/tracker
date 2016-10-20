@@ -55,9 +55,6 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
     };
 
     this.findVelocity = function (task, next) {
-        // if (task.velocity) {
-        //     next(null, task.velocity);
-        // } else {
         self.getParent(task, function (err, parent) {
             if (err) {
                 return next(err);
@@ -72,7 +69,6 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
                 self.findVelocity(parent, next);
             }
         });
-        // }
     };
 
     this.estimateTask = function (velocity, task, next) {

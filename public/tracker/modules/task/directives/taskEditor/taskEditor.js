@@ -59,9 +59,15 @@ angular
                     }
                 });
 
-                $scope.$watch('task.complexity + task.spenttime', function () {
+                $scope.$watch('task.complexity', function () {
                     if($scope.task._id && $scope.task.simple && $scope.task.complexity){
                         getTaskMetrics();
+                    }
+                });
+
+                $scope.$watch('task.spenttime', function (spenttime) {
+                    if($scope.task.estimatedTime){
+                        $scope.task.timeToDo = $scope.task.estimatedTime - spenttime;
                     }
                 });
 
