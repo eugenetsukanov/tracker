@@ -25,8 +25,12 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
         } else {
             task.velocity = 0;
         }
-
-        next(null, task);
+        self.autoUpdateTaskStatus(task, function (err, _task) {
+            if (err) {
+                return next(err);
+            }
+            next(null, _task);
+        })
     };
 
     this.calculateComplex = function (task, next) {
@@ -126,6 +130,14 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
                 self.estimateTask(task.velocity, child, next);
             }, next);
         });
+    };
+
+    this.autoUpdateTaskStatus = function (task, next) {
+        if (task.status === '' && task.spenttime) {
+            task.status = 'in progress';
+        }
+
+        next(null, task);
     };
 
     this.updateParentStatus = function (task, children, next) {
