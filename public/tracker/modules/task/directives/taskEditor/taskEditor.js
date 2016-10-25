@@ -15,7 +15,13 @@ angular
                                   Team,
                                   toaster,
                                   TaskFile,
-                                  TagsList) {
+                                  TagsList,
+                                  $timeout) {
+
+                $scope.showElastic = false;
+                $timeout(function () {
+                    $scope.showElastic = true;
+                }, 250);
 
                 $scope.statuses = [
                     {name: 'New', value: ""},
@@ -171,13 +177,13 @@ angular
                         $scope.addedSpentTime = spenttime - oldSpenttime;
 
                         if (time.name === '5m') {
-                            flag ++;
+                            flag++;
 
                             if (flag === 3) {
                                 spenttime = parseInt(spenttime * 100) / 100;
                                 flag = 0;
 
-                            }else{
+                            } else {
                                 spenttime = parseInt(spenttime * 1000) / 1000;
                             }
                         }
