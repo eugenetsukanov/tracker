@@ -6,6 +6,8 @@ module.exports = function (container) {
   // models
   container.register('User', require('../models/user'), ['Mongoose']);
   container.register('Task', require('../models/task'), ['Mongoose']);
+  container.register('TaskHistory', require('../models/taskHistory'), ['Mongoose']);
+  container.register('TaskComment', require('../models/taskComment'), ['Mongoose', 'TaskHistory']);
 
   // services
   container.register('FileService', require('../services/FileService'), ['GridFS']);

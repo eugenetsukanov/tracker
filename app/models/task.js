@@ -26,7 +26,8 @@ module.exports = function (mongoose) {
         files: [FileSchema],
         tags: [String],
         tagsList: [String],
-        archived: {type: Boolean, default: false}
+        archived: {type: Boolean, default: false},
+        commentsCounter:{type: Number, default: 0}
     });
 
     TaskSchema.methods = {
@@ -45,6 +46,16 @@ module.exports = function (mongoose) {
     TaskSchema.pre('save', function (next) {
         this.updatedAt = Date.now();
         next();
+    });
+
+    TaskSchema.post('remove', function (doc) {
+        var TaskComment = mongoose.model('TaskComment');
+        TaskComment.remove({task: doc._id}, function (err) {
+            if (err) {
+                return next(err);
+            }
+            console.log('Comments were deleted');
+        })
     });
 
     var Task = mongoose.model('Task', TaskSchema);

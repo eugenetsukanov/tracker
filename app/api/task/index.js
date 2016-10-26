@@ -23,7 +23,8 @@ module.exports = function (app) {
         field("files").array(),
         field("tags").array(),
         field("tagsList").array(),
-        field("archived").trim()
+        field("archived").trim(),
+        field("commentsCounter").isNumeric()
     );
 
     app.get('/api/tasks', function (req, res, next) {
@@ -238,7 +239,6 @@ module.exports = function (app) {
 
     app.put('/api/tasks/:taskId', TaskForm, FormService.validate, function (req, res, next) {
         var taskData = _.merge({parentTaskId: req.body.parentTaskId || null}, req.form);
-
         if (taskData.parentTaskId) {
             /// @@@ re-think and refactor
             TaskService.getTaskById(taskData.parentTaskId, function (err, parent) {

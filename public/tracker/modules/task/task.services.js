@@ -297,5 +297,8 @@ angular
             }
         ]
     })
+    .factory('TaskComment', function ($resource) {
+        return $resource('/api/tasks/:taskId/comments/:commentId', null);
+    })
 
 ;

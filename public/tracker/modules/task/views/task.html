@@ -33,9 +33,41 @@
     <div ng-if="taskId" class="pull-right board-buttons btn-group" role="group">
         <a ng-if="tasks.length" class="btn btn-sm btn-default" ui-sref="app.tags-page({taskId: task._id})">Tags</a>
         <a class="btn btn-sm btn-default" ui-sref="app.tasks-archive({taskId: task._id})">Archive</a>
-        <a ng-if="tasks.length" class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: task._id, userId: userId})">Report</a>
+        <a ng-if="tasks.length" class="btn btn-sm btn-default"
+           ui-sref="app.task-report({taskId: task._id, userId: userId})">Report</a>
     </div>
 
+    <div ng-if="taskId" class="pull-left board-buttons btn-group" role="group">
+        <a class="btn btn-sm btn-default" ng-click="initComment()">Comments({{task.commentsCounter||0}})</a>
+    </div>
+
+    <form ng-submit="createComment()">
+        <div ng-if="open" class="form-group">
+            <div ng-if="taskId" class="pull-left board-buttons btn-group" role="group">
+                <button class="btn btn-sm btn-default" type="submit" >Save</button>
+                <a class="btn btn-sm btn-default" ng-click="initComment()">Hide</a>
+            </div>
+            <textarea
+                      ng-focus="msd-elastic" msd-elastic
+                      ng-model="comment.text"
+                      class="form-control description-height"
+                      placeholder="New comment"
+                      rows="1">
+            </textarea>
+        </div>
+    </form>
+
+    <div ng-if="comments.length&&open">
+        <div ng-repeat="comment in comments">
+            <textarea ng-focus="msd-elastic" msd-elastic
+                      ng-model="comment.text"
+                      class="form-control description-height"
+                      rows="1">
+            </textarea>
+            <h5>{{comment.user.first}}{{comment.user.last}}</h5>
+        </div>
+
+    </div>
     <div ng-if="tasks.length" infinite-scroll="scroll()" infinite-scroll-distance="0"
          infinite-scroll-disabled="busyScroll">
         <div class="pull-right board-buttons" ng-if="!taskId">
