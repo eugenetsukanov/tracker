@@ -10,8 +10,7 @@ angular
                                       TitleService,
                                       RootTask,
                                       UserService,
-                                      SocketService,
-                                      TaskComment) {
+                                      SocketService) {
 
             $scope.report = {
                 title: 'Report',
@@ -22,6 +21,7 @@ angular
                 if (user) $scope.userId = user._id;
             });
 
+            $scope.openHistory = false;
             $scope.userId = UserService.getUserId();
             $scope.taskId = $stateParams.taskId;
             $scope.tasks = [];
@@ -57,35 +57,9 @@ angular
                 }
             });
 
-            function toggleCommentField() {
-                $scope.open = !$scope.open;
-            }
-
-            $scope.initComment = function () {
-                toggleCommentField();
-                $scope.comment = new TaskComment({
-                    text: ''
-                });
-                loadComments();
+            $scope.toggleTaskHistory = function () {
+                $scope.openHistory = !$scope.openHistory;
             };
-
-            $scope.createComment = function () {
-                $scope.comment.$save({taskId: $scope.taskId}, function () {
-                    updateCommentCounter();
-                    loadComments();
-                });
-            };
-
-            function updateCommentCounter() {
-                $scope.task.commentsCounter ++ ;
-                $scope.task.$update({taskId: $scope.taskId});
-            }
-
-            function loadComments() {
-                TaskComment.query({taskId: $scope.taskId}, function (comments) {
-                    $scope.comments = comments;
-                });
-            }
 
             var loadTasks = function () {
                 if ($scope.taskId) {
@@ -120,8 +94,6 @@ angular
             };
             $scope.init = function () {
                 loadTasks();
-                $scope.open = false;
-
                 $scope.newTask = new Task({
                     simple: true,
                     developer: UserService.getUser()._id,

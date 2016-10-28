@@ -1,0 +1,21 @@
+<form ng-submit="createComment()">
+    <div class="form-group">
+        <textarea ng-keypress="saveComment($event)"
+                  ng-focus="msd-elastic" msd-elastic
+                  ng-model="comment.text"
+                  class="form-control description-height"
+                  placeholder="New comment"
+                  rows="1">
+        </textarea>
+    </div>
+</form>
+<div ng-if="comments.length">
+    <div ng-repeat="comment in comments">
+        <div class="well" style="background-color:#fff;">
+            <span><strong>{{comment.user.first}}{{comment.user.last}}</strong></span>
+            <span class="text-muted"
+                  style="font-size: 10px;"> / {{comment.createdAt | date : 'yyyy/MM/dd HH:mm:ss'}}</span>
+            <p ng-bind-html="comment.text | linky"></p>
+        </div>
+    </div>
+</div>

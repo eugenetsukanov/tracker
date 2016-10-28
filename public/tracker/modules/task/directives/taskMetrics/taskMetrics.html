@@ -31,6 +31,6 @@
     <li ng-if="task.updatedAt" uib-tooltip="Updated {{task.updatedAt | date : 'yyyy/MM/dd HH:mm:ss'}}"><i class="fa fa-refresh"></i>&nbsp;{{task.updatedAt | fromNow}}</li>
 
     <li ng-if="metricsDetails == 2 && task.files.length > 0" uib-tooltip="Attachments"><i class="fa fa-paperclip"></i>&nbsp;{{task.files.length}}</li>
-    <li ng-if=" task.commentsCounter"><i class="fa fa-comment"></i><span uib-tooltip="Comments">{{task.commentsCounter ||0}}</span></li>
+    <li ng-if=" task.commentsCounter"><i class="fa fa-comment"></i>&nbsp;<span uib-tooltip="Comments">{{task.commentsCounter ||0}}</span></li>
 </ul>
 
