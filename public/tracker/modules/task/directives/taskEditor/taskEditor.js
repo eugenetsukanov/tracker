@@ -122,7 +122,6 @@ angular
                         //update
                         $scope.task.$update().then(init).then($scope.onComplete);
                     }
-
                 };
 
                 $scope.delete = function (task) {

@@ -25,8 +25,12 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
         } else {
             task.velocity = 0;
         }
-
-        next(null, task);
+        self.autoUpdateTaskStatus(task, function (err, _task) {
+            if (err) {
+                return next(err);
+            }
+            next(null, _task);
+        })
     };
 
 
@@ -103,7 +107,7 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
 
             return next(null, task);
         } else {
-            task.estimatedTime = task.points / velocity;
+            task.estimatedTime = velocity ? task.points / velocity : 0;
             task.timeToDo = task.estimatedTime - task.spenttime;
 
             return next(null, task);
@@ -131,6 +135,14 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
                 }, next);
             });
         });
+    };
+
+    this.autoUpdateTaskStatus = function (task, next) {
+        if (task.status === '' && task.spenttime) {
+            task.status = 'in progress';
+        }
+
+        next(null, task);
     };
 
     this.updateParentStatus = function (task, children, next) {
