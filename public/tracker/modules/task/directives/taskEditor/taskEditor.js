@@ -18,9 +18,9 @@ angular
                                   TagsList,
                                   $timeout) {
 
-                $scope.showElastic = false;
+                $scope.showDescription = false;
                 $timeout(function () {
-                    $scope.showElastic = true;
+                    $scope.showDescription = true;
                 }, 250);
 
                 $scope.statuses = [
