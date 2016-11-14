@@ -878,3 +878,7 @@ hr {
 .angular-ui-tree-empty {
     height: 50px;
 }
+
+.history-message {
+    padding-top: 7px;
+}

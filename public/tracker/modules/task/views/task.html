@@ -16,7 +16,8 @@
             {{parentTask.title}}</a>
     </h5>
 
-    <div ng-hide="task._id == newTask._id" class="pull-left" ng-click="edit(task)" task-metrics metrics-details="2" task="task"></div>
+    <div ng-hide="task._id == newTask._id" class="pull-left" ng-click="edit(task)" task-metrics metrics-details="2" task="task" ></div>
+
     <a class="btn btn-sm btn-link pull-right" ng-click="toggleTaskHistory()">Details</a>
 <div class="clearfix"></div>
 
@@ -28,7 +29,7 @@
     <div task-tags task="task" ng-hide="task._id == newTask._id"></div>
 </div>
 
-<div ng-if="openHistory" task-history task="task"></div>
+<div ng-if="openHistory" task-history task="task" ></div>
 
 <div ng-if="!openHistory">
     <div ng-if="!newTask._id" task-editor task="newTask" task-on-complete="init"

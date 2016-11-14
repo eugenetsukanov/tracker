@@ -1,9 +1,8 @@
-var TaskService = function (Task, FileService, UserService, SocketService) {
+var TaskService = function (Task, FileService, UserService, SocketService, HistoryService) {
     var self = this;
     var _ = require('lodash');
     var async = require('async');
     var pointLine = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
-
 
     this.calculate = function (task, next) {
         if (task.simple) {
@@ -169,7 +168,6 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
             // next one
             task.status = 'in progress';
         }
-
         next(null, task);
     };
 
@@ -186,15 +184,20 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
             }
 
             var wasModified = parent.isModified();
-            parent.save(function (err) {
+            parent.save(function (err, parent) {
                 if (err) {
                     return next(err);
                 }
 
-                self.updateParentByTask(parent, function (err) {
-                    if (err) return next(err);
-                    wasModified && self.notifyUsers(parent, 'task.save');
-                    next();
+                HistoryService.createTaskHistory(parent, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+                    self.updateParentByTask(parent, function (err) {
+                        if (err) return next(err);
+                        wasModified && self.notifyUsers(parent, 'task.save');
+                        next();
+                    });
                 });
             });
         });
@@ -244,13 +247,24 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
             if (!parent) {
                 return next();
             }
+            self.updateParentUpdater(task, parent, function (err, parent) {
+                if (err) {
+                    return next(err);
+                }
+                self.updateParent(parent, next);
+            });
 
-            self.updateParent(parent, next);
         });
+    };
+
+    this.updateParentUpdater = function (task, parent, next) {
+        parent.updatedBy = task.updatedBy;
+        next(null, parent);
     };
 
 
     this.calculateComplexByChildren = function (task, children, next) {
+
         var totalSpentTime = 0;
         var totalPoints = 0;
 
@@ -295,7 +309,6 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
                     if (err) {
                         return next(err);
                     }
-
                     next(null, parent);
                 });
             });
@@ -395,7 +408,6 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
 
         var glue = '|||';
         var originTags = task._origin && task._origin.tags || [];
-
         var areTagsAdded = task.tags.length || originTags.length;
         var tagsDifference = task.tags.join(glue) !== originTags.join(glue);
         var tagsModified = areTagsAdded && tagsDifference;
@@ -489,9 +501,8 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
                 return next(err);
             }
 
-            task.save(function (err) {
+            task.save(function (err, task) {
                 if (err) return next(err);
-
                 FileService.connectFiles(task.files);
                 self.updateRootTags(task);
 
@@ -502,8 +513,12 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
 
                     self.getEstimatedTask(task, function (err, task) {
                         if (err) return next(err);
-                        self.notifyUsers(task, 'task.save');
-                        next(null, task);
+
+                        HistoryService.createTaskHistory(task, function (err) {
+                            if (err) return next(err);
+                            self.notifyUsers(task, 'task.save');
+                            next(null, task);
+                        });
                     });
                 });
             });
@@ -511,7 +526,8 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
     };
 
     this.updateTask = function (user, task, taskData, next) {
-        taskData.developer = taskData.developer ? taskData.developer : undefined;
+
+        task.developer = taskData.developer ? taskData.developer : undefined;
 
         _.assign(task, taskData);
 
@@ -519,7 +535,9 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
 
         task.team = task.team || [user];
 
-        task.developer = task.developer || user;
+        task.developer = task.developer || UserService.getUserId(user);
+
+        task.updatedBy = user._id;
 
         self.calculate(task, function (err, task) {
             if (err) {
@@ -531,7 +549,6 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
                 if (err) {
                     return next(err);
                 }
-
                 FileService.connectFiles(task);
                 self.updateRootTags(task);
 
@@ -542,14 +559,18 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
 
                     self.getEstimatedTask(task, function (err, task) {
                         if (err) return next(err);
-                        wasModified && self.notifyUsers(task, 'task.save');
-                        next(null, task);
+
+                        HistoryService.createTaskHistory(task, function (err) {
+                            if (err) return next(err);
+                            wasModified && self.notifyUsers(task, 'task.save');
+                            next(null, task);
+                        });
+
                     });
                 });
             });
         });
     };
-
 
     this.removeTaskStuff = function (task, next) {
         next = next || _.noop;

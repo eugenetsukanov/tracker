@@ -297,8 +297,54 @@ angular
             }
         ]
     })
-    .factory('TaskComment', function ($resource) {
-        return $resource('/api/tasks/:taskId/comments/:commentId', null);
-    })
+    .factory('historyInfoService', function () {
+        return historyTypes = [
+            {
+                type: 'TaskComment',
+                name: 'comment',
+                color: 'label-default',
+                templateUrl: 'tracker/modules/task/directives/taskHistory/historyTypeTemplites/CommentsAndDescriptionTemplate.html'
 
+            },
+            {
+                type: 'TaskStatus',
+                name: 'status',
+                color: 'label-primary',
+                templateUrl: 'tracker/modules/task/directives/taskHistory/historyTypeTemplites/StatusTemplate.html'
+            },
+            {
+                type: 'TaskSpenttime',
+                name: 'spent time',
+                color: 'label-success',
+                templateUrl: 'tracker/modules/task/directives/taskHistory/historyTypeTemplites/SpenttimeTemplate.html'
+            },
+            {
+                type: 'TaskMetrics',
+                name: 'metrics',
+                color: 'label-success',
+                templateUrl: 'tracker/modules/task/directives/taskHistory/historyTypeTemplites/MetricsTemplate.html'
+            },
+            {
+                type: 'TaskDescription',
+                name: 'description',
+                color: 'label-info',
+                templateUrl: 'tracker/modules/task/directives/taskHistory/historyTypeTemplites/CommentsAndDescriptionTemplate.html'
+            },
+            {
+                type: 'TaskDeveloper',
+                name: 'developer',
+                color: 'label-info',
+                templateUrl: 'tracker/modules/task/directives/taskHistory/historyTypeTemplites/DeveloperTemplate.html'
+            },
+            {
+                type: 'TaskComplexity',
+                name: 'complexity/points',
+                color: 'label-danger',
+                templateUrl: 'tracker/modules/task/directives/taskHistory/historyTypeTemplites/ComplexityTemplate.html'
+            }
+        ]
+    })
+    .factory('TaskHistory', function ($resource) {
+        return $resource('/api/tasks/:taskId/history/:nested', null);
+    })
 ;

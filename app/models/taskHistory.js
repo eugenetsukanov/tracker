@@ -4,7 +4,6 @@ module.exports = function (mongoose) {
     var TaskHistorySchema = new Schema({
         task: {type: Schema.Types.ObjectId, ref: "Task", default: null},
         user: {type: Schema.Types.ObjectId, ref: "User", default: null},
-        createdAt: {type: Date, default: Date.now, index: true},
         updatedAt: {type: Date, default: Date.now, index: true}
     }, {discriminatorKey:'_type'});
 

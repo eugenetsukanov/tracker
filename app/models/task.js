@@ -21,13 +21,14 @@ module.exports = function (mongoose) {
         estimatedTime: {type: Number, default: 0},
         timeToDo: {type: Number, default: 0},
         owner: {type: Schema.Types.ObjectId, ref: "User"},
-        developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
+        developer: {type: Schema.Types.ObjectId, ref: "User"},
         team: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
         files: [FileSchema],
         tags: [String],
         tagsList: [String],
         archived: {type: Boolean, default: false},
-        commentsCounter:{type: Number, default: 0}
+        commentsCounter:{type: Number, default: 0},
+        updatedBy: {type: Schema.Types.ObjectId, ref: "User", default: null}
     });
 
     TaskSchema.methods = {

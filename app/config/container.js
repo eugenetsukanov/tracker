@@ -8,11 +8,32 @@ module.exports = function (container) {
   container.register('Task', require('../models/task'), ['Mongoose']);
   container.register('TaskHistory', require('../models/taskHistory'), ['Mongoose']);
   container.register('TaskComment', require('../models/taskComment'), ['Mongoose', 'TaskHistory']);
+  container.register('TaskStatus', require('../models/taskStatus'), ['Mongoose', 'TaskHistory']);
+  container.register('TaskSpenttime', require('../models/taskSpenttime'), ['Mongoose', 'TaskHistory']);
+  container.register('TaskMetrics', require('../models/taskMetrics'), ['Mongoose', 'TaskHistory']);
+  container.register('TaskDescription', require('../models/taskDescription'), ['Mongoose', 'TaskHistory']);
+  container.register('TaskDeveloper', require('../models/taskDeveloper'), ['Mongoose', 'TaskHistory']);
+  container.register('TaskComplexity', require('../models/taskComplexity'), ['Mongoose', 'TaskHistory']);
+
+  // classes
+  container.register('StatusWriter', require('../historyWriters/StatusWriter'), ['TaskStatus']);
+  container.register('MetricsWriter', require('../historyWriters/MetricsWriter'), ['TaskMetrics']);
+  container.register('SpenttimeWriter', require('../historyWriters/SpenttimeWriter'), ['TaskSpenttime']);
+  container.register('DescriptionWriter', require('../historyWriters/DescriptionWriter'), ['TaskDescription']);
+  container.register('DeveloperWriter', require('../historyWriters/DeveloperWriter'), ['TaskDeveloper']);
+  container.register('ComplexityWriter', require('../historyWriters/ComplexityWriter'), ['TaskComplexity']);
+
 
   // services
   container.register('FileService', require('../services/FileService'), ['GridFS']);
-  container.register('TaskService', require('../services/TaskService'), ['Task', 'FileService', 'UserService', 'SocketService']);
+  container.register('TaskService', require('../services/TaskService'), ['Task', 'FileService', 'UserService', 'SocketService','HistoryService']);
   container.register('UserService', require('../services/UserService'), ['User']);
+
+  container.register('HistoryService', require('../services/HistoryService'), ['HistoryService.historyWriters']);
+
+  container.register('HistoryService.historyWriters', function () {
+    return container.find(['taskHistoryWriter']);
+  });
 
   container.register('GridFS', require('../services/GridFS'), ['config/mongo/uri']);
   container.register('Tokenizer', require('../services/Tokenizer'), ['config/tokenizer/secret']);

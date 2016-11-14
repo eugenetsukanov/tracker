@@ -14,7 +14,7 @@
     </div>
 
     <div class="panel-body" ng-show="metricsDetails || task.description || task.tags.length" ui-tree-nodes ng-model="task.tasks">
-        <div ng-if="metricsDetails" ng-click="edit(task)" class="fs-sm" task-metrics task="task" task-options="options" metrics-details="metricsDetails"></div>
+        <div ng-if="metricsDetails" ng-click="edit(task)" class="fs-sm " task-metrics task="task" task-options="options" metrics-details="metricsDetails" style="display: inline-block"></div>
 
         <div ng-if="task.description">
             <hr ng-if="metricsDetails"/>

@@ -67,7 +67,6 @@ angular
                     $scope.tagsList = [];
                     if ($scope.task._id || $scope.task.parentTaskId) {
 
-
                         var id = $scope.task._id || $scope.task.parentTaskId;
 
                         Team.query({taskId: id}, function (team) {
@@ -171,13 +170,13 @@ angular
                         $scope.addedSpentTime = spenttime - oldSpenttime;
 
                         if (time.name === '5m') {
-                            flag ++;
+                            flag++;
 
                             if (flag === 3) {
                                 spenttime = parseInt(spenttime * 100) / 100;
                                 flag = 0;
 
-                            }else{
+                            } else {
                                 spenttime = parseInt(spenttime * 1000) / 1000;
                             }
                         }
