@@ -16,7 +16,13 @@ angular
                                   toaster,
                                   TaskFile,
                                   TagsList,
-                                  TaskMetrics) {
+                                  TaskMetrics,
+                                  $timeout) {
+
+                $scope.showDescription = false;
+                $timeout(function () {
+                    $scope.showDescription = true;
+                }, 250);
 
                 $scope.statuses = [
                     {name: 'New', value: ""},
@@ -87,6 +93,7 @@ angular
 
                     $scope.tagsList = [];
                     if ($scope.task._id || $scope.task.parentTaskId) {
+
 
                         var id = $scope.task._id || $scope.task.parentTaskId;
 
