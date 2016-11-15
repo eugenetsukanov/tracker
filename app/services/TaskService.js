@@ -59,20 +59,22 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
     };
 
     this.findVelocity = function (task, next) {
-        self.getParent(task, function (err, parent) {
-            if (err) {
-                return next(err);
-            }
+        if (task.status !== 'accepted' && task.velocity) {
+            next(null, task.velocity);
 
-            if (!parent) {
-                return next(null, 0);
-            }
-            if(parent.velocity){
-                next(null, parent.velocity);
-            }else{
+        } else {
+            self.getParent(task, function (err, parent) {
+                if (err) {
+                    return next(err);
+                }
+
+                if (!parent) {
+                    return next(null, 0);
+                }
+
                 self.findVelocity(parent, next);
-            }
-        });
+            });
+        }
     };
 
     this.estimateTask = function (velocity, task, next) {
@@ -84,10 +86,11 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
     };
 
     this.estimateSimpleTask = function (velocity, task, next) {
-        if(task.status==='accepted'){
-           return next(null, task);
+        if (task.status === 'accepted') {
+            return next(null, task);
         }
-        if (velocity ) {
+
+        if (velocity) {
             task.estimatedTime = task.points / velocity;
         }
 
@@ -116,19 +119,25 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
     };
 
     this.getEstimatedChildren = function (task, next) {
-        var query = {
-            parentTaskId: task,
-            archived: {$ne: true}
-        };
+        self.findVelocity(task, function (err, velocity) {
+            if (err) {
+                return next(err);
+            }
+
+            var query = {
+                parentTaskId: task,
+                archived: {$ne: true}
+            };
 
         self.getTasksByQuery(query, function (err, children) {
             if (err) {
                 return next(err);
             }
 
-            async.map(children, function (child, next) {
-                self.estimateTask(task.velocity, child, next);
-            }, next);
+                async.map(children, function (child, next) {
+                    self.estimateTask(velocity, child, next);
+                }, next);
+            });
         });
     };
 
