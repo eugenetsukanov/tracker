@@ -532,7 +532,7 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
                     return next(err);
                 }
 
-                FileService.connectFiles(task);
+                FileService.connectFiles(task.files);
                 self.updateRootTags(task);
 
                 self.updateParentByTask(task, function (err) {
