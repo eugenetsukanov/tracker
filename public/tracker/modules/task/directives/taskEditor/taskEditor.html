@@ -91,8 +91,8 @@
             <div class="form-group clearfix" ng-show="task.title" ng-if="task.simple">
                 <i class="fa fa-clock-o fa-md vcenter pull-left" uib-tooltip="Spent time"></i>
 
-                <div class=" pull-left input-sm text-center spent-time">
-                    <strong>{{task.spenttime | humanizeTime}}</strong>
+                <div class=" pull-left input-sm text-center spent-time" >
+                    <strong>{{task.spenttime || 0 | humanizeTime}}</strong>
                 </div>
 
                 <div class="pull-left input-sm text-left added-spent-time">+{{addedSpentTime| humanizeTime}}</div>

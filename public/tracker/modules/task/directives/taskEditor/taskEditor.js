@@ -94,7 +94,7 @@ angular
                     $scope.tasksForMove = [];
 
                     $scope.hours = parseInt($scope.task.spenttime);
-                    oldSpenttime = $scope.task.spenttime;
+                    oldSpenttime = $scope.task.spenttime? $scope.task.spenttime : 0;
                     $scope.addedSpentTime = 0;
 
                 };
