@@ -15,7 +15,13 @@ angular
                                   Team,
                                   toaster,
                                   TaskFile,
-                                  TagsList) {
+                                  TagsList,
+                                  $timeout) {
+
+                $scope.showDescription = false;
+                $timeout(function () {
+                    $scope.showDescription = true;
+                }, 250);
 
                 $scope.statuses = [
                     {name: 'New', value: ""},

@@ -522,8 +522,9 @@ var TaskService = function (Task, FileService, UserService, SocketService, Histo
                 return next(err);
             }
 
-            task.save(function (err, task) {
+            task.save(function (err) {
                 if (err) return next(err);
+
                 FileService.connectFiles(task.files);
                 self.updateRootTags(task);
 
@@ -564,12 +565,14 @@ var TaskService = function (Task, FileService, UserService, SocketService, Histo
             if (err) {
                 return next(err);
             }
+
             var wasModified = task.isModified();
             task.save(function (err, task) {
                 if (err) {
                     return next(err);
                 }
-                FileService.connectFiles(task);
+
+                FileService.connectFiles(task.files);
                 self.updateRootTags(task);
 
                 self.updateParentByTask(task, function (err) {
@@ -591,6 +594,7 @@ var TaskService = function (Task, FileService, UserService, SocketService, Histo
             });
         });
     };
+
 
     this.removeTaskStuff = function (task, next) {
         next = next || _.noop;
