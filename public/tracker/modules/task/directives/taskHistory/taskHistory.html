@@ -1,15 +1,4 @@
-<form ng-submit="createComment()">
-    <div class="form-group">
-        <textarea ng-keypress="saveComment($event)"
-                  ng-focus="msd-elastic" msd-elastic
-                  ng-model="comment.text"
-                  class="form-control description-height"
-                  placeholder="Create a comment with Enter + shift"
-                  rows="1">
-        </textarea>
-    </div>
-</form>
-
+<div task-comment task="task"></div>
 <div class="task-views-block">
     <div class="clearfix">
         <div class="btn-group board-buttons" role="group">
@@ -25,15 +14,10 @@
         </div>
     </div>
 </div>
-
 <div ng-if="messages.length">
     <div ng-repeat="message in messages">
         <div class="well" style="background-color:#fff;">
-            <task-history-label historytype="message._type"></task-history-label>
-            <span ng-if="message.user"><strong>{{message.user.first}}{{message.user.last}}</strong></span>
-            <span class="text-muted"
-                  style="font-size: 10px;"> at {{message.updatedAt | date : 'HH:mm:ss yyyy/MM/dd'}}</span>
-            <div ng-include="getInclude(message._type)" class="history-message"></div>
+            <div ng-include="'tracker/modules/task/directives/taskHistory/historyTypeTemplites/'+ message._type +'.html'"></div>
         </div>
     </div>
 </div>

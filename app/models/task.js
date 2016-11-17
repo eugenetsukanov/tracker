@@ -50,12 +50,12 @@ module.exports = function (mongoose) {
     });
 
     TaskSchema.post('remove', function (doc) {
-        var TaskComment = mongoose.model('TaskComment');
-        TaskComment.remove({task: doc._id}, function (err) {
+        var TaskHistory = mongoose.model('TaskHistory');
+        TaskHistory.remove({task: doc._id}, function (err) {
             if (err) {
                 return next(err);
             }
-            console.log('Comments were deleted');
+            console.log('History was deleted');
         })
     });
 

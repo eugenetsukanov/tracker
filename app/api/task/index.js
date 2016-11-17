@@ -23,8 +23,7 @@ module.exports = function (app) {
         field("files").array(),
         field("tags").array(),
         field("tagsList").array(),
-        field("archived").trim(),
-        field("commentsCounter").isNumeric()
+        field("archived").trim()
     );
 
     app.get('/api/tasks', function (req, res, next) {

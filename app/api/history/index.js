@@ -3,6 +3,7 @@ module.exports = function (app) {
     var TaskComment = app.container.get('TaskComment');
     var UserService = app.container.get('UserService');
     var FormService = app.container.get('FormService');
+    var TaskService = app.container.get('TaskService');
 
     var form = require("express-form"),
         field = form.field;
@@ -22,7 +23,18 @@ module.exports = function (app) {
             if (err) {
                 return next(err);
             }
-            res.sendStatus(200);
+            TaskService.notifyUsers(req.Task, 'comment.save', function (err) {
+                if (err) {
+                    return next(err);
+                }
+                TaskService.updateCommentsCounter(req.Task, function (err) {
+                    if (err) {
+                        return next(err);
+                    }
+
+                    res.sendStatus(200);
+                });
+            })
 
         })
     });
@@ -39,10 +51,7 @@ module.exports = function (app) {
                 if (err) {
                     return next(err);
                 }
-                if (!messages) {
-                    return res.sendStatus(404);
-                }
-                res.status(200).send(messages);
+                res.status(200).json(messages);
             })
 
     });

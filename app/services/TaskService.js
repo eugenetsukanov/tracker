@@ -1,8 +1,29 @@
-var TaskService = function (Task, FileService, UserService, SocketService, HistoryService) {
+var TaskService = function (Task, FileService, UserService, SocketService, HistoryService, TaskComment) {
     var self = this;
     var _ = require('lodash');
     var async = require('async');
     var pointLine = [0, 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, 144];
+
+    this.updateCommentsCounter = function (task, next) {
+        var query = {
+            task: task
+        };
+
+        TaskComment.count(query, function (err, number) {
+            if (err) {
+                return next(err);
+            }
+
+            task.commentsCounter = number;
+            task.save(function (err, task) {
+                if (err) {
+                    return next(err);
+                }
+
+                self.notifyUsers(task, 'task.save', next)
+            });
+        });
+    };
 
     this.calculate = function (task, next) {
         if (task.simple) {
@@ -543,7 +564,6 @@ var TaskService = function (Task, FileService, UserService, SocketService, Histo
             if (err) {
                 return next(err);
             }
-
             var wasModified = task.isModified();
             task.save(function (err, task) {
                 if (err) {

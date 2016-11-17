@@ -26,7 +26,7 @@ module.exports = function (container) {
 
   // services
   container.register('FileService', require('../services/FileService'), ['GridFS']);
-  container.register('TaskService', require('../services/TaskService'), ['Task', 'FileService', 'UserService', 'SocketService','HistoryService']);
+  container.register('TaskService', require('../services/TaskService'), ['Task', 'FileService', 'UserService', 'SocketService','HistoryService', 'TaskComment']);
   container.register('UserService', require('../services/UserService'), ['User']);
 
   container.register('HistoryService', require('../services/HistoryService'), ['HistoryService.historyWriters']);

@@ -1,0 +1,6 @@
+<span class="label label-success">metrics</span>
+<span ng-if="message.user"><strong>{{message.user.first}}{{message.user.last}}</strong></span>
+<span class="text-muted"
+      style="font-size: 10px;"> at {{message.updatedAt | date : 'HH:mm:ss yyyy/MM/dd'}}</span>
+<p ng-if="message.velocity" class="history-message">Velocity was changed to {{message.velocity|round}} .</p>
+<p class="history-message">Estimated time was changed to {{message.estimatedTime|round}} hours .</p>

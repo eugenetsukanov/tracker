@@ -6,7 +6,9 @@ module.exports = function (TaskDeveloper) {
         this.task = task;
 
         this.isUpdated = function () {
-            return this.task.developer && this.task._origin&&this.task._origin.developer&& this.task._origin.developer._id.toString() !== this.task.developer.toString();
+            var origin = this.task._origin;
+            var developer = this.task.developer;
+            return developer && origin && origin.developer&& origin.developer._id.toString() !== developer.toString();
         };
         this.isNew = function () {
             return !this.task._origin && this.task.developer;

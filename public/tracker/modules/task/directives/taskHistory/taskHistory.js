@@ -6,51 +6,18 @@ angular
                 restrict: 'A',
                 templateUrl: 'tracker/modules/task/directives/taskHistory/taskHistory.html',
                 controller: function ($scope,
-                                      Task,
                                       TaskHistory,
-                                      historyInfoService) {
+                                      SocketService) {
+
                     var allMessages;
+                    loadHistory($scope.task._id);
 
-                    $scope.getInclude = function (messageType) {
-                        var historyType = _.find(historyInfoService, function (historyType) {
-                            return historyType.type === messageType;
-                        });
-                        return historyType.templateUrl;
-                    };
-
-                    function initComment() {
-                        $scope.comment = new TaskHistory({
-                            text: ''
-                        });
-                        loadHistory();
-                    }
-
-                    $scope.$watch('task', function (task) {
-                        if (task) {
-                            initComment();
-                        }
+                    SocketService.scopeOn($scope, 'comment.save', function (data) {
+                        loadHistory(data.task);
                     });
 
-                    $scope.saveComment = function ($event) {
-                        if ($event.keyCode == 13 && $event.shiftKey) {
-                            createComment();
-                        }
-                    };
-
-                    function createComment() {
-                        $scope.comment.$save({taskId: $scope.task._id, nested: 'comments'}, function () {
-                            updateCommentCounter();
-                            loadHistory();
-                        });
-                    }
-
-                    function updateCommentCounter() {
-                        $scope.task.commentsCounter++;
-                        $scope.task.$update({taskId: $scope.task._id});
-                    }
-
-                    function loadHistory() {
-                        TaskHistory.query({taskId: $scope.task._id}, function (messages) {
+                    function loadHistory(taskId) {
+                        TaskHistory.query({taskId: taskId}, function (messages) {
                             $scope.messages = messages;
                             allMessages = messages;
 
@@ -75,7 +42,7 @@ angular
                     }
                 },
                 scope: {
-                    task: "=task"
+                    task: "="
 
                 }
             }

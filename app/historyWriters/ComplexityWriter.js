@@ -15,10 +15,12 @@ module.exports = function (TaskComplexity) {
 
         this.getModel = function () {
             return new TaskComplexity({
+
                 task: self.task._id,
                 user: self.task.updatedBy ? self.task.updatedBy : self.task.owner,
                 complexity: self.task.complexity,
                 points: self.task.points
+
             });
         };
 
