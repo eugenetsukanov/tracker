@@ -18,11 +18,12 @@ dev:
     - mongo
   volumes:
     - ./:/project
-  command: node app.js
+  command: concurrently "nodemon -i public app.js" "plus.shell --dir /project start"
   environment:
     NODE_ENV: 'dev'
   ports:
     - "3000:3000"
+    - "10022:10022"
 
 mongo:
   image: mongo:latest
