@@ -166,7 +166,17 @@ hr {
 .task-metrics-widget li.nobg:hover {
     background: transparent;
 }
-
+.edit-panel-metrics-info {
+    font-size: 12px;
+    line-height: 1.5;
+    padding-top: 5px;
+    padding-right: 0px;
+    padding-bottom: 5px;
+}
+.edit-panel-metrics-info li{
+    padding-right: 0px;
+    margin-right: 0px;
+}
 .pointer {
     cursor: pointer;
 }

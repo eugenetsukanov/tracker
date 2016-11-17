@@ -33,7 +33,6 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
         })
     };
 
-
     this.calculateComplex = function (task, next) {
         self.getChildren(task, function (err, children) {
             if (err) {
@@ -60,8 +59,9 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
     };
 
     this.findVelocity = function (task, next) {
-        if (task.velocity) {
+        if (task.status !== 'accepted' && task.velocity) {
             next(null, task.velocity);
+
         } else {
             self.getParent(task, function (err, parent) {
                 if (err) {
@@ -86,6 +86,10 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
     };
 
     this.estimateSimpleTask = function (velocity, task, next) {
+        if (task.status === 'accepted') {
+            return next(null, task);
+        }
+
         if (velocity) {
             task.estimatedTime = task.points / velocity;
         }
@@ -125,10 +129,10 @@ var TaskService = function (Task, FileService, UserService, SocketService) {
                 archived: {$ne: true}
             };
 
-            self.getTasksByQuery(query, function (err, children) {
-                if (err) {
-                    return next(err);
-                }
+        self.getTasksByQuery(query, function (err, children) {
+            if (err) {
+                return next(err);
+            }
 
                 async.map(children, function (child, next) {
                     self.estimateTask(velocity, child, next);
