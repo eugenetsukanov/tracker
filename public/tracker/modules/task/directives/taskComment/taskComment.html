@@ -1,0 +1,11 @@
+<form ng-submit="createComment()">
+    <div class="form-group">
+        <textarea ng-keypress="saveComment($event)"
+                  ng-focus="msd-elastic" msd-elastic
+                  ng-model="comment.text"
+                  class="form-control description-height"
+                  placeholder="Create a comment with Enter + shift"
+                  rows="1">
+        </textarea>
+    </div>
+</form>

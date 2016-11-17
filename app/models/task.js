@@ -21,12 +21,14 @@ module.exports = function (mongoose) {
         estimatedTime: {type: Number, default: 0},
         timeToDo: {type: Number, default: 0},
         owner: {type: Schema.Types.ObjectId, ref: "User"},
-        developer: {type: Schema.Types.ObjectId, ref: "User", default: null},
+        developer: {type: Schema.Types.ObjectId, ref: "User"},
         team: [{type: Schema.Types.ObjectId, ref: "User", default: []}],
         files: [FileSchema],
         tags: [String],
         tagsList: [String],
-        archived: {type: Boolean, default: false}
+        archived: {type: Boolean, default: false},
+        commentsCounter:{type: Number, default: 0},
+        updatedBy: {type: Schema.Types.ObjectId, ref: "User", default: null}
     });
 
     TaskSchema.methods = {
@@ -45,6 +47,16 @@ module.exports = function (mongoose) {
     TaskSchema.pre('save', function (next) {
         this.updatedAt = Date.now();
         next();
+    });
+
+    TaskSchema.post('remove', function (doc) {
+        var TaskHistory = mongoose.model('TaskHistory');
+        TaskHistory.remove({task: doc._id}, function (err) {
+            if (err) {
+                return next(err);
+            }
+            console.log('History was deleted');
+        })
     });
 
     var Task = mongoose.model('Task', TaskSchema);

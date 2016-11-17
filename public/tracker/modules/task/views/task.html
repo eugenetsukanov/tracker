@@ -16,7 +16,10 @@
             {{parentTask.title}}</a>
     </h5>
 
-    <div ng-hide="task._id == newTask._id" ng-click="edit(task)" task-metrics metrics-details="2" task="task"></div>
+    <div ng-hide="task._id == newTask._id" class="pull-left" ng-click="edit(task)" task-metrics metrics-details="2" task="task" ></div>
+
+    <a class="btn btn-sm btn-link pull-right" ng-click="toggleTaskHistory()">Details</a>
+<div class="clearfix"></div>
 
     <div ng-hide="task._id == newTask._id" ng-if="task.description" class="mg" text-extend="task.description"
          text-limit="170"></div>
@@ -26,25 +29,31 @@
     <div task-tags task="task" ng-hide="task._id == newTask._id"></div>
 </div>
 
-<div ng-if="!newTask._id" task-editor task="newTask" task-on-complete="init"
-     class="edit-form"></div>
+<div ng-if="openHistory" task-history task="task" ></div>
 
-<div>
-    <div ng-if="taskId" class="pull-right board-buttons btn-group" role="group">
-        <a ng-if="tasks.length" class="btn btn-sm btn-default" ui-sref="app.tags-page({taskId: task._id})">Tags</a>
-        <a class="btn btn-sm btn-default" ui-sref="app.tasks-archive({taskId: task._id})">Archive</a>
-        <a ng-if="tasks.length" class="btn btn-sm btn-default" ui-sref="app.task-report({taskId: task._id, userId: userId})">Report</a>
-    </div>
+<div ng-if="!openHistory">
+    <div ng-if="!newTask._id" task-editor task="newTask" task-on-complete="init"
+         class="edit-form"></div>
 
-    <div ng-if="tasks.length" infinite-scroll="scroll()" infinite-scroll-distance="0"
-         infinite-scroll-disabled="busyScroll">
-        <div class="pull-right board-buttons" ng-if="!taskId">
-            <a class="btn btn-sm btn-default" ui-sref="app.projects-archive">Archive</a>
+    <div>
+        <div ng-if="taskId" class="pull-right board-buttons btn-group" role="group">
+            <a ng-if="tasks.length" class="btn btn-sm btn-default" ui-sref="app.tags-page({taskId: task._id})">Tags</a>
+            <a class="btn btn-sm btn-default" ui-sref="app.tasks-archive({taskId: task._id})">Archive</a>
+            <a ng-if="tasks.length" class="btn btn-sm btn-default"
+               ui-sref="app.task-report({taskId: task._id, userId: userId})">Report</a>
         </div>
-        <div task-views tasks="tasks" task-on-complete="init"></div>
-    </div>
 
-    <div ng-if="!tasks.length" class="align-center">
-        <h4>No active tasks.</h4>
+        <div ng-if="tasks.length" infinite-scroll="scroll()" infinite-scroll-distance="0"
+             infinite-scroll-disabled="busyScroll">
+            <div class="pull-right board-buttons" ng-if="!taskId">
+                <a class="btn btn-sm btn-default" ui-sref="app.projects-archive">Archive</a>
+            </div>
+            <div task-views tasks="tasks" task-on-complete="init"></div>
+        </div>
+
+        <div ng-if="!tasks.length" class="align-center">
+            <h4>No active tasks.</h4>
+        </div>
     </div>
 </div>
+

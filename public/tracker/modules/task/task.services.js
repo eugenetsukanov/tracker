@@ -301,5 +301,7 @@ angular
             }
         ]
     })
-
+    .factory('TaskHistory', function ($resource) {
+        return $resource('/api/tasks/:taskId/history/:nested', null);
+    })
 ;

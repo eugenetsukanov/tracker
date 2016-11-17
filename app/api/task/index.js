@@ -238,7 +238,6 @@ module.exports = function (app) {
 
     app.put('/api/tasks/:taskId', TaskForm, FormService.validate, function (req, res, next) {
         var taskData = _.merge({parentTaskId: req.body.parentTaskId || null}, req.form);
-
         if (taskData.parentTaskId) {
             /// @@@ re-think and refactor
             TaskService.getTaskById(taskData.parentTaskId, function (err, parent) {

@@ -94,7 +94,6 @@ angular
                     $scope.tagsList = [];
                     if ($scope.task._id || $scope.task.parentTaskId) {
 
-
                         var id = $scope.task._id || $scope.task.parentTaskId;
 
                         Team.query({taskId: id}, function (team) {
