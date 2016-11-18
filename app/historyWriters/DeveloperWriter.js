@@ -6,9 +6,13 @@ module.exports = function (TaskDeveloper) {
         this.task = task;
 
         this.isUpdated = function () {
+            if (!this.task._origin) {
+                return false;
+            }
             var origin = this.task._origin;
             var developer = this.task.developer;
-            return developer && origin && origin.developer&& origin.developer._id.toString() !== developer.toString();
+
+            return developer && origin && origin.developer && origin.developer !== developer;
         };
         this.isNew = function () {
             return !this.task._origin && this.task.developer;
@@ -23,13 +27,14 @@ module.exports = function (TaskDeveloper) {
         };
 
         this.write = function (next) {
-            if (this.isUpdated() || this.isNew()) {
+            if (this.isNew() || this.isUpdated()) {
                 this.getModel().save(next);
             } else {
                 next();
             }
         };
     }
+
     return DeveloperWriter;
 };
 
