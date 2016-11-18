@@ -16,6 +16,7 @@ angular
                                   toaster,
                                   TaskFile,
                                   TagsList,
+                                  TaskMetrics,
                                   $timeout) {
 
                 $scope.showDescription = false;
@@ -61,12 +62,32 @@ angular
                 var oldSpenttime;
 
                 $scope.$watch('task', function (task) {
-
                     if (task) {
                         init();
                     }
-
                 });
+
+                $scope.$watch('task.complexity', function () {
+                    if($scope.task._id && $scope.task.simple && $scope.task.complexity){
+                        getTaskMetrics();
+                    }
+                });
+
+                $scope.$watch('task.spenttime', function (spenttime) {
+                    if($scope.task.estimatedTime){
+                        $scope.task.timeToDo = $scope.task.estimatedTime - spenttime;
+                    }
+                });
+
+                function getTaskMetrics(){
+                    var updatedTask = new TaskMetrics($scope.task);
+
+                    updatedTask.$save(function (task){
+                        $scope.task.estimatedTime = task.estimatedTime;
+                        $scope.task.spenttime = task.spenttime;
+                        $scope.task.timeToDo = task.timeToDo;
+                    });
+                }
 
                 var init = function () {
 
@@ -93,7 +114,7 @@ angular
                     $scope.tasksForMove = [];
 
                     $scope.hours = parseInt($scope.task.spenttime);
-                    oldSpenttime = $scope.task.spenttime;
+                    oldSpenttime = $scope.task.spenttime? $scope.task.spenttime : 0;
                     $scope.addedSpentTime = 0;
 
                 };
@@ -176,13 +197,13 @@ angular
                         $scope.addedSpentTime = spenttime - oldSpenttime;
 
                         if (time.name === '5m') {
-                            flag++;
+                            flag ++;
 
                             if (flag === 3) {
                                 spenttime = parseInt(spenttime * 100) / 100;
                                 flag = 0;
 
-                            } else {
+                            }else{
                                 spenttime = parseInt(spenttime * 1000) / 1000;
                             }
                         }

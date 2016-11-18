@@ -12,3 +12,4 @@ RUN apt-get install -y nodejs
 
 # npm packages
 RUN npm install -g bower forever nodemon
+RUN npm install -g concurrently plus.shell
