@@ -11,10 +11,12 @@ Feature: TaskEstimation
     When I type username "test"
     When I type password "test"
     And click on log in button
+    Then I sleep 1
     And I see task board
     And I set max metrics details
 
   Scenario: CalculationPoints
+
     Then I see task "task 1"
     And I see task "task 2"
     And I see task title input
@@ -69,14 +71,14 @@ Feature: TaskEstimation
 
     Then I click on task complexity "2+"
     Then I click on task status "Accepted"
-    Then I type task spent time "1"
+    Then I click task spent time "+1h"
 
     And I click on save button
 
     Then I see task "p1.2" velocity "8"
     And I don't see task "task 2"
-    And I see task "p1.1" estimated time "1.00"
-    And I see parent "p1" estimated time "2.00"
+    And I see task "p1.1" estimated time "1.00" tooltip "01:00"
+    And I see parent "p1" estimated time "2.00" tooltip "02:00"
 
     Then I click on task link "p1.1"
     Then I am on "p1.1" page
@@ -94,17 +96,18 @@ Feature: TaskEstimation
 
     Then I don't see task "task 1"
     And I don't see task "p1.2"
-    And I see task "p1.1.1" estimated time "1.00"
-    And I see parent "p1.1" estimated time "1.00"
+    And I see task "p1.1.1" estimated time "1.00" tooltip "01:00"
+    And I see parent "p1.1" estimated time "1.00" tooltip "01:00"
 
-    Then I see parent "p1" estimated time "0"
+    Then I sleep 3
+    Then I see parent "p1" estimated time "1.00" tooltip "01:00"
 
     Then I click back to project "p1"
     And I see task "p1.1"
     And I see task "p1.2"
 
-    Then I see parent "p1" estimated time "2.00"
-    And I see task "p1.1" estimated time "1.00"
+    Then I see parent "p1" estimated time "2.00" tooltip "02:00"
+    And I see task "p1.1" estimated time "1.00" tooltip "01:00"
 
   Scenario: ProjectEstimation2
 
@@ -211,7 +214,8 @@ Feature: TaskEstimation
     And I see task "p1.2"
     And I don't see task "task 1"
 
-    Then I see parent "p1" estimated time "0"
+    Then I sleep 3
+    Then I see parent "p1" estimated time "0" tooltip "00:00"
     Then I see task "p1.1" complexity "16p"
     Then I see task "p1.2" complexity "16p"
 
@@ -221,7 +225,7 @@ Feature: TaskEstimation
     Then I see task form
     And I click on task complexity "2+"
     Then I click on task status "Accepted"
-    Then I type task spent time "1"
+    Then I click task spent time "+1h"
     Then I click on save button
 
     And I see task "p1.3"
@@ -229,7 +233,7 @@ Feature: TaskEstimation
     And I don't see task "task 1"
 
     Then I see task "p1.3" velocity "8.00"
-    And I see task "p1.1" estimated time "2.00"
-    And I see task "p1.2" estimated time "2.00"
-    And I see parent "p1" estimated time "5.00"
+    And I see task "p1.1" estimated time "2.00" tooltip "02:00"
+    And I see task "p1.2" estimated time "2.00" tooltip "02:00"
+    And I see parent "p1" estimated time "5.00" tooltip "05:00"
     And I see parent "p1" complexity "40p"

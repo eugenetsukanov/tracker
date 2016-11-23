@@ -54,7 +54,9 @@ Feature: Search
 
     Then I edit this task
 
+    Then I sleep 3
     Then I tag this task with "super-tag"
+    Then I sleep 1
     Then I save task
 
     Then I see task with tag "super-tag"
@@ -82,13 +84,13 @@ Feature: Search
     Then I click on edit button
     Then I see edit form
     And I see title field
+    Then I sleep 1
 
     Then I type "task 1.2 updated"
-    Then I sleep 1
     Then I click on save button
     Then I sleep 1
 
     Then I reload page
-    Then I sleep 1
+    Then I sleep 3
 
     And I see task "task 1.2 updated"
