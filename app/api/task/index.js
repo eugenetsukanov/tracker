@@ -238,7 +238,6 @@ module.exports = function (app) {
 
     app.put('/api/tasks/:taskId', TaskForm, FormService.validate, function (req, res, next) {
         var taskData = _.merge({parentTaskId: req.body.parentTaskId || null}, req.form);
-
         if (taskData.parentTaskId) {
             /// @@@ re-think and refactor
             TaskService.getTaskById(taskData.parentTaskId, function (err, parent) {
@@ -355,4 +354,27 @@ module.exports = function (app) {
             });
         });
     });
+
+    app.post('/api/tasks/:taskId/metrics', TaskForm, FormService.validate, function (req, res, next) {
+        var task = _.assign(req.Task, req.form);
+
+        TaskService.calculateSimple(task, function (err, task) {
+            if (err) {
+                return next(err);
+            }
+            TaskService.findVelocity(task, function (err, velocity) {
+                if (err) {
+                    return next(err);
+                }
+                TaskService.estimateSimpleTask(velocity, task, function (err, task) {
+                    if (err) {
+                        return next(err);
+                    }
+                    res.json(task);
+                });
+            });
+        })
+
+    });
 };
+

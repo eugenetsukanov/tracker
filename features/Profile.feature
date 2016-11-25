@@ -11,6 +11,7 @@ Feature: Profile
 
   Scenario: Update Profile
 
+    Then I sleep 1
     Then I click my profile link
     Then I see my profile form
 
@@ -31,6 +32,7 @@ Feature: Profile
 
   Scenario: Change Password
 
+    Then I sleep 1
     Then I click my profile link
     Then I see my profile form
 
@@ -52,5 +54,6 @@ Feature: Profile
     When I type password "111"
 
     And click on log in button
+    Then I sleep 5
     And I see task board
 

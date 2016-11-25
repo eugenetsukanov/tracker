@@ -1,21 +1,20 @@
 <div class="panel panel-default"
+     ui-tree-handle
      ng-class="{
      'panel-success': task.status == 'accepted',
      'panel-warning': task.status == 'in progress',
      'task-todo-low-time' : (task.timeToDo|round) < 0,
-     'task-not-estimated' : !task.points
-     }">
+     'task-not-estimated' : !task.points}">
 
-    <div class="panel-heading overflow-hidden">
-        <h4 class="panel-title"><a ui-sref="app.task({taskId: task._id})">{{task.title}}</a>
-            <span ng-if="onEdit" class="fa fa-pencil-square-o vcenter pull-right pointer" ng-click="edit(task)"></span>
+    <div class="panel-heading overflow-hidden" >
+        <h4 class="panel-title"><a ui-sref="app.task({taskId: task._id})" data-nodrag>{{task.title}}</a>
+            <span ng-if="onEdit" class="fa fa-pencil-square-o vcenter pull-right pointer" ng-click="edit(task)" data-nodrag></span>
             <span class="label label-info vcenter pull-right" ng-if="!task.simple">complex</span>
         </h4>
     </div>
 
-    <div class="panel-body" ng-show="metricsDetails || task.description || task.tags.length">
-
-        <div ng-if="metricsDetails" ng-click="edit(task)" class="fs-sm" task-metrics task="task" task-options="options" metrics-details="metricsDetails"></div>
+    <div class="panel-body" ng-show="metricsDetails || task.description || task.tags.length" ui-tree-nodes ng-model="task.tasks">
+        <div ng-if="metricsDetails" ng-click="edit(task)" class="fs-sm " task-metrics task="task" task-options="options" metrics-details="metricsDetails" style="display: inline-block"></div>
 
         <div ng-if="task.description">
             <hr ng-if="metricsDetails"/>

@@ -1,36 +1,19 @@
+
 <div class="row board-view" ng-init="taskOptions = {hideStatus: true}">
-
-    <div class="col-md-4">
-        <h3>New</h3>
-
-        <div ng-repeat="task in tasks | byStatus : ''"
-             task-panel task="task"
-             metrics-details="metricsDetails"
-             task-on-edit="edit"
-             task-options="taskOptions"></div>
-
+    <div class="col-sm-4" ng-repeat="list in tasksList" ui-tree="treeOptions" id="tree-{{$index}}">
+        <h3 class="list-name">{{list.name}}</h3>
+        <div ui-tree-nodes ng-model="list.tasks" class="tasks-list">
+            <div task-panel
+                 task="task"
+                 ng-repeat="task in list.tasks"
+                 ui-tree-node
+                 ng-model="list.tasks"
+                 metrics-details="metricsDetails"
+                 task-on-edit="edit"
+                 task-options="taskOptions">
+            </div>
+        </div>
     </div>
-
-    <div class="col-md-4">
-        <h3>In progress</h3>
-
-        <div ng-repeat="task in tasks | byStatus: 'in progress'"
-             task-panel task="task"
-             metrics-details="metricsDetails"
-             task-on-edit="edit"
-             task-options="taskOptions"></div>
-    </div>
-
-    <div class="col-md-4">
-        <h3>Accepted</h3>
-
-        <div ng-repeat="task in tasks | byStatus: 'accepted'"
-             task-panel task="task"
-             metrics-details="metricsDetails"
-             task-on-edit="edit"
-             task-options="taskOptions"></div>
-    </div>
-
 </div>
 
 

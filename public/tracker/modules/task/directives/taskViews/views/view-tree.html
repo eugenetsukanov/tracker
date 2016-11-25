@@ -1,3 +1,12 @@
-<div class="task-tree">
-    <task-tree ng-repeat="task in tasks" task="task" task-on-edit="edit" metrics-details="metricsDetails"></task-tree>
+<div class="row">
+    <div class="col-sm-12" ui-tree="treeOptions">
+        <div class="task-tree" ui-tree-nodes ng-model="tasks">
+            <task-tree ng-repeat="task in tasks"
+                       task="task"
+                       task-on-edit="edit"
+                       metrics-details="metricsDetails">
+            </task-tree>
+        </div>
+    </div>
 </div>
+

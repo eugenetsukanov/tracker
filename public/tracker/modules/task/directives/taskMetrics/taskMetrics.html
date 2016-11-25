@@ -15,9 +15,9 @@
     <li ng-if="metricsDetails == 2 && task.priority" uib-tooltip="Priority"><i class="fa fa-bolt"></i>&nbsp;{{task.priority}}</li>
 
     <li>
-        <i class="fa fa-clock-o" uib-tooltip="Time"></i>&nbsp;<span uib-tooltip="Estimated">{{task.estimatedTime| round}}</span>
-        / <span uib-tooltip="Spent">{{task.spenttime| round}}</span>
-        / <span uib-tooltip="TODO" ng-class="{'warning-text' : (task.timeToDo|round) < 0}">{{task.timeToDo| round}}</span>
+        <i class="fa fa-clock-o" uib-tooltip="Time"></i>&nbsp;<span uib-tooltip="Estimated {{task.estimatedTime|humanizeTime}}">{{task.estimatedTime| round}}</span>
+        / <span uib-tooltip="Spent {{task.spenttime | humanizeTime}}">{{task.spenttime| round}}</span>
+        / <span uib-tooltip="TODO {{task.timeToDo | humanizeTime}}" ng-class="{'warning-text' : (task.timeToDo|round) < 0}">{{task.timeToDo| round}}</span>
     </li>
 
     <li uib-tooltip="Complexity / Points">
@@ -31,5 +31,6 @@
     <li ng-if="task.updatedAt" uib-tooltip="Updated {{task.updatedAt | date : 'yyyy/MM/dd HH:mm:ss'}}"><i class="fa fa-refresh"></i>&nbsp;{{task.updatedAt | fromNow}}</li>
 
     <li ng-if="metricsDetails == 2 && task.files.length > 0" uib-tooltip="Attachments"><i class="fa fa-paperclip"></i>&nbsp;{{task.files.length}}</li>
+    <li ng-if=" task.commentsCounter" ng-click="$event.stopPropagation();"><i class="fa fa-comment"></i>&nbsp;<span uib-tooltip="Comments">{{task.commentsCounter ||0}}</span></li>
 </ul>
 

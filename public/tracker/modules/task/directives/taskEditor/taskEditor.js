@@ -15,7 +15,14 @@ angular
                                   Team,
                                   toaster,
                                   TaskFile,
-                                  TagsList) {
+                                  TagsList,
+                                  TaskMetrics,
+                                  $timeout) {
+
+                $scope.showDescription = false;
+                $timeout(function () {
+                    $scope.showDescription = true;
+                }, 250);
 
                 $scope.statuses = [
                     {name: 'New', value: ""},
@@ -32,7 +39,7 @@ angular
                 $scope.addTimeList = [
                     {
                         name: '5m',
-                        value: 0.1
+                        value: 0.085
                     },
                     {
                         name: '15m',
@@ -52,19 +59,40 @@ angular
 
                 $scope.users = UserService.getUsers();
 
-                $scope.$watch('task', function (task) {
+                var oldSpenttime;
 
+                $scope.$watch('task', function (task) {
                     if (task) {
                         init();
                     }
-
                 });
+
+                $scope.$watch('task.complexity', function () {
+                    if($scope.task._id && $scope.task.simple && $scope.task.complexity){
+                        getTaskMetrics();
+                    }
+                });
+
+                $scope.$watch('task.spenttime', function (spenttime) {
+                    if($scope.task.estimatedTime){
+                        $scope.task.timeToDo = $scope.task.estimatedTime - spenttime;
+                    }
+                });
+
+                function getTaskMetrics(){
+                    var updatedTask = new TaskMetrics($scope.task);
+
+                    updatedTask.$save(function (task){
+                        $scope.task.estimatedTime = task.estimatedTime;
+                        $scope.task.spenttime = task.spenttime;
+                        $scope.task.timeToDo = task.timeToDo;
+                    });
+                }
 
                 var init = function () {
 
                     $scope.tagsList = [];
                     if ($scope.task._id || $scope.task.parentTaskId) {
-
 
                         var id = $scope.task._id || $scope.task.parentTaskId;
 
@@ -85,8 +113,11 @@ angular
 
                     $scope.tasksForMove = [];
 
-                };
+                    $scope.hours = parseInt($scope.task.spenttime);
+                    oldSpenttime = $scope.task.spenttime? $scope.task.spenttime : 0;
+                    $scope.addedSpentTime = 0;
 
+                };
 
                 $scope.onComplete = function () {
                     if ($scope.taskOnComplete) {
@@ -117,7 +148,6 @@ angular
                         //update
                         $scope.task.$update().then(init).then($scope.onComplete);
                     }
-
                 };
 
                 $scope.delete = function (task) {
@@ -158,16 +188,36 @@ angular
                     }).then(init).then($scope.onComplete);
                 };
 
+                var flag = 0;
                 $scope.addTime = function (time) {
                     if ($scope.task) {
                         var spenttime = parseFloat($scope.task.spenttime || 0);
                         spenttime += time.value;
 
-                        spenttime = parseInt(Math.ceil(spenttime * 100)) / 100;
+                        $scope.addedSpentTime = spenttime - oldSpenttime;
+
+                        if (time.name === '5m') {
+                            flag ++;
+
+                            if (flag === 3) {
+                                spenttime = parseInt(spenttime * 100) / 100;
+                                flag = 0;
+
+                            }else{
+                                spenttime = parseInt(spenttime * 1000) / 1000;
+                            }
+                        }
+
                         $scope.task.spenttime = spenttime;
+
                     }
                 };
 
+                $scope.reset = function () {
+                    $scope.task.spenttime = oldSpenttime;
+                    $scope.addedSpentTime = 0;
+
+                };
 
                 $scope.deleteFile = function (file) {
 

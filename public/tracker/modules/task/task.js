@@ -12,107 +12,111 @@ angular
                                       UserService,
                                       SocketService) {
 
-        $scope.report = {
-            title: 'Report',
-            name: "report"
-        };
+            $scope.report = {
+                title: 'Report',
+                name: "report"
+            };
 
-        $scope.$watchCollection('UserService.user', function (user) {
-            if (user) $scope.userId = user._id;
-        });
-
-        $scope.userId = UserService.getUserId();
-        $scope.taskId = $stateParams.taskId;
-        $scope.tasks = [];
-
-        var socketSync = function (data) {
-            var task = _.find($scope.tasks, function (aTask) {
-                return aTask._id === data.task
+            $scope.$watchCollection('UserService.user', function (user) {
+                if (user) $scope.userId = user._id;
             });
 
-            if ($scope.task && $scope.task._id == data.parent) {
-                loadTasks();
-            } else if ($scope.task && $scope.task._id == data.task) {
-                loadTasks();
-            } else if (!$scope.taskId && !data.parent) {
-                loadTasks();
-            }
+            $scope.openHistory = false;
+            $scope.userId = UserService.getUserId();
+            $scope.taskId = $stateParams.taskId;
+            $scope.tasks = [];
 
-            return task;
-        };
+            var socketSync = function (data) {
+                var task = _.find($scope.tasks, function (aTask) {
+                    return aTask._id === data.task
+                });
 
-        SocketService.scopeOn($scope, 'task.save', function (data) {
-            var task = socketSync(data);
+                if ($scope.task && $scope.task._id == data.parent) {
+                    loadTasks();
+                } else if ($scope.task && $scope.task._id == data.task) {
+                    loadTasks();
+                } else if (!$scope.taskId && !data.parent) {
+                    loadTasks();
+                }
 
-            if (task) {
-                task.$get();
-            }
-        });
+                return task;
+            };
 
-        SocketService.scopeOn($scope, 'task.remove', function (data) {
-            var task = socketSync(data);
-            if (task) {
-                loadTasks();
-            }
-        });
+            SocketService.scopeOn($scope, 'task.save', function (data) {
+                var task = socketSync(data);
 
-        var loadTasks = function () {
-            if ($scope.taskId) {
-                var query = {
-                    taskId: $scope.taskId,
-                    nested: 'tasks'
-                };
+                if (task) {
+                    task.$get();
+                }
+            });
 
-                Task.query(query, function (tasks) {
-                    $scope.tasks = tasks;
+            SocketService.scopeOn($scope, 'task.remove', function (data) {
+                var task = socketSync(data);
+                if (task) {
+                    loadTasks();
+                }
+            });
 
-                    Task.get({taskId: $scope.taskId}, function (task) {
+            $scope.toggleTaskHistory = function () {
+                $scope.openHistory = !$scope.openHistory;
+            };
 
-                        $scope.task = task;
-                        TitleService.setTitle($scope.task.title);
+            var loadTasks = function () {
+                if ($scope.taskId) {
+                    var query = {
+                        taskId: $scope.taskId,
+                        nested: 'tasks'
+                    };
 
-                        if (task.parentTaskId) {
-                            Task.get({taskId: task.parentTaskId}, function (parentTask) {
-                                $scope.parentTask = parentTask;
-                            });
-                        }
+                    Task.query(query, function (tasks) {
+                        $scope.tasks = tasks;
+
+                        Task.get({taskId: $scope.taskId}, function (task) {
+
+                            $scope.task = task;
+                            TitleService.setTitle($scope.task.title);
+
+                            if (task.parentTaskId) {
+                                Task.get({taskId: task.parentTaskId}, function (parentTask) {
+                                    $scope.parentTask = parentTask;
+                                });
+                            }
+                        });
+
+                    }, function () {
+                        $state.go('app.tasks');
                     });
-
-                }, function () {
-                    $state.go('app.tasks');
+                } else {
+                    Task.query({}, function (tasks) {
+                        $scope.tasks = tasks;
+                    });
+                }
+            };
+            $scope.init = function () {
+                loadTasks();
+                $scope.newTask = new Task({
+                    simple: true,
+                    developer: UserService.getUser()._id,
+                    status: "",
+                    priority: 5,
+                    parentTaskId: $scope.taskId || undefined,
+                    files: [],
+                    team: []
                 });
-            } else {
-                Task.query({}, function (tasks) {
-                    $scope.tasks = tasks;
-                });
-            }
-        };
+            };
 
-        $scope.init = function () {
-            loadTasks();
+            var init = $scope.init;
 
-            $scope.newTask = new Task({
-                simple: true,
-                developer: UserService.getUser()._id,
-                status: "",
-                priority: 5,
-                parentTaskId: $scope.taskId || undefined,
-                files: [],
-                team: []
-            });
-        };
+            init();
 
-        var init = $scope.init;
+            $scope.edit = function (task) {
 
-        init();
+                $scope.newTask = task;
 
-        $scope.edit = function (task) {
-
-            $scope.newTask = task;
-
-            TaskEditorModal.show(task, init);
-        };
-    })
+                TaskEditorModal.show(task, init);
+            };
+        }
+    )
 
     .controller('AssignedTasksCtrl', function ($scope,
                                                $stateParams,

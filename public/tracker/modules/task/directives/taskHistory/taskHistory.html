@@ -1,0 +1,23 @@
+<div task-comment task="task" on-save="reload"></div>
+<div class="task-views-block">
+    <div class="clearfix">
+        <div class="btn-group board-buttons" role="group">
+            <button class="btn btn-default btn-sm"
+                    ng-click="findAllMessages()">All
+            </button>
+            <button class="btn btn-default btn-sm"
+                    ng-click="findComments()">Comments
+            </button>
+            <button class="btn btn-default btn-sm"
+                    ng-click="findOtherMessages()">Other
+            </button>
+        </div>
+    </div>
+</div>
+<div ng-if="messages.length">
+    <div ng-repeat="message in messages">
+        <div class="well" style="background-color:#fff;">
+            <div ng-include="'tracker/modules/task/directives/taskHistory/historyTypeTemplites/'+ message._type +'.html'"></div>
+        </div>
+    </div>
+</div>

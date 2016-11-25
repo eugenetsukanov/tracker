@@ -1,6 +1,8 @@
 <ul class="detail-line task-metrics-widget" ng-if="counter > 0">
     <li><i class="fa fa-tasks"></i>&nbsp;{{counter}} tasks</li>
-    <li><i class="fa fa-clock-o"></i>&nbsp;<span uib-tooltip="Estimated time">{{estimatedTime | round}}</span>&nbsp;/&nbsp;<span uib-tooltip="Spent time">{{(estimatedTime - timeToDo) | round}}</span>&nbsp;/&nbsp;<span uib-tooltip="TODO">{{timeToDo | round}}</span>&nbsp;hours
+    <li><i class="fa fa-clock-o"></i>&nbsp;<span uib-tooltip="Estimated time">{{estimatedTime | round}}</span>&nbsp;/&nbsp;
+        <span uib-tooltip="Spent time">{{(estimatedTime - timeToDo) | round}}</span>&nbsp;/&nbsp;
+        <span uib-tooltip="TODO">{{timeToDo | round}}</span>&nbsp;hours
     </li>
     <li><span uib-tooltip="Complexity"><i class="fa fa-puzzle-piece"></i>&nbsp;{{points}}</span>&nbsp;points</li>
 </ul>
