@@ -18,17 +18,27 @@ angular
 
                     $scope.saveComment = function ($event) {
                         if ($event.keyCode == 13 && $event.shiftKey) {
-                            createComment();
+                            $scope.createComment();
                         }
                     };
 
-                    function createComment() {
-                        $scope.comment.$save({taskId: $scope.task._id, nested: 'comments'});
-                    }
+                    $scope.createComment = function (){
+                        $scope.comment.$save({taskId: $scope.task._id, nested: 'comments'}, function () {
+                            $scope.onCommentSave();
+                        });
+                    };
+
+                    $scope.onCommentSave = function () {
+                        if ($scope.onSave) {
+                            $scope.onSave();
+                        }
+                    };
+
 
                 },
                 scope: {
-                    task: "="
+                    task: "=",
+                    onSave:"=onSave"
                 }
             }
         }

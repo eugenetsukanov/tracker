@@ -7,6 +7,7 @@ Feature: Report
     When I type username "test"
     When I type password "test"
     And click on log in button
+    Then I sleep 1
     And I see task board
 
   Scenario: CommonReport
@@ -94,6 +95,7 @@ Feature: Report
     And I share this task on user "Arnie Shwarziniggah"
 
     Then I click on save button
+    Then I sleep 1
 
     And I see task "project 1"
     And I see task "task 2"
@@ -122,6 +124,7 @@ Feature: Report
     Then I click on task status "In Progress"
 
     And I click on save button
+    Then I sleep 1
 
     And I see task "project 1.1"
     And I see task "project 1.2"
@@ -138,7 +141,7 @@ Feature: Report
 
     And I am on "project 1" page
     Then I click on task link "project 1.1"
-
+    Then I sleep 1
 #    Then stop
     And I am on "project 1.1" page
     And I don't see task "task 1"

@@ -12,8 +12,15 @@ angular
                     var allMessages;
                     loadHistory($scope.task._id);
 
+                    $scope.reload = function () {
+                        loadHistory($scope.task._id);
+                    };
+
                     SocketService.scopeOn($scope, 'comment.save', function (data) {
-                        loadHistory(data.task);
+
+                        if ($scope.task && $scope.task._id === data.task) {
+                            $scope.reload();
+                        }
                     });
 
                     function loadHistory(taskId) {
