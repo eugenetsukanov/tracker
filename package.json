@@ -14,7 +14,8 @@
     "docker.console": "docker-compose run --rm dev bash",
     "docker.test": "docker-compose run --rm dev npm test",
     "docker.test.wip": "docker-compose run --rm dev npm run test.wip",
-    "docker.stop": "docker-compose stop"
+    "docker.stop": "docker-compose stop",
+    "docker.build": "docker-compose build"
   },
   "author": "",
   "license": "ISC",
