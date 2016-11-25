@@ -11,5 +11,5 @@ RUN curl -sL https://deb.nodesource.com/setup_6.x | bash -
 RUN apt-get install -y nodejs
 
 # npm packages
-RUN npm install -g bower forever nodemon
+RUN npm install -g bower forever nodemon gulp-cli
 RUN npm install -g concurrently plus.shell
