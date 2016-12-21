@@ -33,6 +33,7 @@ mongo:
 
 mongocli:
   image: mongo:latest
+  working_dir: /project
   links:
     - mongo
   volumes:
