@@ -1,5 +1,4 @@
 <div class="panel panel-default"
-     ui-tree-handle
      ng-class="{
      'panel-success': task.status == 'accepted',
      'panel-warning': task.status == 'in progress',
@@ -9,6 +8,7 @@
     <div class="panel-heading overflow-hidden" >
         <h4 class="panel-title"><a ui-sref="app.task({taskId: task._id})" data-nodrag>{{task.title}}</a>
             <span ng-if="onEdit" class="fa fa-pencil-square-o vcenter pull-right pointer" ng-click="edit(task)" data-nodrag></span>
+            <span class="fa fa-arrows vcenter pull-right pointer" ui-tree-handle></span>
             <span class="label label-info vcenter pull-right" ng-if="!task.simple">complex</span>
         </h4>
     </div>
